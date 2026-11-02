@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="GridReplay">
 <meta property="og:locale" content="es_ES">
 <meta property="og:title" content="GridReplay: decide, vigila y revisa tus grid bots con datos reales">
-<meta property="og:description" content="Decide, vigila y revisa tus grid bots con datos reales: prueba tu configuración en 100 momentos distintos del último año, recibe avisos antes de salirte del rango y mira en qué se fue tu dinero. Simulador y analizador gratis.">
+<meta property="og:description" content="Oráculo de grid bots: qué grid lanzar hoy (long, short o neutral), con qué rango y cuántos grids, calculado en directo y validado en seis años de historia. Más simulador y analizador gratis.">
 <meta property="og:url" content="https://gridreplay.com/">
 <meta property="og:image" content="https://gridreplay.com/og-es.png">
 <meta property="og:image:width" content="1200">
@@ -23,7 +23,7 @@
 <meta name="twitter:image" content="https://gridreplay.com/og-es.png">
 <title>GridReplay</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Decide, vigila y revisa tus grid bots con datos reales: prueba tu configuración en 100 momentos distintos del último año, recibe avisos antes de salirte del rango y mira en qué se fue tu dinero. Simulador y analizador gratis.">
+<meta name="description" content="Oráculo de grid bots: qué grid lanzar hoy (long, short o neutral), con qué rango y cuántos grids, calculado en directo y validado en seis años de historia. Más simulador y analizador gratis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -195,6 +195,7 @@ footer a { color: var(--ink-2); }
         GridReplay
       </a>
       <nav aria-label="Secciones">
+        <a href="/oraculo/">Oráculo</a>
         <a href="/simulador/">Simulador</a>
         <a href="/analizador/">Analizador</a>
         <a href="/validacion/">Validación</a>
@@ -204,12 +205,12 @@ footer a { color: var(--ink-2); }
     </div>
 
     <section class="hero" aria-labelledby="h-hero">
-      <p class="eyebrow">Para quien usa grid bots</p>
-      <h1 id="h-hero">Decide, vigila y revisa tus grid bots con datos reales</h1>
-      <p class="lead">Antes de lanzarlo, mira cómo le habría ido a tu configuración en 100 mercados distintos. Mientras funciona, recibe un aviso antes de que se salga del rango. Cuando termina, descubre en qué se fue tu dinero. Sin señales ni claves API, y con un motor validado contra bots reales.</p>
+      <p class="eyebrow">Oráculo de grid bots · gratis</p>
+      <h1 id="h-hero">Qué grid lanzar hoy, y con qué rango</h1>
+      <p class="lead">Para BTC, ETH, SOL y cinco pares más: si el posicionamiento del mercado favorece un grid long, short o neutral, con el rango y los grids sugeridos. Se calcula en directo con datos de Binance y está validado en seis años de historia, con sus aciertos y sus fallos publicados. Gratis y sin claves API.</p>
       <div class="actions">
-        <a class="btn" href="/simulador/">Probar mi configuración gratis</a>
-        <a href="/analizador/">¿Ya usas grids en Pionex? Analiza tus bots →</a>
+        <a class="btn" href="/oraculo/">Ver el oráculo de hoy</a>
+        <a href="/simulador/">Probar mi propia configuración →</a>
       </div>
 
       <figure class="replay" style="margin:0">
@@ -234,8 +235,8 @@ footer a { color: var(--ink-2); }
     <div class="features">
       <div class="feature">
         <span class="tag">Antes · Gratis, ya disponible</span>
-        <h3>Todo lo que le podría pasar a tu bot</h3>
-        <p>No sabes qué mercado le tocará, y un backtest de un solo periodo solo enseña uno. El simulador lanza tu configuración en hasta 100 momentos del último año, con comisiones, funding y liquidación, y te enseña el abanico de resultados: cuántas veces gana, el resultado típico, los peores casos y las liquidaciones.</p>
+        <h3>Qué lanzar y cómo le habría ido</h3>
+        <p>El <a href="/oraculo/">oráculo</a> sugiere cada día dirección, rango y grids para ocho pares. El simulador prueba esa sugerencia, o la tuya, en hasta 100 momentos del último año, con comisiones, funding y liquidación: cuántas veces gana, el resultado típico, los peores casos y las liquidaciones.</p>
         <figure class="mini" style="margin:0.3rem 0 0;display:grid;gap:0.35rem"><svg viewBox="0 0 300 64" role="img" aria-label="Resultado de cada periodo" style="width:100%;height:auto;display:block"><rect x="0.0" y="21.7" width="2.2" height="25.7" fill="var(--s2)"/><rect x="3.0" y="21.1" width="2.2" height="0.8" fill="var(--accent)"/><rect x="6.0" y="21.7" width="2.2" height="5.1" fill="var(--s2)"/><rect x="9.0" y="21.7" width="2.2" height="6.5" fill="var(--s2)"/><rect x="12.0" y="13.0" width="2.2" height="8.8" fill="var(--accent)"/><rect x="15.0" y="13.7" width="2.2" height="8.1" fill="var(--accent)"/><rect x="18.0" y="8.2" width="2.2" height="13.5" fill="var(--accent)"/><rect x="21.0" y="6.4" width="2.2" height="15.3" fill="var(--accent)"/><rect x="24.0" y="10.4" width="2.2" height="11.3" fill="var(--accent)"/><rect x="27.0" y="7.7" width="2.2" height="14.0" fill="var(--accent)"/><rect x="30.0" y="11.6" width="2.2" height="10.1" fill="var(--accent)"/><rect x="33.0" y="11.3" width="2.2" height="10.5" fill="var(--accent)"/><rect x="36.0" y="13.4" width="2.2" height="8.4" fill="var(--accent)"/><rect x="39.0" y="21.7" width="2.2" height="5.9" fill="var(--s2)"/><rect x="42.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="45.0" y="13.8" width="2.2" height="8.0" fill="var(--accent)"/><rect x="48.0" y="14.1" width="2.2" height="7.7" fill="var(--accent)"/><rect x="51.0" y="12.9" width="2.2" height="8.8" fill="var(--accent)"/><rect x="54.0" y="21.7" width="2.2" height="1.7" fill="var(--s2)"/><rect x="57.0" y="21.7" width="2.2" height="15.7" fill="var(--s2)"/><rect x="60.0" y="21.7" width="2.2" height="26.8" fill="var(--s2)"/><rect x="63.0" y="21.7" width="2.2" height="29.7" fill="var(--s2)"/><rect x="66.0" y="21.7" width="2.2" height="41.4" fill="var(--s2)"/><rect x="69.0" y="21.7" width="2.2" height="42.3" fill="var(--s2)"/><rect x="72.0" y="21.7" width="2.2" height="33.5" fill="var(--s2)"/><rect x="75.0" y="21.7" width="2.2" height="41.5" fill="var(--s2)"/><rect x="78.0" y="21.7" width="2.2" height="39.6" fill="var(--s2)"/><rect x="81.0" y="21.7" width="2.2" height="9.2" fill="var(--s2)"/><rect x="84.0" y="17.0" width="2.2" height="4.7" fill="var(--accent)"/><rect x="87.0" y="0.0" width="2.2" height="21.7" fill="var(--accent)"/><rect x="90.0" y="3.6" width="2.2" height="18.1" fill="var(--accent)"/><rect x="93.0" y="5.2" width="2.2" height="16.6" fill="var(--accent)"/><rect x="96.0" y="1.9" width="2.2" height="19.8" fill="var(--accent)"/><rect x="99.0" y="1.0" width="2.2" height="20.7" fill="var(--accent)"/><rect x="102.0" y="13.3" width="2.2" height="8.5" fill="var(--accent)"/><rect x="105.0" y="11.5" width="2.2" height="10.3" fill="var(--accent)"/><rect x="108.0" y="2.6" width="2.2" height="19.1" fill="var(--accent)"/><rect x="111.0" y="5.9" width="2.2" height="15.9" fill="var(--accent)"/><rect x="114.0" y="6.9" width="2.2" height="14.8" fill="var(--accent)"/><rect x="117.0" y="8.7" width="2.2" height="13.0" fill="var(--accent)"/><rect x="120.0" y="10.7" width="2.2" height="11.0" fill="var(--accent)"/><rect x="123.0" y="15.5" width="2.2" height="6.2" fill="var(--accent)"/><rect x="126.0" y="20.9" width="2.2" height="0.8" fill="var(--accent)"/><rect x="129.0" y="21.7" width="2.2" height="8.0" fill="var(--s2)"/><rect x="132.0" y="21.7" width="2.2" height="9.6" fill="var(--s2)"/><rect x="135.0" y="21.7" width="2.2" height="19.9" fill="var(--s2)"/><rect x="138.0" y="21.7" width="2.2" height="19.4" fill="var(--s2)"/><rect x="141.0" y="21.7" width="2.2" height="4.2" fill="var(--s2)"/><rect x="144.0" y="21.7" width="2.2" height="12.4" fill="var(--s2)"/><rect x="147.0" y="16.7" width="2.2" height="5.1" fill="var(--accent)"/><rect x="150.0" y="14.7" width="2.2" height="7.0" fill="var(--accent)"/><rect x="153.0" y="16.1" width="2.2" height="5.7" fill="var(--accent)"/><rect x="156.0" y="14.9" width="2.2" height="6.9" fill="var(--accent)"/><rect x="159.0" y="15.1" width="2.2" height="6.7" fill="var(--accent)"/><rect x="162.0" y="21.7" width="2.2" height="7.0" fill="var(--s2)"/><rect x="165.0" y="21.7" width="2.2" height="32.6" fill="var(--s2)"/><rect x="168.0" y="21.7" width="2.2" height="27.2" fill="var(--s2)"/><rect x="171.0" y="21.7" width="2.2" height="23.1" fill="var(--s2)"/><rect x="174.0" y="21.7" width="2.2" height="15.4" fill="var(--s2)"/><rect x="177.0" y="21.7" width="2.2" height="25.0" fill="var(--s2)"/><rect x="180.0" y="21.7" width="2.2" height="17.0" fill="var(--s2)"/><rect x="183.0" y="21.7" width="2.2" height="28.6" fill="var(--s2)"/><rect x="186.0" y="21.7" width="2.2" height="27.1" fill="var(--s2)"/><rect x="189.0" y="13.5" width="2.2" height="8.3" fill="var(--accent)"/><rect x="192.0" y="8.3" width="2.2" height="13.4" fill="var(--accent)"/><rect x="195.0" y="8.8" width="2.2" height="13.0" fill="var(--accent)"/><rect x="198.0" y="9.9" width="2.2" height="11.8" fill="var(--accent)"/><rect x="201.0" y="15.0" width="2.2" height="6.8" fill="var(--accent)"/><rect x="204.0" y="11.1" width="2.2" height="10.7" fill="var(--accent)"/><rect x="207.0" y="12.1" width="2.2" height="9.6" fill="var(--accent)"/><rect x="210.0" y="17.4" width="2.2" height="4.3" fill="var(--accent)"/><rect x="213.0" y="15.9" width="2.2" height="5.9" fill="var(--accent)"/><rect x="216.0" y="14.0" width="2.2" height="7.8" fill="var(--accent)"/><rect x="219.0" y="14.7" width="2.2" height="7.0" fill="var(--accent)"/><rect x="222.0" y="15.6" width="2.2" height="6.1" fill="var(--accent)"/><rect x="225.0" y="16.0" width="2.2" height="5.7" fill="var(--accent)"/><rect x="228.0" y="16.8" width="2.2" height="4.9" fill="var(--accent)"/><rect x="231.0" y="17.1" width="2.2" height="4.6" fill="var(--accent)"/><rect x="234.0" y="21.7" width="2.2" height="22.9" fill="var(--s2)"/><rect x="237.0" y="21.7" width="2.2" height="25.2" fill="var(--s2)"/><rect x="240.0" y="21.7" width="2.2" height="24.7" fill="var(--s2)"/><rect x="243.0" y="21.7" width="2.2" height="28.1" fill="var(--s2)"/><rect x="246.0" y="21.7" width="2.2" height="29.7" fill="var(--s2)"/><rect x="249.0" y="21.7" width="2.2" height="25.5" fill="var(--s2)"/><rect x="252.0" y="21.7" width="2.2" height="29.0" fill="var(--s2)"/><rect x="255.0" y="21.7" width="2.2" height="29.9" fill="var(--s2)"/><rect x="258.0" y="21.7" width="2.2" height="23.3" fill="var(--s2)"/><rect x="261.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="264.0" y="16.8" width="2.2" height="5.0" fill="var(--accent)"/><rect x="267.0" y="17.0" width="2.2" height="4.7" fill="var(--accent)"/><rect x="270.0" y="21.7" width="2.2" height="2.3" fill="var(--s2)"/><rect x="273.0" y="17.3" width="2.2" height="4.4" fill="var(--accent)"/><rect x="276.0" y="13.8" width="2.2" height="8.0" fill="var(--accent)"/><rect x="279.0" y="20.1" width="2.2" height="1.7" fill="var(--accent)"/><rect x="282.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="285.0" y="13.4" width="2.2" height="8.3" fill="var(--accent)"/><rect x="288.0" y="16.9" width="2.2" height="4.9" fill="var(--accent)"/><rect x="291.0" y="16.7" width="2.2" height="5.1" fill="var(--accent)"/><rect x="294.0" y="17.2" width="2.2" height="4.6" fill="var(--accent)"/><rect x="297.0" y="21.7" width="2.2" height="0.8" fill="var(--accent)"/><line x1="0" x2="300" y1="21.7" y2="21.7" stroke="var(--ink-3)" stroke-width="0.8"/></svg><figcaption style="font-size:0.82rem;color:var(--ink-3);line-height:1.4">Ejemplo: BTC neutral ±10 %, 3x, 100 bots de 30 días. Ganan el 58 %; típico +3,7 %; el 10 % peor, −22,6 %.</figcaption></figure>
         <a href="/simulador/">Probar el simulador →</a>
       </div>
@@ -281,9 +282,9 @@ footer a { color: var(--ink-2); }
 
   <section aria-labelledby="h-no" class="read">
     <p class="eyebrow">Lo que no hace</p>
-    <h2 id="h-no">Una herramienta, no un vendedor de señales</h2>
+    <h2 id="h-no">Datos comprobados, no promesas</h2>
     <ul class="nots">
-      <li>No te dice qué comprar ni cuándo. Tú decides la configuración y GridReplay la simula.</li>
+      <li>No promete ganancias: el oráculo da una ventaja media validada, publicada con sus meses malos, y la decisión final es tuya.</li>
       <li>No opera por ti ni toca tu dinero.</li>
       <li>No pide tus claves API ni acceso a tu cuenta del exchange.</li>
       <li>No esconde los malos resultados: cada simulación se compara con comprar y mantener, y los enlaces a exchanges que nos financian van siempre marcados como enlaces de afiliado.</li>
@@ -312,8 +313,8 @@ footer a { color: var(--ink-2); }
         <p>No. Para simular y para las alertas basta con los parámetros del bot. Para analizar tus bots pasados usas el historial que tu exchange te deja descargar, y se procesa en tu navegador. GridReplay nunca podrá operar ni mover tu dinero.</p>
       </details>
       <details>
-        <summary>¿Me va a decir qué bot crear o cuándo entrar?</summary>
-        <p>No. GridReplay es una herramienta de simulación: tú eliges la configuración y ves qué habría pasado. No damos señales ni recomendaciones de inversión, y lo que pasó en el pasado no garantiza lo que pasará.</p>
+        <summary>¿El oráculo me dice qué bot crear?</summary>
+        <p>Te enseña, igual que a cualquier visitante, qué dirección, rango y número de grids favorecen los datos de hoy para cada par, con la validación histórica de ese método. No conoce tu situación ni tu dinero, así que no es asesoramiento financiero: la decisión es tuya. Y lo que funcionó en el pasado no garantiza lo que pasará.</p>
       </details>
       <details>
         <summary>¿Qué exchanges soporta?</summary>
@@ -379,6 +380,7 @@ footer a { color: var(--ink-2); }
   <footer>
     <nav aria-label="Legal">
       <a href="/privacidad/">Política de privacidad</a>
+      <a href="/oraculo/">Oráculo</a>
       <a href="/simulador/">Simulador</a>
       <a href="/analizador/">Analizador de bots</a>
       <a href="/validacion/">Validación</a>

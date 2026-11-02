@@ -311,7 +311,7 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
   let worker = null, params = null;
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=d9a0da9ef7");
+    worker = new Worker("/app/worker.js?v=d38cf7ed35");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "prices") say(T.prices, 0.03, "");
       else if (m.type === "download") $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString(L, { maximumFractionDigits: 1 }));
@@ -380,7 +380,20 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
     form.querySelectorAll("[data-unit]").forEach(l => { l.hidden = l.dataset.unit !== form.unit.value; });
     hint();
   });
-  loadPrice();
+  // Configuración que llega en la URL (p. ej. desde el oráculo): se aplica sobre el
+  // formulario; el rango en precio, cuando ya se conoce el precio actual.
+  const qs = new URLSearchParams(location.search);
+  for (const k of ["symbol", "direction", "grids", "leverage", "days", "months", "exchange", "mode"]) {
+    if (qs.has(k) && form[k]) form[k].value = qs.get(k);
+  }
+  loadPrice().then(() => {
+    if (qs.has("lower") && qs.has("upper")) {
+      form.unit.value = "price"; form.unit.dispatchEvent(new Event("change"));
+      form.lower.value = qs.get("lower"); form.upper.value = qs.get("upper");
+      hint();
+      form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
 
   // Enlace de afiliado al exchange elegido (affiliates.json); sin enlace no se muestra nada.
   let AFF = {};
