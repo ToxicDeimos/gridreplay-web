@@ -173,7 +173,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <h1>Qué grid lanzar hoy</h1>
     <p class="dek read">BTC y ETH, gratis; el resto de pares, con GridReplay Pro. Para cada par: si el posicionamiento del mercado favorece un grid long, short o neutral, con qué rango y cuántos grids. Se calcula ahora mismo con los datos de Binance y con un método validado en seis años de historia, con sus aciertos y sus fallos publicados.</p>
     <ul class="promises">
-      <li>Gratis</li>
+      <li>BTC y ETH gratis</li>
       <li>Validado fuera de muestra</li>
       <li>Igual para todos · no es asesoramiento</li>
     </ul>
@@ -190,6 +190,31 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <p class="profile-note" id="profile-note"></p>
     </div>
     <div class="cards" id="cards"></div>
+  </section>
+
+  <section aria-labelledby="h-how" class="read">
+    <p class="eyebrow">Cómo funciona</p>
+    <h2 id="h-how">Tres reglas, cada una comprobada con datos</h2>
+    <ul class="plain">
+      <li><b>Dirección.</b> Cuando los grandes traders de Binance están muy cargados en largo, el precio tiende a caer en las semanas siguientes, y al revés; las compras agresivas apuntan en el sentido contrario. El oráculo combina cuatro medidas de ese posicionamiento frente a la historia del par.</li>
+      <li><b>Rango.</b> Un múltiplo de la volatilidad esperada a 30 días (1,5, 2 o 3 veces según el perfil), con niveles separados la mitad de un movimiento diario típico. Cuanto más ancho, menos gana el grid pero mucho menos pierde cuando el mercado se va.</li>
+      <li><b>Volatilidad muy baja.</b> Si el par está en el 20 % más tranquilo de su último año, se avisa: en esos momentos los grids neutrales perdieron de media.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-proof">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Validación</p>
+      <h2 id="h-proof">Lo que habría pasado siguiendo al oráculo</h2>
+      <p>Recalibrado cada mes solo con lo anterior, como funciona de verdad, en <span id="v-starts"></span> bots simulados de 30 días en <span id="v-pairs"></span> pares desde <span id="v-since"></span>. <a href="/validacion/#oraculo">Ver la validación completa</a>.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Dirección</span><b id="v-edge"></b><p id="v-edge-p"></p></div>
+      <div class="kpi"><span class="src">Meses mejores</span><b id="v-months"></b><p>meses en los que seguir la dirección del oráculo superó a lanzar siempre neutral. No acierta siempre.</p></div>
+      <div class="kpi"><span class="src">Rango</span><b id="v-worst"></b><p id="v-worst-p"></p></div>
+      <div class="kpi"><span class="src">Bots con beneficio</span><b id="v-win"></b><p id="v-win-p"></p></div>
+    </div>
+    <p class="note read">Es una ventaja media a lo largo de muchos meses, no una predicción segura: hay meses e incluso años en los que el oráculo lo hace peor que un grid neutral. Es información general, igual para todos, que no tiene en cuenta tu situación ni es asesoramiento financiero. Invertir en criptoactivos conlleva riesgos, incluida la pérdida de todo el capital.</p>
   </section>
 
   <section id="pro" class="cta read" aria-labelledby="h-pro">
@@ -215,31 +240,6 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <button class="btn" type="submit">Avísame cuando abra Pro</button>
       <p class="meta" id="pro-msg" aria-live="polite"></p>
     </form>
-  </section>
-
-  <section aria-labelledby="h-how" class="read">
-    <p class="eyebrow">Cómo funciona</p>
-    <h2 id="h-how">Tres reglas, cada una comprobada con datos</h2>
-    <ul class="plain">
-      <li><b>Dirección.</b> Cuando los grandes traders de Binance están muy cargados en largo, el precio tiende a caer en las semanas siguientes, y al revés; las compras agresivas apuntan en el sentido contrario. El oráculo combina cuatro medidas de ese posicionamiento frente a la historia del par.</li>
-      <li><b>Rango.</b> Un múltiplo de la volatilidad esperada a 30 días (1,5, 2 o 3 veces según el perfil), con niveles separados la mitad de un movimiento diario típico. Cuanto más ancho, menos gana el grid pero mucho menos pierde cuando el mercado se va.</li>
-      <li><b>Volatilidad muy baja.</b> Si el par está en el 20 % más tranquilo de su último año, se avisa: en esos momentos los grids neutrales perdieron de media.</li>
-    </ul>
-  </section>
-
-  <section aria-labelledby="h-proof">
-    <div class="read" style="display:grid;gap:1.1rem">
-      <p class="eyebrow">Validación</p>
-      <h2 id="h-proof">Lo que habría pasado siguiendo al oráculo</h2>
-      <p>Recalibrado cada mes solo con lo anterior, como funciona de verdad, en <span id="v-starts"></span> bots simulados de 30 días en <span id="v-pairs"></span> pares desde <span id="v-since"></span>.</p>
-    </div>
-    <div class="kpis">
-      <div class="kpi"><span class="src">Dirección</span><b id="v-edge"></b><p id="v-edge-p"></p></div>
-      <div class="kpi"><span class="src">Meses mejores</span><b id="v-months"></b><p>meses en los que seguir la dirección del oráculo superó a lanzar siempre neutral. No acierta siempre.</p></div>
-      <div class="kpi"><span class="src">Rango</span><b id="v-worst"></b><p id="v-worst-p"></p></div>
-      <div class="kpi"><span class="src">Bots con beneficio</span><b id="v-win"></b><p id="v-win-p"></p></div>
-    </div>
-    <p class="note read">Es una ventaja media a lo largo de muchos meses, no una predicción segura: hay meses e incluso años en los que el oráculo lo hace peor que un grid neutral. Es información general, igual para todos, que no tiene en cuenta tu situación ni es asesoramiento financiero. Invertir en criptoactivos conlleva riesgos, incluida la pérdida de todo el capital.</p>
   </section>
 
   <footer>

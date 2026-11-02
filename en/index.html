@@ -199,7 +199,7 @@ footer a { color: var(--ink-2); }
         <a href="/en/simulator/">Simulator</a>
         <a href="/en/analyzer/">Analyzer</a>
         <a href="/en/validation/">Validation</a>
-        <a href="#waitlist-signup">Waitlist</a>
+        <a href="#waitlist-signup">Pro</a>
         <a href="/" hreflang="es" lang="es">ES</a>
       </nav>
     </div>
@@ -257,8 +257,14 @@ footer a { color: var(--ink-2); }
 
   <section aria-labelledby="h-proof">
     <p class="eyebrow">Why you can trust the numbers</p>
-    <h2 id="h-proof" class="read">Checked against 33 real Pionex bots</h2>
-    <p class="read" style="color:var(--ink-2)">We rebuilt 33 real futures grids from their order history and replayed them in GridReplay. This is how close the simulation came to what really happened (<a href="/en/validation/">see all 45 bots one by one</a>):</p>
+    <h2 id="h-proof" class="read">Validated on six years of data and real bots</h2>
+    <p class="read" style="color:var(--ink-2)"><b>The oracle</b>, recalibrated every month using only the past, exactly as it works live, across 4,846 30-day bots on 8 pairs since 2022 (<a href="/en/validation/#oracle">see the full validation</a>):</p>
+    <div class="proof">
+      <div><b>+1.8 pp</b><span>per bot versus always running a neutral grid (95% confidence interval: +0.4 to +3.3).</span></div>
+      <div><b>32 / 52</b><span>months better than a neutral grid. It isn’t always right, and we publish that.</span></div>
+      <div><b>−11.5%</b><span>for the worst 10% of bots with the balanced range, versus −24.1% with a fixed ±10% range.</span></div>
+    </div>
+    <p class="read" style="color:var(--ink-2)"><b>The engine</b> behind it, checked against 33 real futures grids rebuilt from their order history (<a href="/en/validation/">see all 45 bots one by one</a>):</p>
     <div class="proof">
       <div><b>96.6%</b><span>of orders match on level and side (median).</span></div>
       <div><b>30 / 33</b><span>bots with a net result within ±5% (or ±1 USDT) of the real one.</span></div>
@@ -273,10 +279,10 @@ footer a { color: var(--ink-2); }
     </div>
     <div class="report">
       <div style="display:grid;gap:0.4rem">
-        <h3>Check it against your own bots</h3>
-        <p>Upload your Pionex history and see, bot by bot, what you earned, what you paid in fees and funding, and whether GridReplay reproduces your orders. Free, no sign-up, and the file never leaves your browser.</p>
+        <h3>Help us extend the validation</h3>
+        <p>If you run futures grids on Pionex, put your history through the free analyzer (it never leaves your browser) and share the anonymous results: they’re added to the public validation, which today rests on a single account.</p>
       </div>
-      <a class="btn" href="/en/analyzer/">Analyze my bots</a>
+      <a class="btn" href="/en/analyzer/">Analyze and share</a>
     </div>
   </section>
 
@@ -306,7 +312,7 @@ footer a { color: var(--ink-2); }
     <div class="faq">
       <details>
         <summary>How do I know the simulations match reality?</summary>
-        <p>Because we test against real bots and publish every result, order by order: 45 futures grids from a real Pionex account, liquidations included. It’s all on the <a href="/en/validation/">validation page</a>, including the bots that deviate and the ones we left out. Before launch we’ll extend it with bots from more users.</p>
+        <p>Because we test against real bots and publish every result, order by order: 45 futures grids from a real Pionex account, liquidations included. It’s all on the <a href="/en/validation/">validation page</a>, including the bots that deviate and the ones we left out. We keep extending it with the results analyzer users share. And the oracle has its own validation, on six years of data.</p>
       </details>
       <details>
         <summary>Do I have to share my API keys or account access?</summary>
@@ -328,7 +334,7 @@ footer a { color: var(--ink-2); }
       </details>
       <details>
         <summary>Which exchanges are supported?</summary>
-        <p>Simulations use real Binance prices and the fees of Pionex, Binance, Bybit or KuCoin. History analysis starts with Pionex; the waitlist decides which exchange comes next.</p>
+        <p>Simulations use real Binance prices and the fees of Pionex, Binance, Bybit or KuCoin. History analysis starts with Pionex; analyzer votes and the waitlist decide which exchange comes next.</p>
       </details>
       <details>
         <summary>Is it free? What does Pro include?</summary>
@@ -337,14 +343,14 @@ footer a { color: var(--ink-2); }
       </details>
       <details>
         <summary>What do you do with my email?</summary>
-        <p>We only use it to tell you about what’s new (alerts and upcoming tools). We don’t sell or share it, and you can unsubscribe at any time. Details are in the <a href="/en/privacy/">privacy policy</a>.</p>
+        <p>We only use it to tell you when GridReplay Pro opens and about what’s new (alerts and new tools). We don’t sell or share it, and you can unsubscribe at any time. Details are in the <a href="/en/privacy/">privacy policy</a>.</p>
       </details>
     </div>
   </section>
 
   <section id="waitlist-signup" class="signup" aria-labelledby="h-lista">
-    <p class="eyebrow">Updates</p>
-    <h2 id="h-lista">Join the waitlist</h2>
+    <p class="eyebrow">First month free</p>
+    <h2 id="h-lista">Sign up for GridReplay Pro</h2>
     <p class="read" style="color:var(--ink-2)">We’ll let you know when GridReplay Pro opens (with the first month free) and when new tools arrive. And if you tell us what you want first, we’ll take it into account.</p>
     <form id="waitlist" data-endpoint="https://gridreplay.pages.dev/api/waitlist" novalidate>
       <div class="field">
@@ -379,7 +385,6 @@ footer a { color: var(--ink-2); }
           <label><input type="checkbox" name="wants" value="comparar"> Compare setups</label>
           <label><input type="checkbox" name="wants" value="ranking"> Ranking by pair</label>
           <label><input type="checkbox" name="wants" value="pro"> GridReplay Pro (full oracle and alerts)</label>
-          <label><input type="checkbox" name="wants" value="score"> Daily market score for grids</label>
           <label><input type="checkbox" name="wants" value="analizador"> The analyzer for my exchange</label>
         </div>
         <p class="hint">Pick as many as you like. It helps us decide what to build first.</p>

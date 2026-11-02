@@ -173,7 +173,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <h1>Which grid to launch today</h1>
     <p class="dek read">BTC and ETH for free; the other pairs with GridReplay Pro. For each pair: whether market positioning favours a long, short or neutral grid, with which range and how many grids. Calculated right now from Binance data with a method validated over six years of history, with its hits and misses published.</p>
     <ul class="promises">
-      <li>Free</li>
+      <li>BTC and ETH free</li>
       <li>Validated out of sample</li>
       <li>Same for everyone · not advice</li>
     </ul>
@@ -190,6 +190,31 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <p class="profile-note" id="profile-note"></p>
     </div>
     <div class="cards" id="cards"></div>
+  </section>
+
+  <section aria-labelledby="h-how" class="read">
+    <p class="eyebrow">How it works</p>
+    <h2 id="h-how">Three rules, each checked against data</h2>
+    <ul class="plain">
+      <li><b>Direction.</b> When Binance’s top traders are heavily long, the price tends to fall over the following weeks, and vice versa; aggressive buying points the other way. The oracle combines four measures of that positioning against the pair’s own history.</li>
+      <li><b>Range.</b> A multiple of the expected 30-day volatility (1.5, 2 or 3 times depending on the profile), with levels half a typical daily move apart. The wider it is, the less the grid earns but the far less it loses when the market runs away.</li>
+      <li><b>Very low volatility.</b> If the pair is in the calmest 20% of its past year, you get a warning: neutral grids lost money on average at those times.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-proof">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Validation</p>
+      <h2 id="h-proof">What following the oracle would have done</h2>
+      <p>Recalibrated every month using only the past, exactly as it works live, across <span id="v-starts"></span> simulated 30-day bots on <span id="v-pairs"></span> pairs since <span id="v-since"></span>. <a href="/en/validation/#oracle">See the full validation</a>.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Direction</span><b id="v-edge"></b><p id="v-edge-p"></p></div>
+      <div class="kpi"><span class="src">Better months</span><b id="v-months"></b><p>months in which following the oracle’s direction beat always going neutral. It isn’t always right.</p></div>
+      <div class="kpi"><span class="src">Range</span><b id="v-worst"></b><p id="v-worst-p"></p></div>
+      <div class="kpi"><span class="src">Profitable bots</span><b id="v-win"></b><p id="v-win-p"></p></div>
+    </div>
+    <p class="note read">It’s an average edge over many months, not a sure prediction: there are months and even years in which the oracle does worse than a neutral grid. It is general information, the same for everyone, that doesn’t consider your situation and isn’t financial advice. Investing in crypto-assets carries risks, including losing all your capital.</p>
   </section>
 
   <section id="pro" class="cta read" aria-labelledby="h-pro">
@@ -215,31 +240,6 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <button class="btn" type="submit">Notify me when Pro opens</button>
       <p class="meta" id="pro-msg" aria-live="polite"></p>
     </form>
-  </section>
-
-  <section aria-labelledby="h-how" class="read">
-    <p class="eyebrow">How it works</p>
-    <h2 id="h-how">Three rules, each checked against data</h2>
-    <ul class="plain">
-      <li><b>Direction.</b> When Binance’s top traders are heavily long, the price tends to fall over the following weeks, and vice versa; aggressive buying points the other way. The oracle combines four measures of that positioning against the pair’s own history.</li>
-      <li><b>Range.</b> A multiple of the expected 30-day volatility (1.5, 2 or 3 times depending on the profile), with levels half a typical daily move apart. The wider it is, the less the grid earns but the far less it loses when the market runs away.</li>
-      <li><b>Very low volatility.</b> If the pair is in the calmest 20% of its past year, you get a warning: neutral grids lost money on average at those times.</li>
-    </ul>
-  </section>
-
-  <section aria-labelledby="h-proof">
-    <div class="read" style="display:grid;gap:1.1rem">
-      <p class="eyebrow">Validation</p>
-      <h2 id="h-proof">What following the oracle would have done</h2>
-      <p>Recalibrated every month using only the past, exactly as it works live, across <span id="v-starts"></span> simulated 30-day bots on <span id="v-pairs"></span> pairs since <span id="v-since"></span>.</p>
-    </div>
-    <div class="kpis">
-      <div class="kpi"><span class="src">Direction</span><b id="v-edge"></b><p id="v-edge-p"></p></div>
-      <div class="kpi"><span class="src">Better months</span><b id="v-months"></b><p>months in which following the oracle’s direction beat always going neutral. It isn’t always right.</p></div>
-      <div class="kpi"><span class="src">Range</span><b id="v-worst"></b><p id="v-worst-p"></p></div>
-      <div class="kpi"><span class="src">Profitable bots</span><b id="v-win"></b><p id="v-win-p"></p></div>
-    </div>
-    <p class="note read">It’s an average edge over many months, not a sure prediction: there are months and even years in which the oracle does worse than a neutral grid. It is general information, the same for everyone, that doesn’t consider your situation and isn’t financial advice. Investing in crypto-assets carries risks, including losing all your capital.</p>
   </section>
 
   <footer>
