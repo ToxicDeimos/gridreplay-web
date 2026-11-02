@@ -206,8 +206,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <select name="exchange" required aria-label="¿Dónde usas tus grid bots?">
         <option value="" selected disabled>¿Dónde usas tus grid bots?</option>
         <option value="pionex">Pionex</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="kucoin">KuCoin</option>
+        <option value="okx">OKX</option><option value="bitget">Bitget</option><option value="gate">Gate.io</option><option value="mexc">MEXC</option><option value="bingx">BingX</option>
         <option value="otro">Otro exchange</option><option value="ninguno">Todavía no uso grid bots</option>
       </select>
+      <input name="exchange_other" type="text" maxlength="40" autocomplete="off" hidden placeholder="¿En qué exchange?" aria-label="¿En qué exchange?">
       <label class="consent"><input type="checkbox" name="consent" required> <span>Acepto que GridReplay guarde mi email para avisarme de Pro, según la <a href="/privacidad/">política de privacidad</a>. Puedo darme de baja cuando quiera.</span></label>
       <div style="display:none"><input name="website" tabindex="-1" autocomplete="off"></div>
       <button class="btn" type="submit">Avísame cuando abra Pro</button>
@@ -267,7 +269,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
     edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
     lockedTxt: "Dirección, rango y grids de este par, con GridReplay Pro.", unlock: "Desbloquear con Pro",
-    badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
+    badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
     proOk: "¡Apuntado! Te avisaremos cuando abra Pro, con el primer mes gratis.", proErr: "No se ha podido enviar. Inténtalo de nuevo en unos minutos.",
     worstP: (f) => `resultado del 10 % de bots peores con el rango equilibrado del oráculo, frente a ${f} con un rango fijo de ±10 %.`,
     winP: (f) => `de los bots neutrales con el rango del oráculo acabaron en beneficio, frente al ${f} con ±10 %.`,
@@ -283,7 +285,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
     edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
     lockedTxt: "Direction, range and grids for this pair, with GridReplay Pro.", unlock: "Unlock with Pro",
-    badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", needConsent: "You need to accept the privacy policy.",
+    badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
     proOk: "You’re on the list! We’ll let you know when Pro opens, with the first month free.", proErr: "Couldn’t send. Please try again in a few minutes.",
     worstP: (f) => `result of the worst 10% of bots with the oracle’s balanced range, versus ${f} with a fixed ±10% range.`,
     winP: (f) => `of neutral bots with the oracle’s range ended in profit, versus ${f} with ±10%.`,
@@ -383,15 +385,17 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     return el;
   }
   $("pro-count").textContent = O.locked.length;
+  $("pro-form").exchange.addEventListener("change", (e) => { e.target.form.exchange_other.hidden = e.target.value !== "otro"; });
   $("pro-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = e.target, msg = $("pro-msg");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) return void (msg.textContent = T.badEmail);
     if (!f.exchange.value) return void (msg.textContent = T.pickExchange);
+    if (f.exchange.value === "otro" && !f.exchange_other.value.trim()) return void (msg.textContent = T.typeExchange);
     if (!f.consent.checked) return void (msg.textContent = T.needConsent);
     try {
       const r = await fetch("https://gridreplay.pages.dev/api/waitlist", { method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: f.email.value.trim(), exchange: f.exchange.value, wants: ["pro"], consent: true, source: location.pathname, website: f.website.value }) });
+        body: JSON.stringify({ email: f.email.value.trim(), exchange: f.exchange.value, exchange_other: f.exchange.value === "otro" ? f.exchange_other.value.trim() : "", wants: ["pro"], consent: true, source: location.pathname, website: f.website.value }) });
       if (!r.ok) throw new Error(r.status);
       grEvent("pro_signup"); f.reset(); msg.textContent = T.proOk;
     } catch { msg.textContent = T.proErr; }

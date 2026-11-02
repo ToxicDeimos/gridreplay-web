@@ -349,9 +349,18 @@ footer a { color: var(--ink-2); }
           <option value="binance">Binance</option>
           <option value="bybit">Bybit</option>
           <option value="kucoin">KuCoin</option>
+          <option value="okx">OKX</option>
+          <option value="bitget">Bitget</option>
+          <option value="gate">Gate.io</option>
+          <option value="mexc">MEXC</option>
+          <option value="bingx">BingX</option>
           <option value="otro">Otro exchange</option>
           <option value="ninguno">Todavía no uso grid bots</option>
         </select>
+      </div>
+      <div class="field" id="other-field" hidden>
+        <label for="exchange_other">¿Cuál?</label>
+        <input id="exchange_other" name="exchange_other" type="text" maxlength="40" autocomplete="off" placeholder="Nombre del exchange">
       </div>
       <fieldset>
         <legend>¿Qué te gustaría que añadiéramos primero? (opcional)</legend>
@@ -452,11 +461,13 @@ footer a { color: var(--ink-2); }
 
   // Lista de espera
   const form = document.getElementById("waitlist"), msg = document.getElementById("form-msg"), btn = document.getElementById("submit");
+  form.exchange.addEventListener("change", () => { document.getElementById("other-field").hidden = form.exchange.value !== "otro"; });
   const say = (text, kind) => { msg.textContent = text; msg.className = "msg " + kind; msg.hidden = false; };
   form.addEventListener("submit", async e => {
     e.preventDefault();
     const email = form.email.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say("Escribe un email válido, por ejemplo nombre@gmail.com.", "err");
+    if (form.exchange.value === "otro" && !form.exchange_other.value.trim()) return say("Escribe en qué exchange usas tus grid bots.", "err");
     if (!form.exchange.value) return say("Elige dónde usas tus grid bots.", "err");
     if (!form.consent.checked) return say("Para apuntarte tienes que aceptar la política de privacidad.", "err");
     const endpoint = form.dataset.endpoint;
@@ -466,7 +477,7 @@ footer a { color: var(--ink-2); }
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, exchange: form.exchange.value, wants: [...form.querySelectorAll("input[name=wants]:checked")].map(i => i.value), consent: true, source: location.pathname, website: form.website.value })
+        body: JSON.stringify({ email, exchange: form.exchange.value, exchange_other: form.exchange.value === "otro" ? form.exchange_other.value.trim() : "", wants: [...form.querySelectorAll("input[name=wants]:checked")].map(i => i.value), consent: true, source: location.pathname, website: form.website.value })
       });
       if (!res.ok) throw new Error(res.status);
       grEvent("waitlist");
