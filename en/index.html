@@ -316,6 +316,16 @@ footer a { color: var(--ink-2); }
         <summary>Does the oracle tell me which bot to create?</summary>
         <p>It shows you, like any other visitor, which direction, range and grid count today’s data favours for each pair, with the historical validation of that method. It knows nothing about your situation or your money, so it isn’t financial advice: the decision is yours. And what worked in the past doesn’t guarantee what will happen.</p>
       </details>
+      <details id="why-pionex">
+        <summary>Why does Pionex show up so much?</summary>
+        <p>For three reasons, and one of them benefits us, so we’re saying it plainly:</p>
+        <ul>
+          <li><b>It’s the only exchange we’ve validated the engine against order by order</b>, with 45 real bots (see the <a href="/en/validation/">validation</a>), and the analyzer reads its history. We don’t have that check for other exchanges yet.</li>
+          <li><b>It’s built for grid bots</b> and its bot fees are low (0.05% spot; 0.02% and 0.05% on futures).</li>
+          <li><b>We have an affiliate link with Pionex</b>: if you open your account through our button, it pays us part of its fees at no cost to you. That’s why every button says so.</li>
+        </ul>
+        <p>That doesn’t make it the best exchange for everyone. The simulator works with Pionex, Binance, Bybit and KuCoin fees, the oracle uses Binance data and its suggestions apply on any exchange with futures grids. You can vote for the next exchange in the <a href="/en/analyzer/">analyzer</a>.</p>
+      </details>
       <details>
         <summary>Which exchanges are supported?</summary>
         <p>Simulations use real Binance prices and the fees of Pionex, Binance, Bybit or KuCoin. History analysis starts with Pionex; the waitlist decides which exchange comes next.</p>
@@ -458,6 +468,10 @@ footer a { color: var(--ink-2); }
   stats.forEach(([v, t]) => { const d = document.createElement("div"); d.className = "stat"; d.innerHTML = `<b>${v}</b><span>${t}</span>`; box.appendChild(d); });
   document.getElementById("verdict").textContent =
     `The bot completed ${r.cycles} cycles and made money, but this month simply holding BTC would have done better (${fmt(r.bh)}% vs ${fmt(r.total)}%). And that’s just one month: the simulator shows you what would have happened in 100.`;
+
+  // Enlaces a una pregunta frecuente concreta (#por-que-pionex): se abre sola.
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target && target.tagName === "DETAILS") target.open = true;
 
   // Lista de espera
   const form = document.getElementById("waitlist"), msg = document.getElementById("form-msg"), btn = document.getElementById("submit");
