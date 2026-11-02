@@ -138,6 +138,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <li>No API keys</li>
       <li>Free</li>
     </ul>
+    <p class="note read" id="share-invite"><b>Help us test the engine against more real bots.</b> Today the public validation rests on 33 bots from a single account<span id="invite-extra"></span>. When the analysis finishes, press “Share anonymous results”: only percentages are sent, never amounts, dates or anything that identifies you, and they’re added to the <a href="/en/validation/">validation page</a>.</p>
   </header>
 
   <section class="read" aria-label="Other exchanges">
@@ -228,13 +229,13 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <h2 id="h-priv">What happens to your file</h2>
     <ul class="plain">
       <li>It’s read and analyzed inside your browser. It isn’t uploaded to GridReplay or anywhere else, and it’s gone when you close the tab.</li>
-      <li>Your browser downloads the calculation engine (Pyodide) from jsDelivr and public prices from Binance, as when visiting any website: they see your IP, not your history.</li>
+      <li>Your browser downloads the calculation engine (Pyodide) from this website and public prices from Binance, as when visiting any website: Binance sees your IP, not your history.</li>
       <li>Only if you press “Share” are the anonymous percentages (which you can inspect first) sent to GridReplay. More in the <a href="/en/privacy/">privacy policy</a>.</li>
     </ul>
   </section>
 
   <footer>
-    <p>GridReplay is independent and not affiliated with Pionex, Binance or any other exchange. Results are for information only and are not financial advice.</p>
+    <p>GridReplay is independent and not owned by Pionex, Binance or any other exchange. Results are for information only and are not financial advice.</p>
   </footer>
 </main>
 
@@ -363,6 +364,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     document.querySelectorAll("[data-want]").forEach(x => { x.disabled = true; });
     $("vote-msg").textContent = ES ? "¡Anotado! Si quieres que sea de los primeros en llegar, envíanos un export de ejemplo a contact@gridreplay.com." : "Noted! If you want it to be among the first, send us a sample export at contact@gridreplay.com.";
   }));
+
+  // Cuántos bots han compartido ya otros usuarios (para la invitación de arriba).
+  fetch("https://gridreplay.pages.dev/api/share").then(r => r.ok ? r.json() : null).then(d => {
+    if (d && d.bots.length) $("invite-extra").textContent = ES ? ` y ${d.bots.length} de otros usuarios` : ` and ${d.bots.length} from other users`;
+  }).catch(() => {});
 
   $("file").addEventListener("change", (e) => analyze(e.target.files[0]));
   const drop = $("drop");

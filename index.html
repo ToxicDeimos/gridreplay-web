@@ -143,11 +143,11 @@ section { display: grid; gap: 1.2rem; min-width: 0; }
 form { display: grid; gap: 1.1rem; max-width: 34rem; }
 .field { display: grid; gap: 0.4rem; }
 label, legend { font: 500 0.92rem/1.3 var(--font-body); }
-input[type="email"], select {
+input[type="email"], input[type="text"], select {
   font: 400 1rem/1.3 var(--font-body); color: var(--ink); background: var(--bg);
   border: 1px solid var(--rule); border-radius: 6px; padding: 0.7rem 0.8rem; width: 100%;
 }
-input[type="email"]:focus, select:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+input[type="email"]:focus, input[type="text"]:focus, select:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); }
 fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
 .choices { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .choices label { display: inline-flex; align-items: center; gap: 0.45rem; border: 1px solid var(--rule); border-radius: 999px; padding: 0.45rem 0.9rem; font-weight: 400; cursor: pointer; }
@@ -296,7 +296,7 @@ footer a { color: var(--ink-2); }
     <h2 id="h-about">Una persona, no un fondo ni un exchange</h2>
     <div class="about">
       <p>GridReplay lo construye Alejandro Rincón Rodríguez, desde España. Empezó como una herramienta para revisar sus propios grid bots: la validación contra Pionex de esta página usa el historial real de su cuenta, con sus aciertos y sus liquidaciones.</p>
-      <p>No cobra de ningún exchange por recomendarte nada y no gestiona dinero de nadie. Si tienes dudas, escribe a <a href="mailto:contact@gridreplay.com">contact@gridreplay.com</a> y te responde Alejandro en persona.</p>
+      <p>No gestiona dinero de nadie. GridReplay se financia con enlaces de afiliado, siempre marcados (<a href="#por-que-pionex">por qué Pionex</a>), y en el futuro con la suscripción Pro; ningún exchange decide lo que dicen el oráculo o el simulador. Si tienes dudas, escribe a <a href="mailto:contact@gridreplay.com">contact@gridreplay.com</a> y te responde Alejandro en persona.</p>
     </div>
   </section>
 
@@ -408,7 +408,7 @@ footer a { color: var(--ink-2); }
       <a href="/en/" hreflang="en" lang="en">English</a>
     </nav>
     <p>GridReplay simula resultados sobre datos históricos. Rentabilidades pasadas no garantizan rentabilidades futuras. Nada de lo que muestra es asesoramiento financiero ni una recomendación de inversión.</p>
-    <p>GridReplay es independiente y no está afiliado a Pionex, Binance ni ningún otro exchange. Los nombres citados son marcas de sus respectivos titulares.</p>
+    <p>GridReplay es independiente y no pertenece a Pionex, Binance ni ningún otro exchange. Algunos enlaces a exchanges son de afiliado y siempre van marcados. Los nombres citados son marcas de sus respectivos titulares.</p>
   </footer>
 </div>
 
