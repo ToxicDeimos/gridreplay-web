@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/privacidad/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/privacidad/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/privacy/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/privacy/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Privacidad de GridReplay">
+<meta property="og:description" content="Qué datos guarda GridReplay (solo el email de la lista de espera), qué no (tu historial se analiza en tu navegador) y cómo ejercer tus derechos.">
+<meta property="og:url" content="https://gridreplay.com/privacidad/">
+<meta property="og:image" content="https://gridreplay.com/og-es.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-es.png">
+<meta name="description" content="Qué datos guarda GridReplay (solo el email de la lista de espera), qué no (tu historial se analiza en tu navegador) y cómo ejercer tus derechos.">
+<title>Privacidad de GridReplay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,700..850&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: una sola columna de lectura; texto legal sobrio con la misma identidad que la portada. */
+:root {
+  --bg: #f5f6f8; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7; --accent: #0d6a65; --todo: #fff1c2; --todo-ink: #5c4300;
+  --font-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0e1115; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0; --rule: #29303a; --accent: #52b8af; --todo: #3b3010; --todo-ink: #ffd76a; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #0e1115; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0; --rule: #29303a; --accent: #52b8af; --todo: #3b3010; --todo-ink: #ffd76a; color-scheme: dark; }
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 2rem 4rem;
+}
+main { max-width: 68ch; margin: 0 auto; display: grid; gap: 1.8rem; }
+h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 850; font-stretch: 80%; }
+h2 { font-size: 1.25rem; font-weight: 700; font-stretch: 90%; }
+section { display: grid; gap: 0.6rem; }
+p, ul { margin: 0; color: var(--ink-2); }
+ul { padding-left: 1.1rem; display: grid; gap: 0.3rem; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.back { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.meta { font: 500 0.8rem/1.4 var(--font-data); color: var(--ink-3); }
+/* Datos que faltan por rellenar antes de publicar la web */
+.todo { background: var(--todo); color: var(--todo-ink); padding: 0 0.3em; border-radius: 3px; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="/">← GridReplay</a> <a class="back" href="/en/privacy/" hreflang="en" lang="en" style="margin-left:1rem">EN</a>
+  <h1>Política de privacidad</h1>
+  <p class="meta">Última actualización: 1 de noviembre de 2026</p>
+
+  <section>
+    <h2>Quién trata tus datos</h2>
+    <p>El responsable es Alejandro Rincón Rodríguez, con residencia en España. Puedes escribir a privacy@gridreplay.com para cualquier cuestión sobre tus datos.</p>
+  </section>
+
+  <section>
+    <h2>Qué datos recogemos y para qué</h2>
+    <p>Cuando te apuntas a la lista de espera guardamos tu email, el exchange donde usas grid bots y, si lo marcas, qué herramientas te gustaría que añadiéramos. Los usamos solo para:</p>
+    <ul>
+      <li>avisarte de las novedades de GridReplay (alertas y nuevas herramientas);</li>
+      <li>saber, de forma agregada, cuánta gente está interesada y qué exchanges usa.</li>
+    </ul>
+    <p>No vendemos ni cedemos tus datos a terceros para publicidad. No pedimos claves API ni acceso a tu cuenta de ningún exchange.</p>
+  </section>
+
+  <section>
+    <h2>El analizador de bots</h2>
+    <p>El historial que cargas en el <a href="/analizador/">analizador</a> se procesa dentro de tu navegador: no se sube a GridReplay ni a ningún servidor, y no lo vemos. Para calcular, tu navegador descarga el motor de cálculo desde jsDelivr y precios públicos desde Binance; como al visitar cualquier web, esos servicios reciben tu dirección IP, pero no tu historial. El <a href="/simulador/">simulador</a> funciona igual: la configuración que pruebas se calcula en tu navegador y no nos llega.</p>
+    <p>Si pulsas «Compartir resultados anónimos», guardamos solo lo que se muestra antes de enviarlo: para cada bot, el par, la dirección, el año, la duración, el número de cuadrículas y de órdenes, y los porcentajes de coincidencia. No guardamos importes, fechas exactas, email ni IP, así que esos datos no permiten identificarte. Los usamos para ampliar la <a href="/validacion/">página de validación</a> y mejorar el simulador, y los conservamos mientras exista GridReplay. Como no podemos saber cuáles son tuyos, no podemos borrarlos a petición.</p>
+  </section>
+
+  <section>
+    <h2>Enlaces de afiliado</h2>
+    <p>GridReplay es gratis y se financia con enlaces de afiliado a exchanges, siempre marcados como tales. Si haces clic en uno, pasas a la web del exchange, que puede registrar que llegas desde GridReplay con sus propias cookies y según su propia política de privacidad. GridReplay no recibe tus datos personales del exchange: solo cifras agregadas de usuarios y comisiones.</p>
+  </section>
+
+  <section>
+    <h2>Base legal</h2>
+    <p>Tu consentimiento, que das al marcar la casilla del formulario (artículo 6.1.a del Reglamento General de Protección de Datos). Puedes retirarlo en cualquier momento.</p>
+  </section>
+
+  <section>
+    <h2>Cuánto tiempo los guardamos</h2>
+    <p>Hasta que te des de baja o, como máximo, 24 meses desde que te apuntaste si el producto no llega a lanzarse.</p>
+  </section>
+
+  <section>
+    <h2>Quién más accede a ellos</h2>
+    <p>Solo el proveedor técnico que necesitamos para funcionar, que actúa como encargado del tratamiento: Cloudflare, Inc., que aloja la web, guarda la lista de espera y los resultados compartidos, y reenvía el correo de contacto. Cloudflare es una empresa de Estados Unidos; la transferencia de datos se ampara en las cláusulas contractuales tipo de la Comisión Europea y en su acuerdo de tratamiento de datos.</p>
+  </section>
+
+  <section>
+    <h2>Tus derechos</h2>
+    <p>Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad de tus datos escribiendo a privacy@gridreplay.com. Cada email que te enviemos incluirá un enlace para darte de baja. Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+  </section>
+
+  <section>
+    <h2>Cookies</h2>
+    <p>Esta web no usa cookies. Para saber cuánta gente la visita contamos las visitas a cada página y cuántas veces se usan el simulador y el analizador con un contador propio, que solo suma por página y día: sin cookies, sin IP y sin ningún dato que te identifique.</p>
+  </section>
+</main>
+</body>
+</html>

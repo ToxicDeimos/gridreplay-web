@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/validacion/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/validacion/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/validation/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/validation/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Validación de GridReplay">
+<meta property="og:description" content="Cómo comprobamos que el simulador de GridReplay acierta: 45 grids de futuros reales de Pionex, comparados bot a bot y orden a orden.">
+<meta property="og:url" content="https://gridreplay.com/validacion/">
+<meta property="og:image" content="https://gridreplay.com/og-es.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-es.png">
+<title>Validación de GridReplay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Cómo comprobamos que el simulador de GridReplay acierta: 45 grids de futuros reales de Pionex, comparados bot a bot y orden a orden.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: columna de lectura (~68ch) con figuras y tablas que se ensanchan hasta 960px. Generado por make_pages.py. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7;
+  --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.kpi { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.kpi b { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+.kpi .src { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2; }
+.table-wrap { overflow-x: auto; min-width: 0; max-height: 34rem; overflow-y: auto; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.45rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { position: sticky; top: 0; background: var(--bg); font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+tr.out td { color: var(--ink-3); }
+.pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
+.pill.ok { border-color: var(--accent); color: var(--accent); }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+</style>
+</head>
+<body>
+<script id="vdata" type="application/json">{"pionex":[{"symbol":"BTC","direction":"neutral","year":2025,"days":1.3,"grids":35,"fills":412,"match":96.4,"net_diff_pct":-2.7,"within":true,"modified":false,"liquidated":false},{"symbol":"WLFI","direction":"long","year":2025,"days":7.0,"grids":137,"fills":264,"match":87.7,"net_diff_pct":1.4,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":1.8,"grids":49,"fills":161,"match":97.6,"net_diff_pct":0.2,"within":true,"modified":false,"liquidated":false},{"symbol":"XRP","direction":"long","year":2025,"days":3.8,"grids":48,"fills":147,"match":97.3,"net_diff_pct":0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2026,"days":8.6,"grids":39,"fills":131,"match":95.6,"net_diff_pct":1.2,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"long","year":2026,"days":4.1,"grids":21,"fills":124,"match":98.4,"net_diff_pct":1.1,"within":true,"modified":false,"liquidated":false},{"symbol":"HBAR","direction":"long","year":2025,"days":3.0,"grids":97,"fills":114,"match":94.7,"net_diff_pct":-0.1,"within":true,"modified":false,"liquidated":true},{"symbol":"SOL","direction":"short","year":2026,"days":2.2,"grids":46,"fills":93,"match":7.1,"net_diff_pct":-2.5,"within":true,"modified":true,"liquidated":false},{"symbol":"HBAR","direction":"long","year":2025,"days":2.1,"grids":51,"fills":74,"match":94.9,"net_diff_pct":0.3,"within":true,"modified":false,"liquidated":false},{"symbol":"WLFI","direction":"long","year":2025,"days":0.6,"grids":198,"fills":67,"match":90.5,"net_diff_pct":0.1,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2026,"days":5.2,"grids":59,"fills":66,"match":88.0,"net_diff_pct":-0.7,"within":true,"modified":false,"liquidated":false},{"symbol":"WLFI","direction":"long","year":2025,"days":2.8,"grids":59,"fills":57,"match":70.0,"net_diff_pct":0.4,"within":true,"modified":true,"liquidated":false},{"symbol":"LINK","direction":"long","year":2025,"days":33.4,"grids":17,"fills":56,"match":96.6,"net_diff_pct":-1.1,"within":true,"modified":false,"liquidated":false},{"symbol":"DOT","direction":"long","year":2025,"days":13.3,"grids":11,"fills":54,"match":100.0,"net_diff_pct":-0.0,"within":true,"modified":false,"liquidated":true},{"symbol":"AVAX","direction":"long","year":2025,"days":28.0,"grids":19,"fills":53,"match":93.0,"net_diff_pct":2.9,"within":true,"modified":false,"liquidated":false},{"symbol":"HBAR","direction":"long","year":2025,"days":6.8,"grids":59,"fills":52,"match":80.0,"net_diff_pct":399.2,"within":false,"modified":true,"liquidated":false},{"symbol":"ASTER","direction":"short","year":2025,"days":0.5,"grids":15,"fills":50,"match":92.6,"net_diff_pct":2.2,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"neutral","year":2026,"days":1.1,"grids":10,"fills":49,"match":100.0,"net_diff_pct":-0.1,"within":true,"modified":false,"liquidated":false},{"symbol":"HBAR","direction":"long","year":2025,"days":2.6,"grids":66,"fills":47,"match":72.3,"net_diff_pct":39.4,"within":false,"modified":true,"liquidated":false},{"symbol":"BTC","direction":"short","year":2026,"days":1.6,"grids":12,"fills":44,"match":100.0,"net_diff_pct":-0.1,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":2.2,"grids":9,"fills":41,"match":95.2,"net_diff_pct":-0.2,"within":true,"modified":false,"liquidated":false},{"symbol":"HBAR","direction":"long","year":2025,"days":22.9,"grids":79,"fills":36,"match":81.8,"net_diff_pct":31.0,"within":false,"modified":true,"liquidated":false},{"symbol":"LINK","direction":"long","year":2025,"days":1.4,"grids":108,"fills":34,"match":100.0,"net_diff_pct":-0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":0.9,"grids":17,"fills":32,"match":94.1,"net_diff_pct":2.8,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":2.0,"grids":69,"fills":32,"match":84.2,"net_diff_pct":-17.2,"within":false,"modified":true,"liquidated":false},{"symbol":"XRP","direction":"long","year":2025,"days":3.1,"grids":13,"fills":30,"match":88.2,"net_diff_pct":24.7,"within":false,"modified":true,"liquidated":false},{"symbol":"BTC","direction":"long","year":2026,"days":2.0,"grids":59,"fills":29,"match":100.0,"net_diff_pct":0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":2.9,"grids":16,"fills":28,"match":75.0,"net_diff_pct":40.0,"within":false,"modified":true,"liquidated":false},{"symbol":"LINK","direction":"long","year":2025,"days":1.7,"grids":199,"fills":28,"match":100.0,"net_diff_pct":6.9,"within":false,"modified":false,"liquidated":false},{"symbol":"ARB","direction":"long","year":2025,"days":11.7,"grids":11,"fills":26,"match":92.9,"net_diff_pct":0.2,"within":true,"modified":false,"liquidated":true},{"symbol":"LINK","direction":"long","year":2025,"days":1.1,"grids":20,"fills":25,"match":100.0,"net_diff_pct":-0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"LINK","direction":"long","year":2025,"days":1.2,"grids":10,"fills":25,"match":100.0,"net_diff_pct":-0.1,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2026,"days":1.5,"grids":99,"fills":24,"match":100.0,"net_diff_pct":-0.5,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":1.0,"grids":14,"fills":24,"match":92.3,"net_diff_pct":45.8,"within":true,"modified":false,"liquidated":false},{"symbol":"AVAX","direction":"long","year":2025,"days":3.9,"grids":77,"fills":23,"match":100.0,"net_diff_pct":-0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":0.5,"grids":8,"fills":22,"match":90.9,"net_diff_pct":-7.7,"within":false,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":0.6,"grids":9,"fills":22,"match":100.0,"net_diff_pct":0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"AVAX","direction":"long","year":2025,"days":0.9,"grids":44,"fills":20,"match":100.0,"net_diff_pct":-0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"long","year":2025,"days":3.9,"grids":5,"fills":20,"match":100.0,"net_diff_pct":57.7,"within":false,"modified":true,"liquidated":false},{"symbol":"BTC","direction":"short","year":2026,"days":0.9,"grids":19,"fills":20,"match":90.9,"net_diff_pct":42.3,"within":false,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"short","year":2025,"days":1.6,"grids":19,"fills":19,"match":90.5,"net_diff_pct":0.5,"within":true,"modified":false,"liquidated":false},{"symbol":"BTC","direction":"long","year":2025,"days":1.3,"grids":19,"fills":18,"match":100.0,"net_diff_pct":0.0,"within":true,"modified":false,"liquidated":false},{"symbol":"AVAX","direction":"long","year":2025,"days":18.0,"grids":50,"fills":17,"match":50.0,"net_diff_pct":144.2,"within":false,"modified":true,"liquidated":false},{"symbol":"ADA","direction":"long","year":2025,"days":1.0,"grids":79,"fills":16,"match":88.9,"net_diff_pct":48.3,"within":false,"modified":true,"liquidated":false},{"symbol":"AVAX","direction":"long","year":2025,"days":25.2,"grids":49,"fills":16,"match":69.6,"net_diff_pct":121.3,"within":false,"modified":true,"liquidated":false}]}</script>
+
+<main>
+  <header>
+    <div><a class="home" href="/">← GridReplay</a> <a class="home" href="/en/validation/" hreflang="en" lang="en" style="margin-left:1rem">EN</a></div>
+    <p class="eyebrow">Validación</p>
+    <h1>Cómo sabemos que GridReplay acierta</h1>
+    <p class="dek read">Un simulador solo vale si reproduce lo que pasa de verdad. Por eso comparamos GridReplay con bots reales, orden a orden, y publicamos todos los resultados: los buenos, los malos y los que dejamos fuera.</p>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Pionex · orden a orden</span><b>96,6 %</b><p>coincidencia mediana de órdenes por nivel y lado en 33 grids reales.</p></div>
+      <div class="kpi"><span class="src">Pionex · resultado neto</span><b id="k-px-ok">—</b><p>bots con el neto simulado a menos de ±5 % (o ±1 USDT) del real.</p></div>
+      <div class="kpi"><span class="src">Pionex · liquidaciones</span><b id="k-px-liq">—</b><p>liquidaciones reales reproducidas, con el resultado dentro del margen.</p></div>
+      <div class="kpi"><span class="src">Pionex · volumen</span><b id="k-px-orders">—</b><p>órdenes ejecutadas comparadas una a una, en 33 bots long, short y neutral.</p></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-px">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Una cuenta real de Pionex, orden a orden</p>
+      <h2 id="h-px">45 grids de futuros reconstruidos desde su historial</h2>
+      <p>Con el historial de operaciones de una cuenta real de Pionex (marzo 2025 a octubre 2026) se puede ir más allá del ROI: reconstruimos cada grid a partir de sus órdenes y comprobamos que GridReplay compra y vende en los mismos niveles. Los 12 bots que se modificaron en marcha aparecen en gris y no cuentan en las estadísticas.</p>
+    </div>
+    <div class="table-wrap">
+      <table id="t-px">
+        <thead><tr><th>Par</th><th>Dirección</th><th>Año</th><th>Días</th><th>Órdenes</th><th>Coincidencia</th><th>Dif. en el neto</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-sh">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Bots de otros usuarios</p>
+      <h2 id="h-sh">Resultados compartidos desde el analizador</h2>
+      <p>Cualquier usuario de Pionex puede pasar su historial por el <a href="/analizador/">analizador gratuito</a> y compartir sus resultados de forma anónima. Aparecen aquí automáticamente, sin filtrar los malos. No podemos auditar cada envío como hicimos con la cuenta de arriba, así que los mostramos aparte.</p>
+    </div>
+    <div class="kpis" id="sh-kpis" hidden>
+      <div class="kpi"><span class="src">Envíos</span><b id="k-sh-subs">—</b><p>historiales compartidos por usuarios del analizador.</p></div>
+      <div class="kpi"><span class="src">Bots comparables</span><b id="k-sh-bots">—</b><p>grids de futuros sin modificaciones en marcha.</p></div>
+      <div class="kpi"><span class="src">Orden a orden</span><b id="k-sh-match">—</b><p>coincidencia mediana de órdenes por nivel y lado.</p></div>
+      <div class="kpi"><span class="src">Resultado neto</span><b id="k-sh-ok">—</b><p>bots con el neto simulado a menos de ±5 % (o ±1 USDT) del real.</p></div>
+    </div>
+    <div class="table-wrap" id="sh-table" hidden>
+      <table id="t-sh">
+        <thead><tr><th>Par</th><th>Dirección</th><th>Año</th><th>Días</th><th>Órdenes</th><th>Coincidencia</th><th>Dif. en el neto</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note read" id="sh-empty">Todavía no hay envíos. ¿Usas grids de futuros en Pionex? <a href="/analizador/">Analiza tus bots</a> y sé el primero en sumarlos.</p>
+  </section>
+
+  <section aria-labelledby="h-lim" class="read">
+    <p class="eyebrow">Metodología y límites</p>
+    <h2 id="h-lim">Lo que estas pruebas demuestran y lo que no</h2>
+    <ul class="plain">
+      <li>Datos reales: el historial de operaciones que Pionex deja descargar a cualquier usuario. De ahí reconstruimos cada grid (rango, número de cuadrículas, modo, dirección y cantidad por orden) sin usar ningún dato de la simulación.</li>
+      <li>Precios: velas de 1 minuto del perpetuo de Binance, del archivo público verificado por checksum, con el funding real de cada contrato. Pionex agrega precios de varios mercados, así que pequeñas diferencias de precio explican parte de las desviaciones.</li>
+      <li>Coincidencia de órdenes: para cada nivel y lado, cuántas ejecuciones reales reproduce la simulación, sobre el total. Resultado neto: beneficio del grid más la posición, menos comisiones, más funding.</li>
+      <li>Dejamos fuera 12 bots que se modificaron en marcha (se añadió inversión o se cambió el rango), porque no hay una configuración única que simular. Aparecen en la tabla, en gris.</li>
+      <li>Es una sola cuenta: 33 bots en 19 meses. Es una prueba seria, pero queremos ampliarla con bots de más usuarios (con el analizador) y de otros exchanges antes del lanzamiento.</li>
+      <li>Validar el pasado no garantiza el futuro: GridReplay te dice qué habría pasado, no qué va a pasar. Nada de esto es asesoramiento financiero.</li>
+    </ul>
+    <p class="note">¿Usas grids de futuros en Pionex? Comprueba GridReplay con tus propios bots en el <a href="/analizador/">analizador gratuito</a> y, si quieres, suma tus resultados anónimos a esta página.</p>
+    <p class="note">¿Ves algo que no cuadra o quieres más detalle de algún bot? Escríbenos a contact@gridreplay.com.</p>
+  </section>
+
+  <section class="cta read" aria-labelledby="h-cta">
+    <h2 id="h-cta">Prueba tu propio bot con este motor</h2>
+    <p>El simulador gratuito usa exactamente este motor: lanza tu configuración en hasta 100 periodos del último año y te enseña cuántas veces gana, cuánto pierde cuando sale mal y cuántas se liquida.</p>
+    <a class="btn" href="/simulador/">Abrir el simulador</a>
+  </section>
+
+  <footer>
+    <p>GridReplay es independiente y no está afiliado a Pionex, Binance ni ningún otro exchange. Los nombres citados son marcas de sus respectivos titulares.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("vdata").textContent);
+  const ES = document.documentElement.lang !== "en";
+  const L = ES ? "es-ES" : "en-US";
+  const P = ES ? " %" : "%";
+  const fmt = (v, d = 1, sign = true) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const DIR = ES ? { long: "long", short: "short", neutral: "neutral" } : { long: "long", short: "short", neutral: "neutral" };
+
+  (function tables() {
+    const px = D.pionex, clean = px.filter(v => !v.modified);
+    document.getElementById("k-px-ok").textContent = `${clean.filter(v => v.within).length} / ${clean.length}`;
+    const liq = clean.filter(v => v.liquidated);
+    document.getElementById("k-px-liq").textContent = `${liq.filter(v => v.within).length} / ${liq.length}`;
+    document.getElementById("k-px-orders").textContent = clean.reduce((s, v) => s + v.fills, 0).toLocaleString(L, { useGrouping: "always" });
+    fill("#t-px", px);
+  })();
+
+  // Misma tabla para la cuenta auditada y para los envíos de usuarios.
+  function fill(sel, rows) {
+    const tb = document.querySelector(sel + " tbody");
+    const diff = v => v.net_diff_pct == null ? Infinity : Math.abs(v.net_diff_pct);
+    [...rows].sort((a, b) => a.modified - b.modified || diff(a) - diff(b)).forEach(v => {
+      const tr = document.createElement("tr"); if (v.modified) tr.className = "out";
+      const status = v.modified ? (ES ? "modificado" : "modified") : v.liquidated ? (v.within ? (ES ? "liquidado ✓" : "liquidated ✓") : (ES ? "liquidado, fuera" : "liquidated, outside")) : v.within ? "✓" : (ES ? "fuera" : "outside");
+      [v.symbol + "/USDT", DIR[v.direction], v.year, fmt(v.days, 1, false), v.fills.toLocaleString(L), fmt(v.match, 1, false) + P, v.net_diff_pct == null ? "—" : fmt(v.net_diff_pct, 1) + P]
+        .forEach(t => { const td = document.createElement("td"); td.textContent = t; tr.appendChild(td); });
+      const td = document.createElement("td"), s = document.createElement("span");
+      s.className = "pill" + (!v.modified && v.within ? " ok" : ""); s.textContent = status; td.appendChild(s); tr.appendChild(td);
+      tb.appendChild(tr);
+    });
+  }
+
+  (async function shared() {
+    let data;
+    try {
+      const resp = await fetch("https://gridreplay.pages.dev/api/share");
+      if (!resp.ok) return;
+      data = await resp.json();
+    } catch { return; } // vista previa sin funciones: se queda el aviso de "sin envíos"
+    const clean = data.bots.filter(v => !v.modified);
+    if (!clean.length) return;
+    const ms = clean.map(v => v.match).sort((a, b) => a - b), mid = ms.length >> 1;
+    const median = ms.length % 2 ? ms[mid] : (ms[mid - 1] + ms[mid]) / 2;
+    document.getElementById("k-sh-subs").textContent = data.submissions.toLocaleString(L);
+    document.getElementById("k-sh-bots").textContent = clean.length.toLocaleString(L, { useGrouping: "always" });
+    document.getElementById("k-sh-match").textContent = fmt(median, 1, false) + P;
+    document.getElementById("k-sh-ok").textContent = `${clean.filter(v => v.within).length} / ${clean.length}`;
+    fill("#t-sh", data.bots);
+    document.getElementById("sh-kpis").hidden = false;
+    document.getElementById("sh-table").hidden = false;
+    document.getElementById("sh-empty").hidden = true;
+  })();
+})();
+</script>
+</body>
+</html>

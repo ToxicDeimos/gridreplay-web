@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/en/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="GridReplay: decide, monitor and review your grid bots with real data">
+<meta property="og:description" content="Decide, monitor and review your grid bots with real data: test your setup at 100 different moments over the past year, get warned before you leave the range and see where your money went. Free simulator and analyzer.">
+<meta property="og:url" content="https://gridreplay.com/en/">
+<meta property="og:image" content="https://gridreplay.com/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-en.png">
+<title>GridReplay</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Decide, monitor and review your grid bots with real data: test your setup at 100 different moments over the past year, get warned before you leave the range and see where your money went. Free simulator and analyzer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout (EN): portada con titular a la izquierda y la repetición del grid debajo, a todo el ancho (960px); secciones de lectura estrecha; formulario como cierre. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #11151b;
+  --ink-2: #48505d;
+  --ink-3: #737c89;
+  --rule: #dde1e7;
+  --accent: #0d6a65;
+  --accent-ink: #ffffff;
+  --band: #e9eef5;
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --ok: #0d6a65;
+  --err: #b42318;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 64ch;
+  --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --accent-ink: #0b1513; --band: #1a2431;
+    --s1: #3987e5; --s2: #d95926; --ok: #52b8af; --err: #f97066;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --accent-ink: #0b1513; --band: #1a2431;
+  --s1: #3987e5; --s2: #d95926; --ok: #52b8af; --err: #f97066;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 3rem;
+}
+.wrap { max-width: var(--wide); margin: 0 auto; display: grid; gap: 4.5rem; }
+.read { max-width: var(--read); }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(2.4rem, 6.4vw, 4.4rem); font-weight: 850; font-stretch: 76%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 800; font-stretch: 82%; }
+h3 { font-size: 1.15rem; font-weight: 700; font-stretch: 92%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+section { display: grid; gap: 1.2rem; min-width: 0; }
+
+/* Barra superior */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.2rem; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+.brand { display: inline-flex; align-items: center; gap: 0.55rem; font: 800 1.15rem/1 var(--font-display); font-stretch: 85%; color: var(--ink); text-decoration: none; }
+.brand svg { width: 22px; height: 22px; }
+.top nav { display: flex; gap: 1.2rem; font-size: 0.92rem; }
+.top nav a { color: var(--ink-2); text-decoration: none; }
+.top nav a:hover { color: var(--ink); text-decoration: underline; }
+
+/* Portada */
+.hero { display: grid; gap: 1.4rem; padding-top: 1rem; }
+.hero .lead { font-size: 1.2rem; line-height: 1.5; color: var(--ink-2); max-width: 56ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.4rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--accent-ink);
+  font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; border: 0; text-decoration: none; cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.status { font: 400 0.85rem/1.4 var(--font-data); color: var(--ink-3); }
+
+.replay { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1.1rem; display: grid; gap: 0.9rem; position: relative; min-width: 0; }
+.replay-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 1.5rem; align-items: baseline; }
+.replay-head .cfg { font: 400 0.85rem/1.4 var(--font-data); color: var(--ink-2); }
+.replay svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.85rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.lbl-strong { fill: var(--ink); font: 500 11px var(--font-data); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem 1rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
+.stat { display: grid; gap: 0.15rem; }
+.stat b { font: 600 1.45rem/1.1 var(--font-data); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 0.82rem; color: var(--ink-3); }
+.verdict { font-size: 0.95rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.8rem 1rem; }
+
+/* Qué hará */
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.6rem 2rem; }
+.feature { display: grid; gap: 0.5rem; align-content: start; border-top: 1px solid var(--ink); padding-top: 0.9rem; }
+.feature p { color: var(--ink-2); font-size: 0.98rem; }
+.feature .tag { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+
+/* Validación */
+.proof { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.proof div { display: grid; gap: 0.35rem; }
+.proof b { font: 600 2.2rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.proof span { font-size: 0.92rem; color: var(--ink-2); }
+
+.report { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1rem 2rem; align-items: center; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1.3rem 1.4rem; }
+.report p { color: var(--ink-2); font-size: 0.98rem; }
+@media (max-width: 640px) { .report { grid-template-columns: 1fr; } }
+
+.nots { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.6rem; }
+.nots li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.4rem; color: var(--ink-2); }
+.nots li::before { content: "—"; color: var(--ink-3); }
+
+/* Formulario */
+.signup { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: clamp(1.2rem, 3vw, 2rem); display: grid; gap: 1.2rem; }
+form { display: grid; gap: 1.1rem; max-width: 34rem; }
+.field { display: grid; gap: 0.4rem; }
+label, legend { font: 500 0.92rem/1.3 var(--font-body); }
+input[type="email"], select {
+  font: 400 1rem/1.3 var(--font-body); color: var(--ink); background: var(--bg);
+  border: 1px solid var(--rule); border-radius: 6px; padding: 0.7rem 0.8rem; width: 100%;
+}
+input[type="email"]:focus, select:focus { border-color: var(--accent); outline: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.choices { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.choices label { display: inline-flex; align-items: center; gap: 0.45rem; border: 1px solid var(--rule); border-radius: 999px; padding: 0.45rem 0.9rem; font-weight: 400; cursor: pointer; }
+.choices input { accent-color: var(--accent); }
+.choices label:has(input:checked) { border-color: var(--accent); background: var(--band); }
+.consent { display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; align-items: start; font-size: 0.88rem; color: var(--ink-2); font-weight: 400; }
+.consent input { margin-top: 0.2rem; accent-color: var(--accent); }
+.hint { font-size: 0.82rem; color: var(--ink-3); }
+.msg { font-size: 0.95rem; padding: 0.75rem 0.9rem; border-radius: 6px; border: 1px solid var(--rule); }
+.msg.ok { border-color: var(--ok); color: var(--ok); }
+.msg.err { border-color: var(--err); color: var(--err); }
+
+/* Quién está detrás y preguntas */
+.about { display: grid; gap: 0.8rem; border-left: 3px solid var(--accent); padding-left: 1.1rem; }
+.about p { color: var(--ink-2); }
+.faq { display: grid; border-top: 1px solid var(--rule); }
+.faq details { border-bottom: 1px solid var(--rule); padding: 0.9rem 0; }
+.faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font: 500 1.1rem/1 var(--font-data); color: var(--ink-3); }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { color: var(--ink-2); margin-top: 0.6rem; font-size: 0.98rem; }
+.faq details ul { color: var(--ink-2); margin: 0.6rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; font-size: 0.98rem; }
+.faq details li b { color: var(--ink); font-weight: 600; }
+
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.85rem; color: var(--ink-3); }
+footer nav { display: flex; flex-wrap: wrap; gap: 1.2rem; }
+footer a { color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) {
+  .draw { stroke-dasharray: var(--len); animation: draw 1.8s ease-out both; }
+  @keyframes draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+  .fill-dot { animation: pop 0.4s ease-out both; animation-delay: calc(var(--t) * 1.8s); }
+  @keyframes pop { from { opacity: 0; } to { opacity: 1; } }
+}
+</style>
+</head>
+<body>
+<script id="hero-data" type="application/json">{"cfg": {"lower": 105000, "upper": 120000, "grids": 40, "investment": 1000, "fee": 0.05}, "path": [[107425, 108483, 107617], [107255, 107987, 107866], [107594, 109820, 109590], [108186, 109912, 108783], [108635, 109520, 109147], [108391, 109373, 108928], [108284, 109330, 108877], [107459, 109443, 109237], [108884, 110272, 110246], [110045, 110624, 110209], [110000, 110711, 110360], [109564, 110700, 109733], [108393, 111772, 111360], [110470, 111540, 110914], [110200, 111419, 111418], [110870, 111538, 111240], [110901, 111782, 111372], [110666, 111411, 110686], [110529, 111279, 111020], [110889, 111708, 111438], [111032, 112500, 112261], [111686, 112575, 112313], [111782, 112516, 112211], [111614, 112250, 111706], [111407, 112180, 111450], [110569, 111729, 110653], [110280, 110859, 110641], [110546, 111155, 110810], [109705, 111124, 109842], [109329, 109914, 109786], [109699, 110409, 110408], [110329, 111765, 110731], [110436, 111482, 111341], [111097, 111710, 111574], [111502, 112999, 112619], [112131, 112620, 112354], [110488, 113385, 110570], [110207, 111018, 110608], [110569, 111680, 111630], [110376, 111700, 110660], [110553, 111216, 111216], [110688, 111308, 110714], [110714, 110968, 110953], [110676, 110953, 110781], [110754, 111000, 110808], [109977, 110840, 110157], [110000, 110286, 110167], [110075, 110283, 110188], [110180, 110693, 110666], [110490, 110733, 110649], [110463, 111377, 111071], [110877, 111292, 111292], [111043, 111412, 111146], [110888, 111373, 110963], [110861, 111371, 111330], [111001, 111600, 111137], [110622, 111372, 111240], [110900, 111349, 111027], [110917, 111910, 111684], [111591, 112187, 112052], [111878, 112780, 112645], [112075, 112924, 112214], [111896, 112516, 111958], [111931, 112513, 112065], [111111, 112104, 111331], [111234, 112249, 112200], [112151, 113293, 112993], [112404, 113058, 112434], [111511, 112950, 111767], [110767, 111847, 111025], [110900, 111530, 111530], [111266, 111746, 111546], [110917, 111573, 111411], [111372, 111730, 111577], [111396, 112860, 112370], [112097, 112428, 112300], [112300, 114313, 113900], [113415, 114096, 113738], [113155, 113900, 113566], [113528, 114026, 113960], [113670, 114177, 113819], [113819, 114434, 114266], [113957, 114460, 114049], [113776, 114119, 114000], [113430, 114715, 114464], [113996, 114699, 114590], [114102, 114606, 114396], [114396, 115488, 115483], [115257, 116332, 115391], [115045, 115657, 115613], [114950, 115613, 115048], [114888, 115148, 114913], [114741, 115501, 115260], [114940, 115939, 115815], [115770, 116666, 116157], [115753, 116360, 116029], [115576, 116299, 115886], [115658, 116013, 115704], [115662, 116056, 115978], [115871, 116167, 115974], [115604, 116060, 115798], [115127, 115925, 115572], [115433, 115991, 115906], [115810, 115980, 115918], [115745, 116109, 115853], [115450, 115925, 115860], [115694, 115983, 115933], [115749, 116165, 115795], [115142, 115878, 115402], [115194, 115658, 115558], [115331, 115851, 115802], [115135, 116087, 115268], [114825, 115443, 115362], [115348, 116583, 116520], [114709, 116758, 114737], [114626, 115196, 115070], [114384, 115099, 114680], [114404, 115130, 115120], [114904, 115570, 115380], [115222, 115605, 115350], [114945, 115520, 115034], [114930, 115957, 115937], [115526, 116010, 115659], [115206, 115720, 115288], [114737, 115558, 115297], [115011, 116871, 116462], [116226, 116909, 116839], [116584, 116964, 116789], [116517, 117077, 116686], [116160, 117214, 117108], [116684, 117287, 116860], [116253, 116860, 116258], [115432, 116517, 115607], [115386, 116288, 115504], [114721, 116333, 115621], [115307, 116991, 116448], [116093, 116960, 116950], [116897, 117896, 117273], [116888, 117413, 117230], [117014, 117350, 117063], [116978, 117844, 117641], [117322, 117789, 117580], [117196, 117900, 117521], [116612, 117521, 117074], [117020, 117460, 117113], [116700, 117291, 116895], [116634, 117090, 116916], [116300, 116980, 116395], [115800, 116529, 115900], [115464, 116136, 115543], [115100, 115645, 115343], [115306, 115657, 115632], [115444, 115730, 115606], [115408, 115718, 115717], [115626, 115985, 115701], [115664, 115910, 115894], [115804, 116036, 115970], [115817, 116122, 115822], [115690, 115822, 115721], [115603, 115945, 115686], [115442, 115733, 115691], [115488, 115723, 115663], [115561, 115819, 115630], [115329, 115708, 115603], [115500, 115747, 115500], [115209, 115630, 115628], [115308, 115666, 115308], [115188, 115545, 115232], [114150, 115379, 114188], [113623, 114654, 113691], [111800, 113698, 112629], [112174, 112976, 112877], [112380, 113433, 112933], [112251, 113024, 112399], [111936, 112977, 112782], [112592, 112970, 112651], [111674, 112833, 111812], [111478, 112894, 112665], [112617, 113178, 113134], [112683, 113282, 112976], [112572, 113290, 112653], [111888, 113073, 111958], [111459, 112200, 111986], [111880, 112221, 111999], [111817, 112500, 112112], [111043, 112667, 112637], [112406, 112779, 112623], [112501, 113162, 113029], [112808, 113890, 113721], [113163, 113940, 113761], [113292, 113831, 113502], [113205, 113648, 113307], [112446, 113510, 112907], [111584, 112907, 111750], [111450, 112031, 111727], [111284, 112246, 111348], [110630, 111730, 111540], [108654, 111673, 108834], [108632, 109973, 109163], [108765, 109686, 108994], [108809, 109799, 109622], [109086, 109636, 109253], [108913, 109624, 109567], [108620, 109691, 109134], [108765, 109780, 108836], [108802, 110000, 109900], [109030, 110300, 109288], [109189, 109688, 109643], [109324, 109661, 109408], [109385, 109744, 109636], [109252, 109636, 109252], [109064, 109478, 109310], [109227, 109478, 109288], [109193, 109428, 109382], [109345, 109440, 109390], [109389, 109700, 109636], [109325, 109788, 109448], [109356, 109535, 109356], [109260, 109585, 109510], [109250, 109560, 109369], [109190, 109888, 109850], [109712, 110394, 110204], [110061, 110945, 110804], [110641, 112350, 112164], [111633, 112310, 111750], [111575, 111904, 111753], [111561, 112422, 112100], [111923, 112225, 112100], [111901, 114232, 114034], [113450, 114151, 114044], [113849, 114400, 114258], [114020, 114396, 114312], [114040, 114792, 114456], [113827, 114514, 113904], [113350, 114084, 113452], [112656, 113452, 113055], [112866, 113677, 113595], [112800, 113598, 113246], [113177, 114724, 114626], [113765, 114755, 114049]], "step_h": 3, "fills": [[0.15, "b", 108000.0], [0.78, "s", 108375.0], [1.17, "b", 108000.0], [1.77, "s", 108375.0], [1.88, "b", 108000.0], [2.42, "b", 107625.0], [6.35, "s", 108000.0], [7.35, "s", 108375.0], [7.55, "s", 108750.0], [7.85, "s", 109125.0], [8.0, "s", 109500.0], [9.53, "s", 109875.0], [9.98, "b", 109500.0], [10.32, "b", 109125.0], [10.52, "b", 108750.0], [10.62, "b", 108375.0], [11.9, "s", 108750.0], [12.63, "s", 109125.0], [13.43, "s", 109500.0], [13.73, "b", 109125.0], [15.4, "b", 108750.0], [18.25, "s", 109125.0], [20.63, "b", 108750.0], [20.75, "b", 108375.0], [20.78, "s", 108750.0], [21.33, "b", 108375.0], [21.53, "b", 108000.0], [21.68, "b", 107625.0], [22.3, "s", 108000.0], [22.88, "s", 108375.0], [23.22, "s", 108750.0], [23.73, "s", 109125.0], [25.73, "s", 109500.0], [26.85, "s", 109875.0], [26.98, "s", 110250.0], [32.88, "s", 110625.0], [34.48, "b", 110250.0], [35.48, "b", 109875.0], [36.1, "b", 109500.0], [36.7, "b", 109125.0], [36.72, "b", 108750.0], [37.12, "s", 109125.0], [37.42, "s", 109500.0], [37.52, "b", 109125.0], [37.55, "s", 109500.0], [37.58, "s", 109875.0], [37.62, "s", 110250.0], [37.75, "s", 110625.0], [37.83, "s", 111000.0], [38.0, "s", 111375.0], [38.07, "b", 111000.0], [38.45, "s", 111375.0], [38.6, "s", 111750.0], [38.72, "b", 111375.0], [39.1, "b", 111000.0], [39.22, "s", 111375.0], [39.58, "b", 111000.0], [40.45, "b", 110625.0], [41.53, "s", 111000.0], [42.07, "b", 110625.0], [42.77, "b", 110250.0], [42.83, "s", 110625.0], [44.12, "s", 111000.0], [44.67, "s", 111375.0], [46.0, "b", 111000.0], [48.08, "s", 111375.0], [48.43, "s", 111750.0], [48.77, "b", 111375.0], [49.38, "b", 111000.0], [50.03, "s", 111375.0], [51.42, "b", 111000.0], [54.02, "b", 110625.0], [55.88, "s", 111000.0], [58.32, "s", 111375.0], [60.62, "s", 111750.0], [60.72, "b", 111375.0], [61.77, "s", 111750.0], [61.92, "b", 111375.0], [62.07, "s", 111750.0], [62.22, "b", 111375.0], [62.52, "s", 111750.0], [62.67, "s", 112125.0], [62.72, "s", 112500.0], [62.88, "b", 112125.0], [64.73, "b", 111750.0], [65.17, "s", 112125.0], [65.85, "s", 112500.0], [66.48, "b", 112125.0], [71.53, "b", 111750.0], [72.6, "s", 112125.0], [73.2, "b", 111750.0], [75.08, "b", 111375.0], [76.97, "b", 111000.0], [77.37, "b", 110625.0], [82.17, "s", 111000.0], [83.0, "b", 110625.0], [83.25, "s", 111000.0], [84.6, "b", 110625.0], [85.8, "b", 110250.0], [86.08, "b", 109875.0], [87.18, "b", 109500.0], [89.47, "s", 109875.0], [92.35, "s", 110250.0], [94.4, "s", 110625.0], [94.93, "s", 111000.0], [94.95, "s", 111375.0], [95.0, "s", 111750.0], [95.17, "b", 111375.0], [95.52, "b", 111000.0], [95.85, "b", 110625.0], [97.72, "s", 111000.0], [98.08, "s", 111375.0], [102.88, "s", 111750.0], [103.02, "s", 112125.0], [103.2, "s", 112500.0], [103.35, "s", 112875.0], [105.03, "b", 112500.0], [108.5, "s", 112875.0], [108.5, "s", 113250.0], [108.52, "b", 112125.0], [108.52, "b", 112500.0], [108.52, "b", 112875.0], [108.52, "s", 112500.0], [108.53, "s", 112875.0], [108.6, "b", 112500.0], [108.85, "s", 112875.0], [108.9, "s", 113250.0], [109.13, "b", 112875.0], [109.85, "s", 113250.0], [109.92, "b", 112875.0], [110.18, "b", 112500.0], [110.25, "b", 112125.0], [110.28, "b", 111750.0], [110.3, "b", 111375.0], [110.43, "b", 111000.0], [110.6, "b", 110625.0], [111.7, "s", 111000.0], [112.02, "b", 110625.0], [113.72, "b", 110250.0], [114.0, "s", 110625.0], [114.48, "s", 111000.0], [115.37, "s", 111375.0], [117.27, "b", 110625.0], [117.27, "b", 111000.0], [117.3, "s", 111000.0], [117.87, "b", 110625.0], [122.77, "s", 111000.0], [135.7, "b", 110625.0], [136.07, "b", 110250.0], [146.92, "s", 110625.0], [152.35, "s", 111000.0], [152.5, "s", 111375.0], [153.65, "b", 111000.0], [158.15, "s", 111375.0], [161.32, "b", 111000.0], [167.3, "s", 111375.0], [168.35, "b", 111000.0], [170.35, "b", 110625.0], [170.53, "s", 111000.0], [175.28, "s", 111375.0], [176.67, "s", 111750.0], [178.42, "s", 112125.0], [182.57, "s", 112500.0], [183.38, "s", 112875.0], [184.15, "b", 112500.0], [185.88, "b", 112125.0], [186.95, "s", 112500.0], [187.57, "b", 112125.0], [190.2, "s", 112500.0], [191.52, "b", 112125.0], [192.38, "b", 111750.0], [193.43, "b", 111375.0], [196.2, "s", 111750.0], [197.95, "s", 112125.0], [198.07, "s", 112500.0], [198.6, "s", 112875.0], [199.43, "s", 113250.0], [199.75, "b", 112875.0], [203.98, "b", 112500.0], [205.53, "s", 112875.0], [206.02, "b", 112500.0], [206.12, "b", 112125.0], [206.57, "b", 111750.0], [207.2, "b", 111375.0], [207.62, "b", 111000.0], [211.92, "s", 111375.0], [216.92, "b", 111000.0], [218.4, "s", 111375.0], [222.48, "s", 111750.0], [223.47, "s", 112125.0], [223.88, "s", 112500.0], [225.12, "b", 112125.0], [228.28, "s", 112500.0], [228.5, "s", 112875.0], [228.5, "s", 113250.0], [229.0, "s", 113625.0], [229.73, "s", 114000.0], [232.52, "b", 113625.0], [233.28, "s", 114000.0], [233.45, "b", 113625.0], [235.35, "b", 113250.0], [236.02, "s", 113625.0], [239.08, "s", 114000.0], [243.93, "s", 114375.0], [245.35, "b", 114000.0], [246.55, "s", 114375.0], [247.08, "b", 114000.0], [252.2, "s", 114375.0], [252.5, "b", 113625.0], [252.5, "b", 114000.0], [252.52, "s", 114000.0], [252.52, "s", 114375.0], [252.53, "b", 114000.0], [253.17, "b", 113625.0], [253.65, "s", 114000.0], [253.95, "s", 114375.0], [254.27, "b", 114000.0], [254.55, "s", 114375.0], [255.88, "b", 114000.0], [256.32, "s", 114375.0], [262.33, "s", 114750.0], [262.4, "s", 115125.0], [264.0, "s", 115500.0], [264.43, "s", 115875.0], [264.78, "s", 116250.0], [264.98, "b", 115875.0], [265.82, "b", 115500.0], [267.58, "b", 115125.0], [268.55, "s", 115500.0], [271.95, "b", 115125.0], [276.13, "b", 114750.0], [276.47, "s", 115125.0], [278.08, "s", 115500.0], [278.23, "b", 115125.0], [280.97, "s", 115500.0], [281.37, "s", 115875.0], [282.5, "s", 116250.0], [283.9, "s", 116625.0], [284.22, "b", 116250.0], [285.67, "b", 115875.0], [286.35, "s", 116250.0], [289.62, "b", 115875.0], [304.35, "b", 115500.0], [308.07, "s", 115875.0], [316.3, "b", 115500.0], [317.6, "s", 115875.0], [325.4, "b", 115500.0], [333.3, "s", 115875.0], [335.33, "b", 115500.0], [336.12, "b", 115125.0], [339.27, "s", 115500.0], [340.33, "s", 115875.0], [341.33, "s", 116250.0], [342.15, "s", 116625.0], [342.57, "b", 116250.0], [343.62, "b", 115875.0], [344.05, "b", 115500.0], [344.82, "b", 115125.0], [344.92, "b", 114750.0], [345.38, "s", 115125.0], [346.38, "b", 114750.0], [347.62, "s", 115125.0], [348.82, "b", 114750.0], [353.98, "s", 115125.0], [355.1, "s", 115500.0], [355.23, "b", 115125.0], [355.65, "s", 115500.0], [360.38, "b", 115125.0], [361.45, "s", 115500.0], [361.87, "b", 115125.0], [364.85, "s", 115500.0], [365.23, "s", 115875.0], [369.9, "b", 115500.0], [373.67, "b", 115125.0], [373.85, "b", 114750.0], [373.95, "s", 115125.0], [375.92, "s", 115500.0], [375.98, "s", 115875.0], [377.03, "s", 116250.0], [377.27, "s", 116625.0], [378.7, "b", 116250.0], [379.75, "s", 116625.0], [386.87, "s", 117000.0], [387.05, "b", 116625.0], [388.67, "b", 116250.0], [389.25, "s", 116625.0], [389.75, "s", 117000.0], [389.78, "b", 116625.0], [389.92, "s", 117000.0], [393.82, "b", 116625.0], [396.0, "b", 116250.0], [398.33, "b", 115875.0], [398.5, "b", 115500.0], [399.97, "s", 115875.0], [400.67, "b", 115500.0], [401.67, "s", 115875.0], [401.72, "s", 116250.0], [401.77, "b", 115875.0], [401.98, "b", 115500.0], [402.0, "s", 115875.0], [402.0, "s", 116250.0], [402.02, "b", 115875.0], [402.08, "s", 116250.0], [402.12, "b", 115875.0], [402.22, "b", 115500.0], [402.25, "b", 115125.0], [402.28, "s", 115500.0], [402.42, "s", 115875.0], [402.53, "b", 115500.0], [402.7, "b", 115125.0], [402.75, "b", 114750.0], [402.78, "s", 115125.0], [403.08, "s", 115500.0], [403.42, "s", 115875.0], [404.93, "b", 115500.0], [405.45, "s", 115875.0], [406.22, "s", 116250.0], [406.9, "s", 116625.0], [408.17, "b", 116250.0], [409.4, "s", 116625.0], [411.02, "s", 117000.0], [411.13, "s", 117375.0], [411.35, "s", 117750.0], [412.43, "b", 117375.0], [414.22, "b", 117000.0], [416.4, "s", 117375.0], [420.18, "b", 117000.0], [421.23, "s", 117375.0], [422.33, "s", 117750.0], [423.25, "b", 117375.0], [424.25, "s", 117750.0], [427.55, "b", 117375.0], [431.0, "b", 117000.0], [431.05, "b", 116625.0], [431.7, "s", 117000.0], [432.72, "s", 117375.0], [435.58, "b", 117000.0], [441.82, "b", 116625.0], [444.45, "b", 116250.0], [446.82, "b", 115875.0], [447.18, "b", 115500.0], [447.68, "s", 115875.0], [450.18, "b", 115500.0], [451.98, "b", 115125.0], [453.8, "s", 115500.0], [463.67, "s", 115875.0], [481.97, "b", 115500.0], [504.52, "b", 115125.0], [504.6, "b", 114750.0], [504.85, "b", 114375.0], [505.68, "s", 114750.0], [505.88, "b", 114375.0], [509.98, "b", 113625.0], [509.98, "b", 114000.0], [510.02, "b", 113250.0], [510.03, "b", 112125.0], [510.03, "b", 112500.0], [510.03, "b", 112875.0], [510.05, "s", 112500.0], [510.12, "s", 112875.0], [511.9, "b", 112500.0], [515.13, "s", 112875.0], [517.68, "b", 112500.0], [517.9, "s", 112875.0], [518.12, "s", 113250.0], [518.65, "b", 112875.0], [521.03, "b", 112500.0], [523.72, "b", 112125.0], [524.57, "s", 112500.0], [524.92, "s", 112875.0], [528.18, "b", 112500.0], [530.42, "b", 112125.0], [530.9, "b", 111750.0], [531.33, "s", 112125.0], [533.02, "s", 112500.0], [533.63, "s", 112875.0], [537.18, "s", 113250.0], [538.02, "b", 112875.0], [542.18, "s", 113250.0], [542.35, "b", 112875.0], [543.02, "b", 112500.0], [543.18, "s", 112875.0], [544.2, "b", 112500.0], [544.87, "s", 112875.0], [545.25, "b", 112500.0], [545.65, "b", 112125.0], [546.68, "b", 111750.0], [549.58, "s", 112125.0], [553.65, "s", 112500.0], [554.27, "b", 112125.0], [555.78, "b", 111750.0], [556.18, "b", 111375.0], [556.43, "s", 111750.0], [556.5, "s", 112125.0], [557.77, "s", 112500.0], [562.87, "s", 112875.0], [566.53, "s", 113250.0], [566.85, "s", 113625.0], [568.2, "b", 113250.0], [568.58, "s", 113625.0], [575.33, "b", 113250.0], [577.55, "b", 112875.0], [577.88, "b", 112500.0], [578.1, "s", 112875.0], [579.38, "b", 112500.0], [580.28, "b", 112125.0], [580.33, "b", 111750.0], [585.43, "s", 112125.0], [585.8, "b", 111750.0], [587.78, "b", 111375.0], [589.07, "b", 111000.0], [589.25, "s", 111375.0], [589.7, "b", 111000.0], [590.25, "s", 111375.0], [591.4, "b", 111000.0], [591.68, "s", 111375.0], [592.67, "b", 111000.0], [593.15, "b", 110625.0], [593.23, "b", 110250.0], [593.35, "b", 109875.0], [593.6, "b", 109500.0], [593.9, "b", 109125.0], [593.95, "b", 108750.0], [594.23, "s", 109125.0], [594.33, "s", 109500.0], [595.0, "s", 109875.0], [595.68, "b", 109500.0], [596.65, "b", 109125.0], [597.13, "s", 109500.0], [597.55, "b", 109125.0], [597.95, "s", 109500.0], [599.6, "b", 109125.0], [600.92, "s", 109500.0], [605.82, "b", 109125.0], [606.28, "s", 109500.0], [607.52, "b", 109125.0], [608.22, "s", 109500.0], [610.28, "b", 109125.0], [610.8, "b", 108750.0], [611.7, "s", 109125.0], [612.6, "s", 109500.0], [613.27, "b", 109125.0], [613.65, "s", 109500.0], [614.4, "b", 109125.0], [616.32, "s", 109500.0], [617.43, "s", 109875.0], [618.42, "s", 110250.0], [618.68, "b", 109875.0], [619.05, "b", 109500.0], [619.57, "b", 109125.0], [621.95, "s", 109500.0], [633.43, "b", 109125.0], [646.05, "s", 109500.0], [662.85, "s", 109875.0], [664.12, "s", 110250.0], [668.38, "s", 110625.0], [670.08, "s", 111000.0], [670.1, "s", 111375.0], [670.3, "s", 111750.0], [671.02, "s", 112125.0], [673.93, "b", 111750.0], [680.05, "s", 112125.0], [684.52, "s", 112500.0], [684.67, "b", 112125.0], [685.65, "s", 112500.0], [685.7, "s", 112875.0], [685.73, "s", 113250.0], [686.17, "s", 113625.0], [686.68, "s", 114000.0], [688.95, "b", 113625.0], [689.83, "s", 114000.0], [691.83, "s", 114375.0], [696.83, "s", 114750.0], [696.88, "b", 114375.0], [697.23, "s", 114750.0], [697.78, "b", 114375.0], [701.38, "b", 114000.0], [703.7, "b", 113625.0], [705.18, "b", 113250.0], [705.77, "b", 112875.0], [708.67, "s", 113250.0], [709.08, "b", 112875.0], [709.33, "s", 113250.0], [709.77, "s", 113625.0], [709.9, "b", 113250.0], [710.95, "s", 113625.0], [711.18, "b", 113250.0], [712.68, "b", 112875.0], [713.33, "s", 113250.0], [714.88, "s", 113625.0], [715.5, "s", 114000.0], [715.85, "s", 114375.0], [717.07, "s", 114750.0], [717.33, "b", 114375.0], [718.38, "b", 114000.0]], "result": {"total": 4.46, "grid": 1.47, "position": 2.99, "bh": 5.31, "cycles": 255, "fees": 6.58, "dd": 3.23, "in_range": 100.0}}</script>
+
+<div class="wrap">
+  <div>
+    <div class="top">
+      <a class="brand" href="/en/" aria-label="GridReplay, home">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M2 6h18M2 11h18M2 16h18" stroke="var(--rule)" stroke-width="1.5"/><path d="M2 15 L7 7 L11 13 L15 5 L20 10" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        GridReplay
+      </a>
+      <nav aria-label="Sections">
+        <a href="/en/simulator/">Simulator</a>
+        <a href="/en/analyzer/">Analyzer</a>
+        <a href="/en/validation/">Validation</a>
+        <a href="#waitlist-signup">Waitlist</a>
+        <a href="/" hreflang="es" lang="es">ES</a>
+      </nav>
+    </div>
+
+    <section class="hero" aria-labelledby="h-hero">
+      <p class="eyebrow">For grid bot users</p>
+      <h1 id="h-hero">Decide, monitor and review your grid bots with real data</h1>
+      <p class="lead">Before you launch, see how your setup would have done in 100 different markets. While it runs, get warned before it leaves the range. When it ends, find out where your money went. No signals, no API keys, and an engine validated against real bots.</p>
+      <div class="actions">
+        <a class="btn" href="/en/simulator/">Test my setup for free</a>
+        <a href="/en/analyzer/">Already running grids on Pionex? Analyze your bots →</a>
+      </div>
+
+      <figure class="replay" style="margin:0">
+        <div class="replay-head">
+          <h3>Real example: BTC, September 2025</h3>
+          <span class="cfg" id="cfg"></span>
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span><i style="background:var(--s1)"></i>Bot buy</span>
+          <span><i style="background:var(--s2)"></i>Bot sell</span>
+        </div>
+        <svg id="replay" viewBox="0 0 960 320" role="img" aria-label="BTC price in September 2025 with the 41 grid levels and every simulated buy and sell"></svg>
+        <div class="stats" id="stats"></div>
+        <p class="verdict" id="verdict"></p>
+      </figure>
+    </section>
+  </div>
+
+  <section id="what-it-does" aria-labelledby="h-que">
+    <p class="eyebrow">Before, during and after</p>
+    <h2 id="h-que" class="read">What your exchange doesn’t show you about your bot</h2>
+    <div class="features">
+      <div class="feature">
+        <span class="tag">Before · Free, available now</span>
+        <h3>Everything that could happen to your bot</h3>
+        <p>You can’t know which market it will get, and a single-period backtest only shows one. The simulator launches your setup at up to 100 moments over the past year, with fees, funding and liquidation, and shows you the range of outcomes: how often it wins, the typical result, the worst cases and the liquidations.</p>
+        <figure class="mini" style="margin:0.3rem 0 0;display:grid;gap:0.35rem"><svg viewBox="0 0 300 64" role="img" aria-label="Result of each period" style="width:100%;height:auto;display:block"><rect x="0.0" y="21.7" width="2.2" height="25.7" fill="var(--s2)"/><rect x="3.0" y="21.1" width="2.2" height="0.8" fill="var(--accent)"/><rect x="6.0" y="21.7" width="2.2" height="5.1" fill="var(--s2)"/><rect x="9.0" y="21.7" width="2.2" height="6.5" fill="var(--s2)"/><rect x="12.0" y="13.0" width="2.2" height="8.8" fill="var(--accent)"/><rect x="15.0" y="13.7" width="2.2" height="8.1" fill="var(--accent)"/><rect x="18.0" y="8.2" width="2.2" height="13.5" fill="var(--accent)"/><rect x="21.0" y="6.4" width="2.2" height="15.3" fill="var(--accent)"/><rect x="24.0" y="10.4" width="2.2" height="11.3" fill="var(--accent)"/><rect x="27.0" y="7.7" width="2.2" height="14.0" fill="var(--accent)"/><rect x="30.0" y="11.6" width="2.2" height="10.1" fill="var(--accent)"/><rect x="33.0" y="11.3" width="2.2" height="10.5" fill="var(--accent)"/><rect x="36.0" y="13.4" width="2.2" height="8.4" fill="var(--accent)"/><rect x="39.0" y="21.7" width="2.2" height="5.9" fill="var(--s2)"/><rect x="42.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="45.0" y="13.8" width="2.2" height="8.0" fill="var(--accent)"/><rect x="48.0" y="14.1" width="2.2" height="7.7" fill="var(--accent)"/><rect x="51.0" y="12.9" width="2.2" height="8.8" fill="var(--accent)"/><rect x="54.0" y="21.7" width="2.2" height="1.7" fill="var(--s2)"/><rect x="57.0" y="21.7" width="2.2" height="15.7" fill="var(--s2)"/><rect x="60.0" y="21.7" width="2.2" height="26.8" fill="var(--s2)"/><rect x="63.0" y="21.7" width="2.2" height="29.7" fill="var(--s2)"/><rect x="66.0" y="21.7" width="2.2" height="41.4" fill="var(--s2)"/><rect x="69.0" y="21.7" width="2.2" height="42.3" fill="var(--s2)"/><rect x="72.0" y="21.7" width="2.2" height="33.5" fill="var(--s2)"/><rect x="75.0" y="21.7" width="2.2" height="41.5" fill="var(--s2)"/><rect x="78.0" y="21.7" width="2.2" height="39.6" fill="var(--s2)"/><rect x="81.0" y="21.7" width="2.2" height="9.2" fill="var(--s2)"/><rect x="84.0" y="17.0" width="2.2" height="4.7" fill="var(--accent)"/><rect x="87.0" y="0.0" width="2.2" height="21.7" fill="var(--accent)"/><rect x="90.0" y="3.6" width="2.2" height="18.1" fill="var(--accent)"/><rect x="93.0" y="5.2" width="2.2" height="16.6" fill="var(--accent)"/><rect x="96.0" y="1.9" width="2.2" height="19.8" fill="var(--accent)"/><rect x="99.0" y="1.0" width="2.2" height="20.7" fill="var(--accent)"/><rect x="102.0" y="13.3" width="2.2" height="8.5" fill="var(--accent)"/><rect x="105.0" y="11.5" width="2.2" height="10.3" fill="var(--accent)"/><rect x="108.0" y="2.6" width="2.2" height="19.1" fill="var(--accent)"/><rect x="111.0" y="5.9" width="2.2" height="15.9" fill="var(--accent)"/><rect x="114.0" y="6.9" width="2.2" height="14.8" fill="var(--accent)"/><rect x="117.0" y="8.7" width="2.2" height="13.0" fill="var(--accent)"/><rect x="120.0" y="10.7" width="2.2" height="11.0" fill="var(--accent)"/><rect x="123.0" y="15.5" width="2.2" height="6.2" fill="var(--accent)"/><rect x="126.0" y="20.9" width="2.2" height="0.8" fill="var(--accent)"/><rect x="129.0" y="21.7" width="2.2" height="8.0" fill="var(--s2)"/><rect x="132.0" y="21.7" width="2.2" height="9.6" fill="var(--s2)"/><rect x="135.0" y="21.7" width="2.2" height="19.9" fill="var(--s2)"/><rect x="138.0" y="21.7" width="2.2" height="19.4" fill="var(--s2)"/><rect x="141.0" y="21.7" width="2.2" height="4.2" fill="var(--s2)"/><rect x="144.0" y="21.7" width="2.2" height="12.4" fill="var(--s2)"/><rect x="147.0" y="16.7" width="2.2" height="5.1" fill="var(--accent)"/><rect x="150.0" y="14.7" width="2.2" height="7.0" fill="var(--accent)"/><rect x="153.0" y="16.1" width="2.2" height="5.7" fill="var(--accent)"/><rect x="156.0" y="14.9" width="2.2" height="6.9" fill="var(--accent)"/><rect x="159.0" y="15.1" width="2.2" height="6.7" fill="var(--accent)"/><rect x="162.0" y="21.7" width="2.2" height="7.0" fill="var(--s2)"/><rect x="165.0" y="21.7" width="2.2" height="32.6" fill="var(--s2)"/><rect x="168.0" y="21.7" width="2.2" height="27.2" fill="var(--s2)"/><rect x="171.0" y="21.7" width="2.2" height="23.1" fill="var(--s2)"/><rect x="174.0" y="21.7" width="2.2" height="15.4" fill="var(--s2)"/><rect x="177.0" y="21.7" width="2.2" height="25.0" fill="var(--s2)"/><rect x="180.0" y="21.7" width="2.2" height="17.0" fill="var(--s2)"/><rect x="183.0" y="21.7" width="2.2" height="28.6" fill="var(--s2)"/><rect x="186.0" y="21.7" width="2.2" height="27.1" fill="var(--s2)"/><rect x="189.0" y="13.5" width="2.2" height="8.3" fill="var(--accent)"/><rect x="192.0" y="8.3" width="2.2" height="13.4" fill="var(--accent)"/><rect x="195.0" y="8.8" width="2.2" height="13.0" fill="var(--accent)"/><rect x="198.0" y="9.9" width="2.2" height="11.8" fill="var(--accent)"/><rect x="201.0" y="15.0" width="2.2" height="6.8" fill="var(--accent)"/><rect x="204.0" y="11.1" width="2.2" height="10.7" fill="var(--accent)"/><rect x="207.0" y="12.1" width="2.2" height="9.6" fill="var(--accent)"/><rect x="210.0" y="17.4" width="2.2" height="4.3" fill="var(--accent)"/><rect x="213.0" y="15.9" width="2.2" height="5.9" fill="var(--accent)"/><rect x="216.0" y="14.0" width="2.2" height="7.8" fill="var(--accent)"/><rect x="219.0" y="14.7" width="2.2" height="7.0" fill="var(--accent)"/><rect x="222.0" y="15.6" width="2.2" height="6.1" fill="var(--accent)"/><rect x="225.0" y="16.0" width="2.2" height="5.7" fill="var(--accent)"/><rect x="228.0" y="16.8" width="2.2" height="4.9" fill="var(--accent)"/><rect x="231.0" y="17.1" width="2.2" height="4.6" fill="var(--accent)"/><rect x="234.0" y="21.7" width="2.2" height="22.9" fill="var(--s2)"/><rect x="237.0" y="21.7" width="2.2" height="25.2" fill="var(--s2)"/><rect x="240.0" y="21.7" width="2.2" height="24.7" fill="var(--s2)"/><rect x="243.0" y="21.7" width="2.2" height="28.1" fill="var(--s2)"/><rect x="246.0" y="21.7" width="2.2" height="29.7" fill="var(--s2)"/><rect x="249.0" y="21.7" width="2.2" height="25.5" fill="var(--s2)"/><rect x="252.0" y="21.7" width="2.2" height="29.0" fill="var(--s2)"/><rect x="255.0" y="21.7" width="2.2" height="29.9" fill="var(--s2)"/><rect x="258.0" y="21.7" width="2.2" height="23.3" fill="var(--s2)"/><rect x="261.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="264.0" y="16.8" width="2.2" height="5.0" fill="var(--accent)"/><rect x="267.0" y="17.0" width="2.2" height="4.7" fill="var(--accent)"/><rect x="270.0" y="21.7" width="2.2" height="2.3" fill="var(--s2)"/><rect x="273.0" y="17.3" width="2.2" height="4.4" fill="var(--accent)"/><rect x="276.0" y="13.8" width="2.2" height="8.0" fill="var(--accent)"/><rect x="279.0" y="20.1" width="2.2" height="1.7" fill="var(--accent)"/><rect x="282.0" y="21.7" width="2.2" height="0.8" fill="var(--s2)"/><rect x="285.0" y="13.4" width="2.2" height="8.3" fill="var(--accent)"/><rect x="288.0" y="16.9" width="2.2" height="4.9" fill="var(--accent)"/><rect x="291.0" y="16.7" width="2.2" height="5.1" fill="var(--accent)"/><rect x="294.0" y="17.2" width="2.2" height="4.6" fill="var(--accent)"/><rect x="297.0" y="21.7" width="2.2" height="0.8" fill="var(--accent)"/><line x1="0" x2="300" y1="21.7" y2="21.7" stroke="var(--ink-3)" stroke-width="0.8"/></svg><figcaption style="font-size:0.82rem;color:var(--ink-3);line-height:1.4">Example: BTC neutral ±10%, 3x, 100 bots of 30 days. 58% win; typical +3.7%; worst 10%, −22.6%.</figcaption></figure>
+        <a href="/en/simulator/">Try the simulator →</a>
+      </div>
+      <div class="feature">
+        <span class="tag">During · In development</span>
+        <h3>A warning before it’s too late</h3>
+        <p>Alerts when the price nears the edge of your range or your liquidation price, or when funding is eating your profit. No API keys: the bot’s parameters are enough.</p>
+        <a href="#waitlist-signup">Try them free in the beta →</a>
+      </div>
+      <div class="feature">
+        <span class="tag">After · Free, Pionex</span>
+        <h3>Where your money went</h3>
+        <p>Upload your Pionex history and the analyzer rebuilds every bot: what you really earned, how much went to fees and funding, and which ones were liquidated. The file never leaves your browser.</p>
+        <a href="/en/analyzer/">Analyze my bots →</a>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-proof">
+    <p class="eyebrow">Why you can trust the numbers</p>
+    <h2 id="h-proof" class="read">Checked against 33 real Pionex bots</h2>
+    <p class="read" style="color:var(--ink-2)">We rebuilt 33 real futures grids from their order history and replayed them in GridReplay. This is how close the simulation came to what really happened (<a href="/en/validation/">see all 45 bots one by one</a>):</p>
+    <div class="proof">
+      <div><b>96.6%</b><span>of orders match on level and side (median).</span></div>
+      <div><b>30 / 33</b><span>bots with a net result within ±5% (or ±1 USDT) of the real one.</span></div>
+      <div><b>3 / 3</b><span>liquidations reproduced.</span></div>
+    </div>
+    <div class="report">
+      <div style="display:grid;gap:0.4rem">
+        <h3>Report: we put Pionex’s AI agents to the test</h3>
+        <p>We applied the method suggested by their assistant Pai 200 times and asked their agent Quant how it runs backtests. Data, charts and methodology.</p>
+      </div>
+      <a class="btn" href="/en/reports/pionex-ai/">Read the report</a>
+    </div>
+    <div class="report">
+      <div style="display:grid;gap:0.4rem">
+        <h3>Check it against your own bots</h3>
+        <p>Upload your Pionex history and see, bot by bot, what you earned, what you paid in fees and funding, and whether GridReplay reproduces your orders. Free, no sign-up, and the file never leaves your browser.</p>
+      </div>
+      <a class="btn" href="/en/analyzer/">Analyze my bots</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-no" class="read">
+    <p class="eyebrow">What it doesn’t do</p>
+    <h2 id="h-no">A tool, not a signal seller</h2>
+    <ul class="nots">
+      <li>It doesn’t tell you what to buy or when. You choose the configuration and GridReplay simulates it.</li>
+      <li>It doesn’t trade for you or touch your money.</li>
+      <li>It doesn’t ask for your API keys or access to your exchange account.</li>
+      <li>It doesn’t hide bad results: every simulation is compared with buy and hold, and the exchange links that fund us are always labelled as affiliate links.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-about" class="read">
+    <p class="eyebrow">Who’s behind it</p>
+    <h2 id="h-about">One person, not a fund or an exchange</h2>
+    <div class="about">
+      <p>GridReplay is built by Alejandro Rincón Rodríguez, from Spain. It started as a tool to review Alejandro’s own grid bots: the Pionex validation on this site uses that real account history, wins and liquidations included.</p>
+      <p>GridReplay isn’t paid by any exchange to recommend anything and doesn’t manage anyone’s money. Questions? Write to <a href="mailto:contact@gridreplay.com">contact@gridreplay.com</a> and Alejandro will answer personally.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-faq" class="read">
+    <p class="eyebrow">FAQ</p>
+    <h2 id="h-faq">Worth knowing before you sign up</h2>
+    <div class="faq">
+      <details>
+        <summary>How do I know the simulations match reality?</summary>
+        <p>Because we test against real bots and publish every result, order by order: 45 futures grids from a real Pionex account, liquidations included. It’s all on the <a href="/en/validation/">validation page</a>, including the bots that deviate and the ones we left out. Before launch we’ll extend it with bots from more users.</p>
+      </details>
+      <details>
+        <summary>Do I have to share my API keys or account access?</summary>
+        <p>No. Simulating and alerts only need the bot’s parameters. To analyze past bots you use the history your exchange lets you download, and it’s processed in your browser. GridReplay will never be able to trade or move your money.</p>
+      </details>
+      <details>
+        <summary>Will it tell me which bot to create or when to enter?</summary>
+        <p>No. GridReplay is a simulation tool: you choose the configuration and see what would have happened. We don’t give signals or investment recommendations, and past results don’t guarantee future ones.</p>
+      </details>
+      <details>
+        <summary>Which exchanges are supported?</summary>
+        <p>Simulations use real Binance prices and the fees of Pionex, Binance, Bybit or KuCoin. History analysis starts with Pionex; the waitlist decides which exchange comes next.</p>
+      </details>
+      <details>
+        <summary>Is it free? How is it funded?</summary>
+        <p>Yes, it’s free: the simulator, the analyzer and the tools still to come. GridReplay is funded by affiliate links to exchanges: if you open your account or create your bot through them, the exchange pays us part of the fees it earns, at no extra cost to you.</p>
+        <p>Affiliate links are always labelled as such and don’t affect results: the simulator gives exactly the same answer whether or not you use a link, and we don’t recommend any exchange based on what it pays.</p>
+      </details>
+      <details>
+        <summary>What do you do with my email?</summary>
+        <p>We only use it to tell you about what’s new (alerts and upcoming tools). We don’t sell or share it, and you can unsubscribe at any time. Details are in the <a href="/en/privacy/">privacy policy</a>.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="waitlist-signup" class="signup" aria-labelledby="h-lista">
+    <p class="eyebrow">Updates</p>
+    <h2 id="h-lista">Join the waitlist</h2>
+    <p class="read" style="color:var(--ink-2)">We’ll let you know when alerts and the next tools arrive, all free. And if you tell us what you want first, we’ll take it into account.</p>
+    <form id="waitlist" data-endpoint="https://gridreplay.pages.dev/api/waitlist" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@email.com">
+      </div>
+      <div class="field">
+        <label for="exchange">Where do you run your grid bots?</label>
+        <select id="exchange" name="exchange" required>
+          <option value="" selected disabled>Choose one</option>
+          <option value="pionex">Pionex</option>
+          <option value="binance">Binance</option>
+          <option value="bybit">Bybit</option>
+          <option value="kucoin">KuCoin</option>
+          <option value="otro">Another exchange</option>
+          <option value="ninguno">I don’t use grid bots yet</option>
+        </select>
+      </div>
+      <fieldset>
+        <legend>What would you like us to add first? (optional)</legend>
+        <div class="choices">
+          <label><input type="checkbox" name="wants" value="alertas"> Alerts for my bots</label>
+          <label><input type="checkbox" name="wants" value="comparar"> Compare setups</label>
+          <label><input type="checkbox" name="wants" value="ranking"> Ranking by pair</label>
+          <label><input type="checkbox" name="wants" value="score"> Daily market score for grids</label>
+          <label><input type="checkbox" name="wants" value="analizador"> The analyzer for my exchange</label>
+        </div>
+        <p class="hint">Pick as many as you like. It helps us decide what to build first.</p>
+      </fieldset>
+      <label class="consent" for="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <span>I agree that GridReplay may store my email to notify me about updates, as described in the <a href="/en/privacy/">privacy policy</a>. I can unsubscribe at any time.</span>
+      </label>
+      <div hidden aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <div><button class="btn" type="submit" id="submit">Join</button></div>
+      <p class="msg" id="form-msg" role="status" hidden></p>
+    </form>
+  </section>
+
+  <footer>
+    <nav aria-label="Legal">
+      <a href="/en/privacy/">Privacy policy</a>
+      <a href="/en/simulator/">Simulator</a>
+      <a href="/en/analyzer/">Bot analyzer</a>
+      <a href="/en/validation/">Validation</a>
+      <a href="/en/reports/pionex-ai/">Report on Pionex’s AI agents</a>
+      <a href="/" hreflang="es" lang="es">Español</a>
+    </nav>
+    <p>GridReplay simulates results on historical data. Past performance does not guarantee future results. Nothing it shows is financial advice or an investment recommendation.</p>
+    <p>GridReplay is independent and not affiliated with Pionex, Binance or any other exchange. All names mentioned are trademarks of their respective owners.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("hero-data").textContent);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent, text) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    parent.appendChild(n);
+    return n;
+  };
+  const fmt = (v, d = 1, sign = true) => {
+    const s = Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+    return (v < 0 ? "−" : sign && v > 0 ? "+" : "") + s;
+  };
+  const k = v => (v / 1000).toLocaleString("en-US", { maximumFractionDigits: 1 }) + "k";
+
+  // Repetición del grid
+  const svg = document.getElementById("replay");
+  const P = D.path, C = D.cfg, W = 960, H = 320, L = 8, R = 92, T = 10, B = 24;
+  const lo = 104000, hi = 121000;
+  const y = v => T + (H - T - B) * (hi - v) / (hi - lo);
+  const hours = P.length * D.step_h;
+  const x = hrs => L + (W - L - R) * hrs / hours;
+  const levels = Array.from({ length: C.grids + 1 }, (_, i) => C.lower + (C.upper - C.lower) * i / C.grids);
+  levels.forEach((v, i) => el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--rule)", "stroke-width": (i === 0 || i === C.grids) ? 1.5 : 0.75 }, svg));
+  let band = "", line = "";
+  P.forEach((p, i) => { band += (i ? "L" : "M") + x(i * D.step_h).toFixed(1) + " " + y(p[1]).toFixed(1); });
+  for (let i = P.length - 1; i >= 0; i--) band += "L" + x(i * D.step_h).toFixed(1) + " " + y(P[i][0]).toFixed(1);
+  el("path", { d: band + "Z", fill: "var(--ink-3)", "fill-opacity": 0.1 }, svg);
+  P.forEach((p, i) => { line += (i ? "L" : "M") + x(i * D.step_h).toFixed(1) + " " + y(p[2]).toFixed(1); });
+  const path = el("path", { d: line, fill: "none", stroke: "var(--ink-2)", "stroke-width": 1.5, "stroke-linejoin": "round", class: "draw" }, svg);
+  try { path.style.setProperty("--len", path.getTotalLength()); } catch (e) {}
+  D.fills.forEach(([h, side, price]) => {
+    const c = el("circle", { cx: x(h).toFixed(1), cy: y(price).toFixed(1), r: 3, fill: side === "b" ? "var(--s1)" : "var(--s2)", "fill-opacity": 0.9, class: "fill-dot" }, svg);
+    c.style.setProperty("--t", (h / hours).toFixed(3));
+  });
+  [[C.upper, k(C.upper) + " top", "lbl-strong"], [112500, k(112500)], [C.lower, k(C.lower) + " bottom", "lbl-strong"]].forEach(([v, t, cls]) =>
+    el("text", { x: W - R + 8, y: y(v) + 4, class: cls || "lbl" }, svg, t));
+  [["Sep 1", 0, "start"], ["Sep 15", 14 * 24, "middle"], ["Sep 30", hours, "end"]].forEach(([t, h, a]) =>
+    el("text", { x: x(h), y: H - 6, class: "lbl", "text-anchor": a }, svg, t));
+
+  const r = D.result;
+  document.getElementById("cfg").textContent =
+    `Range ${k(C.lower)}–${k(C.upper)} · ${C.grids} grids · 1,000 USDT · fee ${fmt(C.fee, 2, false)}%`;
+  const stats = [
+    [fmt(r.total) + "%", "bot result"],
+    [fmt(r.grid) + "%", "earned by the grid"],
+    [fmt(r.bh) + "%", "buy and hold BTC"],
+    [String(r.cycles), "buy-sell cycles"],
+    [fmt(r.dd, 1, false) + "%", "max drawdown"]
+  ];
+  const box = document.getElementById("stats");
+  stats.forEach(([v, t]) => { const d = document.createElement("div"); d.className = "stat"; d.innerHTML = `<b>${v}</b><span>${t}</span>`; box.appendChild(d); });
+  document.getElementById("verdict").textContent =
+    `The bot completed ${r.cycles} cycles and made money, but this month simply holding BTC would have done better (${fmt(r.bh)}% vs ${fmt(r.total)}%). And that’s just one month: the simulator shows you what would have happened in 100.`;
+
+  // Lista de espera
+  const form = document.getElementById("waitlist"), msg = document.getElementById("form-msg"), btn = document.getElementById("submit");
+  const say = (text, kind) => { msg.textContent = text; msg.className = "msg " + kind; msg.hidden = false; };
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say("Enter a valid email, for example name@gmail.com.", "err");
+    if (!form.exchange.value) return say("Choose where you run your grid bots.", "err");
+    if (!form.consent.checked) return say("To join, please accept the privacy policy.", "err");
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) return say("Preview: the form isn’t connected yet, so nothing was saved.", "ok");
+    btn.disabled = true;
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, exchange: form.exchange.value, wants: [...form.querySelectorAll("input[name=wants]:checked")].map(i => i.value), consent: true, source: location.pathname, website: form.website.value })
+      });
+      if (!res.ok) throw new Error(res.status);
+      grEvent("waitlist");
+      form.reset();
+      say("You’re on the list. We’ll email you when there’s news.", "ok");
+    } catch (err) {
+      say("Something went wrong. Please try again in a few minutes.", "err");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/en/analyzer/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/analizador/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/analyzer/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Pionex Bot Analyzer">
+<meta property="og:description" content="Upload your Pionex history and see, bot by bot, what you earned, what you paid in fees and funding, and whether GridReplay reproduces every order. Free, and the file never leaves your browser.">
+<meta property="og:url" content="https://gridreplay.com/en/analyzer/">
+<meta property="og:image" content="https://gridreplay.com/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-en.png">
+<title>Pionex Bot Analyzer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Upload your Pionex history and see, bot by bot, what you earned, what you paid in fees and funding, and whether GridReplay reproduces every order. Free, and the file never leaves your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: columna de lectura (~68ch) con figuras y tablas que se ensanchan hasta 960px. Misma base que la página de validación. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7;
+  --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.kpi { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.kpi b { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+.kpi .src { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2; }
+.table-wrap { overflow-x: auto; min-width: 0; max-height: 34rem; overflow-y: auto; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.45rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { position: sticky; top: 0; background: var(--bg); font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+tr.out td { color: var(--ink-3); }
+.pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
+.pill.ok { border-color: var(--accent); color: var(--accent); }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+</style>
+<style>
+/* Analizador: pasos numerados, zona para soltar el archivo, progreso y resultados. Generado por make_pages.py. */
+.promises { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.promises li { font: 500 0.8rem/1 var(--font-data); padding: 0.45rem 0.7rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; }
+.vote { display: grid; gap: 0.6rem; background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; font-size: 0.95rem; color: var(--ink-2); }
+.vote div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.vote button { font: 500 0.85rem/1 var(--font-body); padding: 0.5rem 0.8rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
+.vote button:disabled { opacity: .5; cursor: default; }
+ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; color: var(--ink-2); }
+ol.steps b { color: var(--ink); font-weight: 600; }
+.drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
+.drop b { font: 600 1.1rem/1.3 var(--font-body); }
+.drop span { font-size: 0.92rem; color: var(--ink-3); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.status { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.2rem; }
+.status p { color: var(--ink-2); }
+.bar { height: 6px; background: var(--band); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.status.err { border-color: var(--s2); }
+.status.err p:first-child { color: var(--s2); font-weight: 600; }
+.pos { color: var(--accent); }
+.neg { color: var(--s2); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+button.btn { border: 0; cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button.btn:disabled { opacity: .55; cursor: default; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; }
+details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); border-radius: 6px; padding: 0.8rem; overflow-x: auto; max-height: 16rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><a class="home" href="/en/">← GridReplay</a> <a class="home" href="/analizador/" hreflang="es" lang="es" style="margin-left:1rem">ES</a></div>
+    <p class="eyebrow">Free analyzer · Pionex futures</p>
+    <h1>Analyze your Pionex grid bots</h1>
+    <p class="dek read">Upload the history Pionex lets you download and see, bot by bot, what you really earned, how much went to fees and funding, and whether GridReplay reproduces every one of your orders.</p>
+    <ul class="promises">
+      <li>Your file never leaves your browser</li>
+      <li>No sign-up</li>
+      <li>No API keys</li>
+      <li>Free</li>
+    </ul>
+  </header>
+
+  <section class="read" aria-label="Other exchanges">
+    <div class="vote">
+      <p>Are your bots on another exchange? Vote for it and we’ll add exchanges by demand. Meanwhile, the <a href="/en/simulator/">simulator</a> works for any exchange.</p>
+      <div><button type="button" data-want="binance">Binance</button><button type="button" data-want="bybit">Bybit</button><button type="button" data-want="okx">OKX</button><button type="button" data-want="bitget">Bitget</button><button type="button" data-want="kucoin">KuCoin</button><button type="button" data-want="otro">Other</button></div>
+      <p class="meta" id="vote-msg" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-1" class="read">
+    <p class="eyebrow">Step 1</p>
+    <h2 id="h-1">Download your Pionex history</h2>
+    <ol class="steps">
+      <li>Go to <b>pionex.com</b> on a computer and sign in.</li>
+      <li>Click your avatar (top right) → <b>Dashboard</b> → in the left menu, <b>Transaction History</b>.</li>
+      <li>Pick the period you want to analyze (from your first bot until today) and confirm the export.</li>
+      <li>Pionex prepares the file and emails you, usually within minutes (check spam too). Download the <b>.zip</b> without opening or editing it. The analysis here is instant.</li>
+    </ol>
+    <p class="note">Never run bots on Pionex? Then there’s nothing to analyze yet: join the <a href="/en/#waitlist-signup">waitlist</a> to simulate any grid without needing a history.</p>
+  </section>
+
+  <section aria-labelledby="h-2" class="read">
+    <p class="eyebrow">Step 2</p>
+    <h2 id="h-2">Drop the .zip here</h2>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept=".zip,application/zip">
+      <b>Drag the file here or click to choose it</b>
+      <span>pionex_txn_….zip · analyzed on this device</span>
+    </label>
+    <div class="status" id="status" hidden aria-live="polite">
+      <p id="st-main"></p>
+      <div class="bar"><i id="st-bar"></i></div>
+      <p class="meta" id="st-sub"></p>
+    </div>
+    <p class="meta">The first time, your browser downloads the calculation engine (about 15 MB) and Binance’s public prices for your bots’ dates. It can take a minute or two; keep the tab open.</p>
+  </section>
+
+  <section aria-labelledby="h-res" id="results" hidden>
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Results</p>
+      <h2 id="h-res">Your bots, one by one</h2>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Grid bots</span><b id="k-bots">—</b><p id="k-bots-p"></p></div>
+      <div class="kpi"><span class="src">Net result</span><b id="k-net">—</b><p>USDT across all bots: profit minus fees, plus or minus funding.</p></div>
+      <div class="kpi"><span class="src">Fees</span><b id="k-fees">—</b><p id="k-fees-p"></p></div>
+      <div class="kpi"><span class="src">Funding</span><b id="k-fund">—</b><p>USDT received (+) or paid (−) for holding open positions.</p></div>
+      <div class="kpi"><span class="src">Accuracy on your account</span><b id="k-match">—</b><p id="k-match-p"></p></div>
+    </div>
+    <div class="table-wrap">
+      <table id="t-bots">
+        <thead><tr><th>Pair</th><th>Type</th><th>Start</th><th>Days</th><th>Grids</th><th>Orders</th><th>Real net</th><th>Fees</th><th>Funding</th><th>Simulated net</th><th>Match</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="meta read">Amounts in USDT. Futures grids with at least 20 orders only. “Modified”: the bot’s range or investment changed while running, so it can’t be simulated as a single grid. The simulation uses Binance prices while Pionex aggregates several markets, so small differences are normal.</p>
+    <div class="row-actions" id="useful">
+      <span>Was this useful?</span>
+      <button class="btn ghost" type="button" data-useful="yes">Yes</button>
+      <button class="btn ghost" type="button" data-useful="no">No</button>
+      <span class="meta" id="useful-msg" aria-live="polite"></span>
+    </div>
+    <div class="row-actions">
+      <button class="btn ghost" id="csv" type="button">Download results (CSV)</button>
+      <button class="btn ghost" id="again" type="button">Analyze another file</button>
+    </div>
+
+    <div class="cta read" id="share-box">
+      <h2>Help us validate GridReplay</h2>
+      <p>If you share your results, they’re added anonymously to the <a href="/en/validation/">validation page</a>. Only percentages are sent: never amounts, exact dates or anything that identifies you. This is exactly what would be sent:</p>
+      <details><summary>See the data</summary><pre id="share-preview"></pre></details>
+      <div class="row-actions">
+        <button class="btn" id="share" type="button">Share anonymous results</button>
+        <span class="meta" id="share-msg" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="cta read">
+      <h2>What if you’d used a different range?</h2>
+      <p>Try it in the simulator: your setup across up to 100 periods from the past year, with fees, funding and liquidation. You’ll see how often it wins and how much it loses when things go wrong. Free.</p>
+      <a class="btn" href="/en/simulator/">Open the simulator</a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-priv" class="read">
+    <p class="eyebrow">Privacy</p>
+    <h2 id="h-priv">What happens to your file</h2>
+    <ul class="plain">
+      <li>It’s read and analyzed inside your browser. It isn’t uploaded to GridReplay or anywhere else, and it’s gone when you close the tab.</li>
+      <li>Your browser downloads the calculation engine (Pyodide) from jsDelivr and public prices from Binance, as when visiting any website: they see your IP, not your history.</li>
+      <li>Only if you press “Share” are the anonymous percentages (which you can inspect first) sent to GridReplay. More in the <a href="/en/privacy/">privacy policy</a>.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>GridReplay is independent and not affiliated with Pionex, Binance or any other exchange. Results are for information only and are not financial advice.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const ES = document.documentElement.lang !== "en";
+  const L = ES ? "es-ES" : "en-US";
+  const P = ES ? " %" : "%";
+  const T = ES ? {
+    engine: "Cargando el motor de cálculo…", reading: "Leyendo tu historial…", prices: "Descargando precios de Binance y simulando tus bots…",
+    bot: (d, t, s) => `Bot ${d} de ${t} simulado (${s})`, dl: (f, mb) => `${f} archivos de precios · ${mb} MB`,
+    errTitle: "No se ha podido analizar el archivo", notExport: "No parece un export de Pionex. Sube el .zip tal como lo descargaste (con raw-trading-details.csv y position_futures.csv dentro).",
+    noBots: "No hemos encontrado grids de futuros con al menos 20 órdenes en este historial. Por ahora el analizador solo cubre grids de futuros.",
+    retry: "Revisa tu conexión y vuelve a intentarlo. Si sigue fallando, escríbenos a contact@gridreplay.com.",
+    bots: (n, m) => `analizados${m ? `, ${m} modificados en marcha (no comparables)` : ""}.`,
+    fees: (pct) => pct == null ? "USDT pagados en comisiones." : `USDT pagados: el ${pct}${P} de tu beneficio bruto.`,
+    match: (n) => `de tus órdenes reproducidas por nivel y lado, en ${n} bots comparables.`,
+    st: { mod: "modificado", nodata: "sin datos", err: "error", liq: "liquidado", ok: "✓ coincide", off: "desviado" },
+    thanksYes: "¡Gracias!", thanksNo: "Gracias. Si nos cuentas qué echas en falta en contact@gridreplay.com, lo tendremos en cuenta.",
+    shared: "¡Gracias! Tus resultados se sumarán a la página de validación.", shareErr: "No se ha podido enviar. Inténtalo de nuevo más tarde.",
+  } : {
+    engine: "Loading the calculation engine…", reading: "Reading your history…", prices: "Downloading Binance prices and simulating your bots…",
+    bot: (d, t, s) => `Bot ${d} of ${t} simulated (${s})`, dl: (f, mb) => `${f} price files · ${mb} MB`,
+    errTitle: "We couldn’t analyze the file", notExport: "This doesn’t look like a Pionex export. Upload the .zip exactly as downloaded (with raw-trading-details.csv and position_futures.csv inside).",
+    noBots: "We didn’t find any futures grids with at least 20 orders in this history. For now the analyzer only covers futures grids.",
+    retry: "Check your connection and try again. If it keeps failing, write to contact@gridreplay.com.",
+    bots: (n, m) => `analyzed${m ? `, ${m} modified while running (not comparable)` : ""}.`,
+    fees: (pct) => pct == null ? "USDT paid in fees." : `USDT paid: ${pct}${P} of your gross profit.`,
+    match: (n) => `of your orders reproduced by level and side, across ${n} comparable bots.`,
+    st: { mod: "modified", nodata: "no data", err: "error", liq: "liquidated", ok: "✓ matches", off: "deviates" },
+    thanksYes: "Thank you!", thanksNo: "Thanks. If you tell us what’s missing at contact@gridreplay.com, we’ll take it into account.",
+    shared: "Thank you! Your results will be added to the validation page.", shareErr: "Couldn’t send. Please try again later.",
+  };
+  const $ = (id) => document.getElementById(id);
+  const num = (v, d = 2, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  const cls = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
+
+  let worker = null, rows = [], share = [], fileBytes = null, engineReady = false;
+  function startWorker() {
+    if (worker) return worker;
+    worker = new Worker("/app/worker.js?v=d9a0da9ef7");
+    worker.onmessage = ({ data: m }) => {
+      if (m.type === "stage" && m.stage === "ready") engineReady = true;
+      else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
+      else if (m.type === "download") { $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString(L, { maximumFractionDigits: 1 })); if ($("st-main").textContent === T.reading) $("st-main").textContent = T.prices; }
+      else if (m.type === "progress") say(T.bot(m.done, m.total, m.symbol), 0.05 + 0.95 * m.done / m.total);
+      else if (m.type === "done") show(m);
+      else if (m.type === "error") { if (!m.code) grEvent("analyzer_crash"); fail(m.code === "not_export" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
+    };
+    worker.onerror = (e) => { grEvent("analyzer_crash"); fail(`${T.retry} (${e.message})`); };
+    return worker;
+  }
+  // Empieza a cargar el motor en cuanto se ve la zona de subida, para ganar tiempo.
+  new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { startWorker().postMessage({ type: "warmup" }); ob.disconnect(); } }).observe($("drop"));
+
+  function say(main, frac, sub) {
+    const st = $("status"); st.hidden = false; st.classList.remove("err");
+    $("st-main").textContent = main;
+    if (frac != null) $("st-bar").style.width = `${Math.round(frac * 100)}%`;
+    if (sub != null) $("st-sub").textContent = sub;
+  }
+  function fail(msg) {
+    const st = $("status"); st.hidden = false; st.classList.add("err");
+    $("st-main").textContent = T.errTitle; $("st-sub").textContent = msg; $("st-bar").style.width = "0";
+    $("drop").hidden = false; fileBytes = null;
+  }
+  async function analyze(file) {
+    if (!file) return;
+    $("results").hidden = true; $("drop").hidden = true;
+    say(engineReady ? T.reading : T.engine, 0.01, "");
+    fileBytes = await file.arrayBuffer();
+    grEvent("analyzer_run");
+    startWorker().postMessage({ type: "analyze", file: fileBytes }, [fileBytes]);
+  }
+
+  function show(m) {
+    grEvent("analyzer_done");
+    rows = m.rows; share = m.share;
+    if (!rows.length) return fail(T.noBots);
+    $("status").hidden = true;
+    const ok = rows.filter(r => r.match != null && !r.modified);
+    const sum = (k, rs = rows) => rs.reduce((s, r) => s + (r[k] || 0), 0);
+    const gross = sum("real_gross"), fees = sum("real_fees"), net = sum("real_net");
+    $("k-bots").textContent = rows.length;
+    $("k-bots-p").textContent = T.bots(rows.length, rows.filter(r => r.modified).length);
+    $("k-net").textContent = num(net, 2, true); $("k-net").className = cls(net);
+    $("k-fees").textContent = num(fees);
+    $("k-fees-p").textContent = T.fees(gross > 0 ? num(100 * fees / gross, 1) : null);
+    const fund = sum("real_funding"); $("k-fund").textContent = num(fund, 2, true); $("k-fund").className = cls(fund);
+    const fills = sum("real_fills", ok);
+    const matched = ok.reduce((s, r) => s + r.match * r.real_fills, 0);
+    $("k-match").textContent = fills ? num(matched / fills, 1) + P : "—";
+    $("k-match-p").textContent = T.match(ok.length);
+
+    const tb = document.querySelector("#t-bots tbody"); tb.textContent = "";
+    for (const r of rows) {
+      const tr = document.createElement("tr"); if (r.modified || r.error) tr.className = "out";
+      const status = r.modified ? T.st.mod : r.error === "no_data" ? T.st.nodata : r.error ? T.st.err : (r.liquidated ? T.st.liq + " · " : "") + (r.within ? T.st.ok : T.st.off);
+      const cells = [
+        [r.symbol.replace(/USDT$/, "/USDT")], [r.direction], [r.start.slice(0, 10)], [num(r.days, 1)], [r.grids], [r.real_fills.toLocaleString(L)],
+        [num(r.real_net, 2, true), cls(r.real_net)], [num(r.real_fees)], [num(r.real_funding, 2, true)],
+        [r.sim_net == null ? "—" : num(r.sim_net, 2, true)], [r.match == null ? "—" : num(r.match, 1) + P],
+      ];
+      for (const [text, c] of cells) { const td = document.createElement("td"); td.textContent = text; if (c) td.className = c; tr.appendChild(td); }
+      const td = document.createElement("td"), s = document.createElement("span");
+      s.className = "pill" + (!r.modified && r.within ? " ok" : ""); s.textContent = status; td.appendChild(s); tr.appendChild(td);
+      tb.appendChild(tr);
+    }
+    $("share-preview").textContent = JSON.stringify(share, null, 1);
+    $("share-box").hidden = !share.length;
+    $("share").disabled = false; $("share-msg").textContent = "";
+    $("results").hidden = false; $("drop").hidden = false;
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ¿Útil? Una respuesta por resultado, contada de forma anónima.
+  document.querySelectorAll("[data-useful]").forEach(b => b.addEventListener("click", () => {
+    grEvent("useful_" + b.dataset.useful);
+    document.querySelectorAll("[data-useful]").forEach(x => { x.disabled = true; });
+    $("useful-msg").textContent = b.dataset.useful === "yes" ? T.thanksYes : T.thanksNo;
+  }));
+
+  // Votos de exchange: cuentan de forma anónima para decidir cuál añadir después.
+  document.querySelectorAll("[data-want]").forEach(b => b.addEventListener("click", () => {
+    grEvent("want_" + b.dataset.want);
+    document.querySelectorAll("[data-want]").forEach(x => { x.disabled = true; });
+    $("vote-msg").textContent = ES ? "¡Anotado! Si quieres que sea de los primeros en llegar, envíanos un export de ejemplo a contact@gridreplay.com." : "Noted! If you want it to be among the first, send us a sample export at contact@gridreplay.com.";
+  }));
+
+  $("file").addEventListener("change", (e) => analyze(e.target.files[0]));
+  const drop = $("drop");
+  ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => drop.addEventListener(t, () => drop.classList.remove("over")));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); analyze(e.dataTransfer.files[0]); });
+  $("again").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
+
+  $("csv").addEventListener("click", () => {
+    const cols = ["symbol", "direction", "mode", "start", "days", "lower", "upper", "grids", "real_fills", "real_net", "real_gross", "real_fees", "real_funding", "sim_fills", "sim_net", "sim_fees", "sim_funding", "grid_profit", "round_trips", "match", "net_diff", "within", "modified", "liquidated", "error"];
+    const csv = [cols.join(",")].concat(rows.map(r => cols.map(c => r[c] == null ? "" : JSON.stringify(r[c])).join(","))).join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    a.download = "gridreplay-pionex.csv"; a.click(); URL.revokeObjectURL(a.href);
+  });
+
+  $("share").addEventListener("click", async () => {
+    const btn = $("share"); btn.disabled = true;
+    try {
+      const resp = await fetch("https://gridreplay.pages.dev/api/share", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ rows: share, lang: ES ? "es" : "en" }) });
+      if (!resp.ok) throw new Error(resp.status);
+      grEvent("share");
+      $("share-msg").textContent = T.shared;
+    } catch { btn.disabled = false; $("share-msg").textContent = T.shareErr; }
+  });
+})();
+</script>
+</body>
+</html>

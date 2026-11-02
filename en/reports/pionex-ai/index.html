@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/en/reports/pionex-ai/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/informes/ias-de-pionex/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/reports/pionex-ai/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/reports/pionex-ai/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Pionex AI Tested">
+<meta property="og:description" content="Independent GridReplay report: what Pionex’s AI agents suggest for grid bots, and what minute-by-minute data says about it.">
+<meta property="og:url" content="https://gridreplay.com/en/reports/pionex-ai/">
+<meta property="og:image" content="https://gridreplay.com/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-en.png">
+<title>Pionex AI Tested</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Independent GridReplay report: what Pionex’s AI agents suggest for grid bots, and what minute-by-minute data says about it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: una columna de lectura (~68ch) con figuras que se ensanchan hasta 960px; cabecera con la escalera de niveles real. */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --ink: #11151b;
+  --ink-2: #48505d;
+  --ink-3: #737c89;
+  --rule: #dde1e7;
+  --accent: #0d6a65;
+  --band: #e9eef5;
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch;
+  --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4.1rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+h3 { font-size: 1.15rem; font-weight: 700; font-stretch: 90%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow {
+  font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent);
+}
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+
+/* Cabecera: escalera de niveles */
+.ladder { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1rem 0.6rem; display: grid; gap: 0.4rem; }
+.ladder svg { width: 100%; height: auto; display: block; }
+.caption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+
+/* Hallazgos */
+.findings { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.finding { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.finding .big { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.finding p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+
+/* Tablas */
+.table-wrap { overflow-x: auto; min-width: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { padding: 0.5rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font: 500 0.74rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); }
+tr.em td { font-weight: 500; background: var(--band); }
+
+/* Figuras */
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.85rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.axis text, .lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.lbl-strong { fill: var(--ink); font: 500 11px var(--font-data); }
+.tip {
+  position: absolute; pointer-events: none; background: var(--ink); color: var(--bg);
+  font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2;
+}
+
+/* Cita / comparación */
+.compare th:not(:first-child), .compare td:not(:first-child) { text-align: center; }
+.yes { color: var(--accent); font-weight: 600; }
+.no { color: var(--ink-3); }
+blockquote { margin: 0; padding-left: 1rem; border-left: 2px solid var(--rule); color: var(--ink-2); font-style: italic; }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+@media (prefers-reduced-motion: no-preference) {
+  .path-draw { stroke-dasharray: var(--len); stroke-dashoffset: 0; animation: draw 1.6s ease-out both; }
+  @keyframes draw { from { stroke-dashoffset: var(--len); } to { stroke-dashoffset: 0; } }
+}
+</style>
+
+</head>
+<body>
+<script id="report-data" type="application/json">{"exact": [{"symbol": "SOLUSDT", "lower": 85, "upper": 125, "grids": 45, "stop": 80, "total": -6.39, "grid": 2.44, "position": -8.83, "bh": -19.77, "cycles": 141, "in_range": 100.0}, {"symbol": "NEARUSDT", "lower": 3.6, "upper": 6.0, "grids": 35, "stop": 3.3, "total": 2.07, "grid": 12.07, "position": -10.0, "bh": -16.98, "cycles": 292, "in_range": 100.0}], "walk": {"SOLUSDT": [{"start": "2024-10-30", "total": 1.49, "grid": 1.43, "bh": 32.35, "stopped": false, "lower_third": false}, {"start": "2024-11-06", "total": 1.76, "grid": 0.43, "bh": 41.46, "stopped": false, "lower_third": false}, {"start": "2024-11-13", "total": 3.6, "grid": 3.15, "bh": 7.19, "stopped": false, "lower_third": false}, {"start": "2024-11-20", "total": -0.1, "grid": 5.79, "bh": -18.48, "stopped": false, "lower_third": false}, {"start": "2024-11-27", "total": -2.68, "grid": 5.4, "bh": -18.35, "stopped": false, "lower_third": false}, {"start": "2024-12-04", "total": 1.33, "grid": 5.07, "bh": -10.99, "stopped": false, "lower_third": false}, {"start": "2024-12-11", "total": -4.98, "grid": 5.09, "bh": -13.46, "stopped": false, "lower_third": false}, {"start": "2024-12-18", "total": -14.01, "grid": 3.71, "bh": -5.43, "stopped": true, "lower_third": false}, {"start": "2024-12-25", "total": 16.38, "grid": 8.58, "bh": 28.36, "stopped": false, "lower_third": false}, {"start": "2025-01-01", "total": 15.75, "grid": 7.46, "bh": 25.82, "stopped": false, "lower_third": true}, {"start": "2025-01-08", "total": 5.01, "grid": 8.16, "bh": -6.29, "stopped": false, "lower_third": false}, {"start": "2025-01-15", "total": 9.11, "grid": 7.47, "bh": 3.51, "stopped": false, "lower_third": false}, {"start": "2025-01-22", "total": -12.04, "grid": 5.47, "bh": -29.73, "stopped": false, "lower_third": false}, {"start": "2025-01-29", "total": -23.45, "grid": 4.0, "bh": -39.39, "stopped": true, "lower_third": false}, {"start": "2025-02-05", "total": -21.11, "grid": 1.85, "bh": -30.68, "stopped": true, "lower_third": false}, {"start": "2025-02-12", "total": -19.59, "grid": 1.03, "bh": -37.71, "stopped": true, "lower_third": true}, {"start": "2025-02-19", "total": -13.78, "grid": 0.52, "bh": -24.68, "stopped": true, "lower_third": true}, {"start": "2025-02-26", "total": -12.86, "grid": 3.33, "bh": -4.14, "stopped": true, "lower_third": true}, {"start": "2025-03-05", "total": -10.27, "grid": 3.41, "bh": -19.12, "stopped": false, "lower_third": true}, {"start": "2025-03-12", "total": -15.29, "grid": 2.23, "bh": -10.05, "stopped": true, "lower_third": true}, {"start": "2025-03-19", "total": -16.08, "grid": 2.03, "bh": 7.53, "stopped": true, "lower_third": true}, {"start": "2025-03-26", "total": -23.82, "grid": 1.46, "bh": 6.15, "stopped": true, "lower_third": false}, {"start": "2025-04-02", "total": -18.2, "grid": 0.82, "bh": 19.02, "stopped": true, "lower_third": true}, {"start": "2025-04-09", "total": 15.0, "grid": 3.93, "bh": 55.96, "stopped": false, "lower_third": true}, {"start": "2025-04-16", "total": 4.67, "grid": 1.96, "bh": 34.08, "stopped": false, "lower_third": false}, {"start": "2025-04-23", "total": 1.26, "grid": 1.25, "bh": 20.71, "stopped": false, "lower_third": false}, {"start": "2025-04-30", "total": 1.24, "grid": 0.72, "bh": 13.89, "stopped": false, "lower_third": false}, {"start": "2025-05-07", "total": 0.53, "grid": 0.81, "bh": -1.82, "stopped": false, "lower_third": false}, {"start": "2025-05-14", "total": -0.29, "grid": 3.95, "bh": -17.15, "stopped": false, "lower_third": false}, {"start": "2025-05-21", "total": -1.15, "grid": 4.34, "bh": -12.83, "stopped": false, "lower_third": false}, {"start": "2025-05-28", "total": -7.21, "grid": 3.94, "bh": -21.35, "stopped": false, "lower_third": false}, {"start": "2025-06-04", "total": 3.19, "grid": 4.16, "bh": -1.87, "stopped": false, "lower_third": false}, {"start": "2025-06-11", "total": 3.82, "grid": 3.99, "bh": -0.52, "stopped": false, "lower_third": false}, {"start": "2025-06-18", "total": 11.18, "grid": 4.03, "bh": 19.11, "stopped": false, "lower_third": true}, {"start": "2025-06-25", "total": 8.46, "grid": 3.26, "bh": 25.25, "stopped": false, "lower_third": false}, {"start": "2025-07-02", "total": 4.48, "grid": 1.78, "bh": 17.2, "stopped": false, "lower_third": false}, {"start": "2025-07-09", "total": 3.83, "grid": 2.22, "bh": 15.55, "stopped": false, "lower_third": false}, {"start": "2025-07-16", "total": 1.37, "grid": 1.25, "bh": 17.32, "stopped": false, "lower_third": false}, {"start": "2025-07-23", "total": 2.21, "grid": 4.19, "bh": -12.4, "stopped": false, "lower_third": false}, {"start": "2025-07-30", "total": 7.6, "grid": 5.49, "bh": 18.1, "stopped": false, "lower_third": false}, {"start": "2025-08-06", "total": 11.76, "grid": 5.28, "bh": 23.24, "stopped": false, "lower_third": false}, {"start": "2025-08-13", "total": 5.89, "grid": 5.07, "bh": 19.21, "stopped": false, "lower_third": false}, {"start": "2025-08-20", "total": 8.19, "grid": 3.94, "bh": 40.38, "stopped": false, "lower_third": false}, {"start": "2025-08-27", "total": 2.2, "grid": 2.61, "bh": -1.64, "stopped": false, "lower_third": false}, {"start": "2025-09-03", "total": 2.54, "grid": 2.31, "bh": 11.92, "stopped": false, "lower_third": false}, {"start": "2025-09-10", "total": 2.01, "grid": 2.0, "bh": 1.66, "stopped": false, "lower_third": false}, {"start": "2025-09-17", "total": -3.07, "grid": 6.97, "bh": -22.03, "stopped": false, "lower_third": false}, {"start": "2025-09-24", "total": 1.3, "grid": 7.21, "bh": -10.33, "stopped": false, "lower_third": false}, {"start": "2025-10-01", "total": -0.3, "grid": 7.44, "bh": -11.54, "stopped": false, "lower_third": false}, {"start": "2025-10-08", "total": -13.2, "grid": 6.74, "bh": -29.45, "stopped": true, "lower_third": false}, {"start": "2025-10-15", "total": -18.56, "grid": 3.63, "bh": -28.55, "stopped": true, "lower_third": false}, {"start": "2025-10-22", "total": -15.05, "grid": 2.75, "bh": -28.02, "stopped": true, "lower_third": false}, {"start": "2025-10-29", "total": -18.2, "grid": 1.91, "bh": -27.49, "stopped": true, "lower_third": false}, {"start": "2025-11-05", "total": -13.28, "grid": 1.88, "bh": -10.38, "stopped": true, "lower_third": true}, {"start": "2025-11-12", "total": -14.09, "grid": 1.48, "bh": -11.83, "stopped": true, "lower_third": true}, {"start": "2025-11-19", "total": -7.77, "grid": 3.26, "bh": -15.03, "stopped": false, "lower_third": true}, {"start": "2025-11-26", "total": -7.05, "grid": 2.23, "bh": -13.64, "stopped": false, "lower_third": true}, {"start": "2025-12-03", "total": -2.86, "grid": 2.49, "bh": -8.53, "stopped": false, "lower_third": false}, {"start": "2025-12-10", "total": 3.17, "grid": 2.99, "bh": 0.31, "stopped": false, "lower_third": false}, {"start": "2025-12-17", "total": 7.75, "grid": 4.8, "bh": 10.2, "stopped": false, "lower_third": false}, {"start": "2025-12-24", "total": 5.21, "grid": 3.53, "bh": 3.54, "stopped": false, "lower_third": false}, {"start": "2025-12-31", "total": 0.21, "grid": 3.65, "bh": -5.81, "stopped": false, "lower_third": false}, {"start": "2026-01-07", "total": -16.68, "grid": 3.18, "bh": -44.49, "stopped": true, "lower_third": false}, {"start": "2026-01-14", "total": -19.28, "grid": 1.73, "bh": -46.15, "stopped": true, "lower_third": false}, {"start": "2026-01-21", "total": -14.25, "grid": 1.28, "bh": -34.46, "stopped": true, "lower_third": false}, {"start": "2026-01-28", "total": -16.47, "grid": 0.56, "bh": -32.48, "stopped": true, "lower_third": false}, {"start": "2026-02-04", "total": -12.33, "grid": 0.42, "bh": -9.36, "stopped": true, "lower_third": true}, {"start": "2026-02-11", "total": 4.74, "grid": 2.26, "bh": 4.59, "stopped": false, "lower_third": true}, {"start": "2026-02-18", "total": 4.64, "grid": 2.34, "bh": 4.41, "stopped": false, "lower_third": true}, {"start": "2026-02-25", "total": 7.64, "grid": 2.66, "bh": 9.49, "stopped": false, "lower_third": true}, {"start": "2026-03-04", "total": -1.43, "grid": 3.04, "bh": -9.29, "stopped": false, "lower_third": false}, {"start": "2026-03-11", "total": 3.4, "grid": 4.49, "bh": -3.02, "stopped": false, "lower_third": false}, {"start": "2026-03-18", "total": 2.25, "grid": 3.46, "bh": -5.92, "stopped": false, "lower_third": false}, {"start": "2026-03-25", "total": 1.39, "grid": 3.0, "bh": -5.2, "stopped": false, "lower_third": false}, {"start": "2026-04-01", "total": 3.09, "grid": 3.15, "bh": -0.17, "stopped": false, "lower_third": false}, {"start": "2026-04-08", "total": 3.75, "grid": 2.53, "bh": 3.29, "stopped": false, "lower_third": false}, {"start": "2026-04-15", "total": 5.88, "grid": 2.65, "bh": 10.01, "stopped": false, "lower_third": false}, {"start": "2026-04-22", "total": 2.57, "grid": 2.15, "bh": 1.48, "stopped": false, "lower_third": false}, {"start": "2026-04-29", "total": 1.62, "grid": 2.46, "bh": -2.37, "stopped": false, "lower_third": false}, {"start": "2026-05-06", "total": -13.69, "grid": 2.82, "bh": -20.22, "stopped": true, "lower_third": false}, {"start": "2026-05-13", "total": -16.85, "grid": 1.73, "bh": -29.04, "stopped": true, "lower_third": false}, {"start": "2026-05-20", "total": -13.28, "grid": 1.2, "bh": -17.35, "stopped": true, "lower_third": false}, {"start": "2026-05-27", "total": -13.58, "grid": 0.54, "bh": -19.16, "stopped": true, "lower_third": false}, {"start": "2026-06-03", "total": -12.91, "grid": 0.5, "bh": 8.7, "stopped": true, "lower_third": true}, {"start": "2026-06-10", "total": 12.5, "grid": 2.83, "bh": 20.06, "stopped": false, "lower_third": true}, {"start": "2026-06-17", "total": 4.42, "grid": 3.51, "bh": 2.38, "stopped": false, "lower_third": false}, {"start": "2026-06-24", "total": 6.71, "grid": 3.3, "bh": 8.81, "stopped": false, "lower_third": false}, {"start": "2026-07-01", "total": 2.74, "grid": 2.4, "bh": 1.09, "stopped": false, "lower_third": false}, {"start": "2026-07-08", "total": -1.14, "grid": 1.56, "bh": -9.82, "stopped": false, "lower_third": false}, {"start": "2026-07-15", "total": 0.94, "grid": 1.48, "bh": -2.09, "stopped": false, "lower_third": false}, {"start": "2026-07-22", "total": 2.4, "grid": 1.59, "bh": 12.14, "stopped": false, "lower_third": false}, {"start": "2026-07-29", "total": 4.94, "grid": 1.69, "bh": 47.75, "stopped": false, "lower_third": false}, {"start": "2026-08-05", "total": 4.37, "grid": 1.13, "bh": 40.85, "stopped": false, "lower_third": false}, {"start": "2026-08-12", "total": 0.81, "grid": 0.49, "bh": 29.25, "stopped": false, "lower_third": false}, {"start": "2026-08-19", "total": 0.29, "grid": 0.15, "bh": 31.85, "stopped": false, "lower_third": false}, {"start": "2026-08-26", "total": 2.28, "grid": 1.74, "bh": 21.1, "stopped": false, "lower_third": false}, {"start": "2026-09-02", "total": 2.9, "grid": 1.73, "bh": 18.34, "stopped": false, "lower_third": false}, {"start": "2026-09-09", "total": 1.84, "grid": 1.28, "bh": 5.99, "stopped": false, "lower_third": false}, {"start": "2026-09-16", "total": 3.18, "grid": 1.38, "bh": 8.78, "stopped": false, "lower_third": false}, {"start": "2026-09-23", "total": -0.34, "grid": 3.01, "bh": -12.63, "stopped": false, "lower_third": false}], "NEARUSDT": [{"start": "2024-10-30", "total": 16.77, "grid": 10.41, "bh": 57.99, "stopped": false, "lower_third": false}, {"start": "2024-11-06", "total": 16.71, "grid": 5.38, "bh": 99.82, "stopped": false, "lower_third": true}, {"start": "2024-11-13", "total": 4.76, "grid": 4.15, "bh": 29.39, "stopped": false, "lower_third": false}, {"start": "2024-11-20", "total": 2.14, "grid": 4.93, "bh": -10.09, "stopped": false, "lower_third": false}, {"start": "2024-11-27", "total": -0.37, "grid": 7.62, "bh": -22.01, "stopped": false, "lower_third": false}, {"start": "2024-12-04", "total": -1.13, "grid": 6.62, "bh": -26.31, "stopped": false, "lower_third": false}, {"start": "2024-12-11", "total": -8.03, "grid": 5.6, "bh": -22.56, "stopped": false, "lower_third": false}, {"start": "2024-12-18", "total": -17.55, "grid": 4.87, "bh": -19.21, "stopped": true, "lower_third": false}, {"start": "2024-12-25", "total": -2.03, "grid": 4.25, "bh": -10.35, "stopped": false, "lower_third": false}, {"start": "2025-01-01", "total": 0.29, "grid": 4.45, "bh": -6.34, "stopped": false, "lower_third": true}, {"start": "2025-01-08", "total": -17.07, "grid": 4.11, "bh": -41.43, "stopped": true, "lower_third": true}, {"start": "2025-01-15", "total": -15.73, "grid": 4.0, "bh": -33.23, "stopped": true, "lower_third": true}, {"start": "2025-01-22", "total": -19.56, "grid": 2.06, "bh": -34.01, "stopped": true, "lower_third": false}, {"start": "2025-01-29", "total": -11.36, "grid": 0.79, "bh": -28.64, "stopped": true, "lower_third": true}, {"start": "2025-02-05", "total": -1.88, "grid": 4.05, "bh": -10.0, "stopped": false, "lower_third": true}, {"start": "2025-02-12", "total": -15.8, "grid": 3.97, "bh": -19.72, "stopped": true, "lower_third": true}, {"start": "2025-02-19", "total": -15.62, "grid": 3.33, "bh": -12.72, "stopped": true, "lower_third": true}, {"start": "2025-02-26", "total": -14.59, "grid": 2.91, "bh": 0.08, "stopped": true, "lower_third": true}, {"start": "2025-03-05", "total": -15.7, "grid": 1.94, "bh": -10.82, "stopped": true, "lower_third": true}, {"start": "2025-03-12", "total": -14.81, "grid": 4.61, "bh": -18.24, "stopped": true, "lower_third": true}, {"start": "2025-03-19", "total": -18.94, "grid": 3.44, "bh": -20.66, "stopped": true, "lower_third": false}, {"start": "2025-03-26", "total": -26.47, "grid": 2.6, "bh": -15.97, "stopped": true, "lower_third": false}, {"start": "2025-04-02", "total": -22.1, "grid": 1.61, "bh": -4.12, "stopped": true, "lower_third": false}, {"start": "2025-04-09", "total": 22.49, "grid": 4.91, "bh": 43.32, "stopped": false, "lower_third": true}, {"start": "2025-04-16", "total": 18.55, "grid": 4.7, "bh": 41.34, "stopped": false, "lower_third": true}, {"start": "2025-04-23", "total": 11.52, "grid": 5.69, "bh": 27.89, "stopped": false, "lower_third": false}, {"start": "2025-04-30", "total": 3.36, "grid": 2.59, "bh": 8.89, "stopped": false, "lower_third": false}, {"start": "2025-05-07", "total": 1.66, "grid": 3.03, "bh": -3.57, "stopped": false, "lower_third": false}, {"start": "2025-05-14", "total": -5.21, "grid": 4.93, "bh": -26.24, "stopped": false, "lower_third": false}, {"start": "2025-05-21", "total": -8.99, "grid": 4.7, "bh": -22.53, "stopped": false, "lower_third": false}, {"start": "2025-05-28", "total": -21.15, "grid": 3.42, "bh": -27.26, "stopped": true, "lower_third": false}, {"start": "2025-06-04", "total": -16.84, "grid": 2.18, "bh": -9.26, "stopped": true, "lower_third": false}, {"start": "2025-06-11", "total": -20.77, "grid": 1.33, "bh": -5.57, "stopped": true, "lower_third": false}, {"start": "2025-06-18", "total": -12.44, "grid": 0.48, "bh": 31.57, "stopped": true, "lower_third": true}, {"start": "2025-06-25", "total": 13.46, "grid": 5.66, "bh": 24.0, "stopped": false, "lower_third": false}, {"start": "2025-07-02", "total": 12.76, "grid": 4.63, "bh": 24.2, "stopped": false, "lower_third": false}, {"start": "2025-07-09", "total": 9.29, "grid": 5.17, "bh": 18.03, "stopped": false, "lower_third": false}, {"start": "2025-07-16", "total": 3.38, "grid": 3.37, "bh": 3.24, "stopped": false, "lower_third": false}, {"start": "2025-07-23", "total": 0.08, "grid": 5.4, "bh": -19.37, "stopped": false, "lower_third": false}, {"start": "2025-07-30", "total": 3.15, "grid": 5.48, "bh": -6.62, "stopped": false, "lower_third": false}, {"start": "2025-08-06", "total": 3.17, "grid": 5.15, "bh": -3.81, "stopped": false, "lower_third": false}, {"start": "2025-08-13", "total": 5.11, "grid": 5.59, "bh": -1.56, "stopped": false, "lower_third": false}, {"start": "2025-08-20", "total": 13.28, "grid": 5.21, "bh": 30.97, "stopped": false, "lower_third": true}, {"start": "2025-08-27", "total": 8.37, "grid": 5.13, "bh": 7.94, "stopped": false, "lower_third": false}, {"start": "2025-09-03", "total": 12.24, "grid": 5.43, "bh": 21.63, "stopped": false, "lower_third": false}, {"start": "2025-09-10", "total": 8.83, "grid": 6.19, "bh": 9.28, "stopped": false, "lower_third": false}, {"start": "2025-09-17", "total": -17.01, "grid": 3.2, "bh": -18.87, "stopped": true, "lower_third": false}, {"start": "2025-09-24", "total": -20.89, "grid": 3.72, "bh": -24.6, "stopped": true, "lower_third": false}, {"start": "2025-10-01", "total": -17.8, "grid": 2.49, "bh": -20.16, "stopped": true, "lower_third": false}, {"start": "2025-10-08", "total": -20.59, "grid": 1.12, "bh": -28.93, "stopped": true, "lower_third": false}, {"start": "2025-10-15", "total": 7.32, "grid": 7.51, "bh": -0.54, "stopped": false, "lower_third": false}, {"start": "2025-10-22", "total": 5.08, "grid": 8.31, "bh": -6.5, "stopped": false, "lower_third": false}, {"start": "2025-10-29", "total": 0.58, "grid": 8.68, "bh": -14.76, "stopped": false, "lower_third": false}, {"start": "2025-11-05", "total": 7.11, "grid": 8.19, "bh": -1.91, "stopped": false, "lower_third": true}, {"start": "2025-11-12", "total": -18.17, "grid": 4.58, "bh": -34.37, "stopped": false, "lower_third": false}, {"start": "2025-11-19", "total": -23.7, "grid": 2.97, "bh": -37.33, "stopped": true, "lower_third": false}, {"start": "2025-11-26", "total": -15.65, "grid": 1.54, "bh": -24.82, "stopped": true, "lower_third": true}, {"start": "2025-12-03", "total": -4.29, "grid": 2.0, "bh": -9.81, "stopped": false, "lower_third": true}, {"start": "2025-12-10", "total": -2.31, "grid": 1.99, "bh": -6.9, "stopped": false, "lower_third": true}, {"start": "2025-12-17", "total": 9.23, "grid": 3.65, "bh": 9.7, "stopped": false, "lower_third": true}, {"start": "2025-12-24", "total": 6.21, "grid": 5.12, "bh": 1.77, "stopped": false, "lower_third": true}, {"start": "2025-12-31", "total": -0.62, "grid": 5.63, "bh": -9.29, "stopped": false, "lower_third": false}, {"start": "2026-01-07", "total": -18.34, "grid": 4.67, "bh": -46.04, "stopped": true, "lower_third": false}, {"start": "2026-01-14", "total": -20.71, "grid": 2.7, "bh": -48.2, "stopped": true, "lower_third": false}, {"start": "2026-01-21", "total": -13.93, "grid": 1.42, "bh": -33.17, "stopped": true, "lower_third": true}, {"start": "2026-01-28", "total": -15.28, "grid": 0.41, "bh": -24.45, "stopped": true, "lower_third": true}, {"start": "2026-02-04", "total": -15.24, "grid": 0.44, "bh": 8.02, "stopped": true, "lower_third": true}, {"start": "2026-02-11", "total": 20.03, "grid": 4.12, "bh": 37.7, "stopped": false, "lower_third": true}, {"start": "2026-02-18", "total": 16.04, "grid": 5.31, "bh": 27.81, "stopped": false, "lower_third": true}, {"start": "2026-02-25", "total": 17.31, "grid": 6.13, "bh": 26.51, "stopped": false, "lower_third": true}, {"start": "2026-03-04", "total": -0.09, "grid": 4.06, "bh": -14.48, "stopped": false, "lower_third": false}, {"start": "2026-03-11", "total": 5.11, "grid": 3.81, "bh": 6.42, "stopped": false, "lower_third": false}, {"start": "2026-03-18", "total": 2.89, "grid": 3.03, "bh": -1.43, "stopped": false, "lower_third": false}, {"start": "2026-03-25", "total": 5.1, "grid": 3.08, "bh": 8.69, "stopped": false, "lower_third": false}, {"start": "2026-04-01", "total": 8.28, "grid": 3.82, "bh": 9.12, "stopped": false, "lower_third": true}, {"start": "2026-04-08", "total": 7.29, "grid": 4.44, "bh": 12.24, "stopped": false, "lower_third": false}, {"start": "2026-04-15", "total": 4.89, "grid": 3.27, "bh": 15.6, "stopped": false, "lower_third": false}, {"start": "2026-04-22", "total": 1.73, "grid": 1.46, "bh": 38.96, "stopped": false, "lower_third": false}, {"start": "2026-04-29", "total": 1.88, "grid": 1.07, "bh": 79.57, "stopped": false, "lower_third": false}, {"start": "2026-05-06", "total": 3.05, "grid": 0.66, "bh": 69.67, "stopped": false, "lower_third": false}, {"start": "2026-05-13", "total": 2.1, "grid": 2.0, "bh": 28.34, "stopped": false, "lower_third": false}, {"start": "2026-05-20", "total": 0.85, "grid": 0.42, "bh": 39.48, "stopped": false, "lower_third": false}, {"start": "2026-05-27", "total": -1.86, "grid": 10.26, "bh": -28.19, "stopped": false, "lower_third": false}, {"start": "2026-06-03", "total": -1.95, "grid": 8.06, "bh": -26.13, "stopped": false, "lower_third": false}, {"start": "2026-06-10", "total": -0.67, "grid": 4.86, "bh": -10.78, "stopped": false, "lower_third": false}, {"start": "2026-06-17", "total": -3.88, "grid": 3.42, "bh": -14.9, "stopped": false, "lower_third": false}, {"start": "2026-06-24", "total": -0.01, "grid": 3.21, "bh": -4.99, "stopped": false, "lower_third": true}, {"start": "2026-07-01", "total": -1.79, "grid": 2.35, "bh": -5.99, "stopped": false, "lower_third": true}, {"start": "2026-07-08", "total": -8.76, "grid": 2.45, "bh": -16.23, "stopped": false, "lower_third": false}, {"start": "2026-07-15", "total": -10.97, "grid": 1.96, "bh": -18.62, "stopped": false, "lower_third": false}, {"start": "2026-07-22", "total": -1.89, "grid": 2.85, "bh": -8.87, "stopped": false, "lower_third": false}, {"start": "2026-07-29", "total": 14.62, "grid": 7.35, "bh": 16.51, "stopped": false, "lower_third": true}, {"start": "2026-08-05", "total": 12.67, "grid": 8.14, "bh": 12.88, "stopped": false, "lower_third": false}, {"start": "2026-08-12", "total": 16.24, "grid": 7.5, "bh": 50.57, "stopped": false, "lower_third": true}, {"start": "2026-08-19", "total": 16.53, "grid": 7.43, "bh": 97.95, "stopped": false, "lower_third": true}, {"start": "2026-08-26", "total": 5.78, "grid": 3.09, "bh": 146.57, "stopped": false, "lower_third": false}, {"start": "2026-09-02", "total": 3.45, "grid": 1.23, "bh": 154.72, "stopped": false, "lower_third": false}, {"start": "2026-09-09", "total": 3.25, "grid": 2.67, "bh": 92.23, "stopped": false, "lower_third": false}, {"start": "2026-09-16", "total": 3.2, "grid": 0.93, "bh": 125.09, "stopped": false, "lower_third": false}, {"start": "2026-09-23", "total": 2.78, "grid": 2.58, "bh": 10.32, "stopped": false, "lower_third": false}]}, "validation": [{"symbol": "BTC", "direction": "neutral", "year": 2025, "days": 1.3, "grids": 35, "fills": 412, "match": 96.4, "net_diff_pct": -2.7, "within": true, "modified": false, "liquidated": false}, {"symbol": "WLFI", "direction": "long", "year": 2025, "days": 7.0, "grids": 137, "fills": 264, "match": 87.7, "net_diff_pct": 1.4, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 1.8, "grids": 49, "fills": 161, "match": 97.6, "net_diff_pct": 0.2, "within": true, "modified": false, "liquidated": false}, {"symbol": "XRP", "direction": "long", "year": 2025, "days": 3.8, "grids": 48, "fills": 147, "match": 97.3, "net_diff_pct": 0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2026, "days": 8.6, "grids": 39, "fills": 131, "match": 95.6, "net_diff_pct": 1.2, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "long", "year": 2026, "days": 4.1, "grids": 21, "fills": 124, "match": 98.4, "net_diff_pct": 1.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "HBAR", "direction": "long", "year": 2025, "days": 3.0, "grids": 97, "fills": 114, "match": 94.7, "net_diff_pct": -0.1, "within": true, "modified": false, "liquidated": true}, {"symbol": "SOL", "direction": "short", "year": 2026, "days": 2.2, "grids": 46, "fills": 93, "match": 7.1, "net_diff_pct": -2.5, "within": true, "modified": true, "liquidated": false}, {"symbol": "HBAR", "direction": "long", "year": 2025, "days": 2.1, "grids": 51, "fills": 74, "match": 94.9, "net_diff_pct": 0.3, "within": true, "modified": false, "liquidated": false}, {"symbol": "WLFI", "direction": "long", "year": 2025, "days": 0.6, "grids": 198, "fills": 67, "match": 90.5, "net_diff_pct": 0.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2026, "days": 5.2, "grids": 59, "fills": 66, "match": 88.0, "net_diff_pct": -0.7, "within": true, "modified": false, "liquidated": false}, {"symbol": "WLFI", "direction": "long", "year": 2025, "days": 2.8, "grids": 59, "fills": 57, "match": 70.0, "net_diff_pct": 0.4, "within": true, "modified": true, "liquidated": false}, {"symbol": "LINK", "direction": "long", "year": 2025, "days": 33.4, "grids": 17, "fills": 56, "match": 96.6, "net_diff_pct": -1.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "DOT", "direction": "long", "year": 2025, "days": 13.3, "grids": 11, "fills": 54, "match": 100.0, "net_diff_pct": -0.0, "within": true, "modified": false, "liquidated": true}, {"symbol": "AVAX", "direction": "long", "year": 2025, "days": 28.0, "grids": 19, "fills": 53, "match": 93.0, "net_diff_pct": 2.9, "within": true, "modified": false, "liquidated": false}, {"symbol": "HBAR", "direction": "long", "year": 2025, "days": 6.8, "grids": 59, "fills": 52, "match": 80.0, "net_diff_pct": 399.2, "within": false, "modified": true, "liquidated": false}, {"symbol": "ASTER", "direction": "short", "year": 2025, "days": 0.5, "grids": 15, "fills": 50, "match": 92.6, "net_diff_pct": 2.2, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "neutral", "year": 2026, "days": 1.1, "grids": 10, "fills": 49, "match": 100.0, "net_diff_pct": -0.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "HBAR", "direction": "long", "year": 2025, "days": 2.6, "grids": 66, "fills": 47, "match": 72.3, "net_diff_pct": 39.4, "within": false, "modified": true, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2026, "days": 1.6, "grids": 12, "fills": 44, "match": 100.0, "net_diff_pct": -0.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 2.2, "grids": 9, "fills": 41, "match": 95.2, "net_diff_pct": -0.2, "within": true, "modified": false, "liquidated": false}, {"symbol": "HBAR", "direction": "long", "year": 2025, "days": 22.9, "grids": 79, "fills": 36, "match": 81.8, "net_diff_pct": 31.0, "within": false, "modified": true, "liquidated": false}, {"symbol": "LINK", "direction": "long", "year": 2025, "days": 1.4, "grids": 108, "fills": 34, "match": 100.0, "net_diff_pct": -0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 0.9, "grids": 17, "fills": 32, "match": 94.1, "net_diff_pct": 2.8, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 2.0, "grids": 69, "fills": 32, "match": 84.2, "net_diff_pct": -17.2, "within": false, "modified": true, "liquidated": false}, {"symbol": "XRP", "direction": "long", "year": 2025, "days": 3.1, "grids": 13, "fills": 30, "match": 88.2, "net_diff_pct": 24.7, "within": false, "modified": true, "liquidated": false}, {"symbol": "BTC", "direction": "long", "year": 2026, "days": 2.0, "grids": 59, "fills": 29, "match": 100.0, "net_diff_pct": 0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 2.9, "grids": 16, "fills": 28, "match": 75.0, "net_diff_pct": 40.0, "within": false, "modified": true, "liquidated": false}, {"symbol": "LINK", "direction": "long", "year": 2025, "days": 1.7, "grids": 199, "fills": 28, "match": 100.0, "net_diff_pct": 6.9, "within": false, "modified": false, "liquidated": false}, {"symbol": "ARB", "direction": "long", "year": 2025, "days": 11.7, "grids": 11, "fills": 26, "match": 92.9, "net_diff_pct": 0.2, "within": true, "modified": false, "liquidated": true}, {"symbol": "LINK", "direction": "long", "year": 2025, "days": 1.1, "grids": 20, "fills": 25, "match": 100.0, "net_diff_pct": -0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "LINK", "direction": "long", "year": 2025, "days": 1.2, "grids": 10, "fills": 25, "match": 100.0, "net_diff_pct": -0.1, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2026, "days": 1.5, "grids": 99, "fills": 24, "match": 100.0, "net_diff_pct": -0.5, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 1.0, "grids": 14, "fills": 24, "match": 92.3, "net_diff_pct": 45.8, "within": true, "modified": false, "liquidated": false}, {"symbol": "AVAX", "direction": "long", "year": 2025, "days": 3.9, "grids": 77, "fills": 23, "match": 100.0, "net_diff_pct": -0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 0.5, "grids": 8, "fills": 22, "match": 90.9, "net_diff_pct": -7.7, "within": false, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 0.6, "grids": 9, "fills": 22, "match": 100.0, "net_diff_pct": 0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "AVAX", "direction": "long", "year": 2025, "days": 0.9, "grids": 44, "fills": 20, "match": 100.0, "net_diff_pct": -0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "long", "year": 2025, "days": 3.9, "grids": 5, "fills": 20, "match": 100.0, "net_diff_pct": 57.7, "within": false, "modified": true, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2026, "days": 0.9, "grids": 19, "fills": 20, "match": 90.9, "net_diff_pct": 42.3, "within": false, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "short", "year": 2025, "days": 1.6, "grids": 19, "fills": 19, "match": 90.5, "net_diff_pct": 0.5, "within": true, "modified": false, "liquidated": false}, {"symbol": "BTC", "direction": "long", "year": 2025, "days": 1.3, "grids": 19, "fills": 18, "match": 100.0, "net_diff_pct": 0.0, "within": true, "modified": false, "liquidated": false}, {"symbol": "AVAX", "direction": "long", "year": 2025, "days": 18.0, "grids": 50, "fills": 17, "match": 50.0, "net_diff_pct": 144.2, "within": false, "modified": true, "liquidated": false}, {"symbol": "ADA", "direction": "long", "year": 2025, "days": 1.0, "grids": 79, "fills": 16, "match": 88.9, "net_diff_pct": 48.3, "within": false, "modified": true, "liquidated": false}, {"symbol": "AVAX", "direction": "long", "year": 2025, "days": 25.2, "grids": 49, "fills": 16, "match": 69.6, "net_diff_pct": 121.3, "within": false, "modified": true, "liquidated": false}], "near_path": [[4.885, 5.089, 5.011], [4.867, 5.038, 4.883], [4.866, 4.995, 4.976], [4.831, 5.084, 5.058], [4.995, 5.123, 5.085], [5.08, 5.35, 5.3], [5.253, 5.471, 5.342], [5.144, 5.39, 5.309], [5.291, 5.506, 5.373], [5.294, 5.48, 5.313], [5.265, 5.396, 5.282], [5.234, 5.406, 5.341], [5.225, 5.344, 5.234], [5.174, 5.441, 5.391], [5.348, 5.495, 5.49], [5.278, 5.54, 5.288], [5.181, 5.307, 5.202], [5.057, 5.204, 5.113], [4.742, 5.134, 4.959], [4.811, 4.997, 4.918], [4.803, 4.955, 4.9], [4.75, 4.963, 4.866], [4.761, 4.889, 4.784], [4.747, 4.825, 4.809], [4.797, 4.915, 4.882], [4.841, 5.035, 4.923], [4.884, 5.066, 4.988], [4.925, 5.049, 4.971], [4.883, 5.015, 4.905], [4.844, 4.94, 4.845], [4.817, 4.991, 4.896], [4.785, 4.956, 4.819], [4.751, 4.878, 4.776], [4.601, 4.788, 4.614], [4.59, 4.683, 4.662], [4.632, 4.711, 4.692], [4.683, 4.74, 4.696], [4.672, 4.735, 4.695], [4.621, 4.731, 4.707], [4.671, 4.731, 4.681], [4.646, 4.7, 4.672], [4.668, 4.723, 4.67], [4.628, 4.678, 4.641], [4.617, 4.683, 4.646], [4.604, 4.73, 4.688], [4.64, 4.752, 4.726], [4.724, 4.819, 4.753], [4.736, 4.874, 4.833], [4.796, 4.908, 4.853], [4.787, 4.879, 4.805], [4.78, 4.883, 4.835], [4.767, 4.843, 4.805], [4.741, 4.835, 4.821], [4.819, 4.94, 4.875], [4.85, 4.926, 4.874], [4.819, 4.894, 4.82], [4.81, 5.02, 4.972], [4.946, 5.05, 4.964], [4.899, 4.996, 4.91], [4.88, 5.025, 4.917], [4.859, 4.932, 4.87], [4.835, 4.985, 4.845], [4.811, 5.076, 5.01], [4.96, 5.192, 5.167], [4.998, 5.178, 5.004], [4.988, 5.049, 5.016], [4.968, 5.057, 5.04], [4.923, 5.086, 5.022], [4.937, 5.091, 5.078], [5.076, 5.206, 5.188], [5.179, 5.3, 5.256], [5.097, 5.321, 5.294], [5.225, 5.37, 5.338], [5.231, 5.339, 5.251], [5.2, 5.293, 5.21], [5.141, 5.306, 5.298], [5.186, 5.337, 5.261], [5.225, 5.297, 5.252], [5.14, 5.257, 5.145], [5.08, 5.171, 5.092], [5.025, 5.131, 5.04], [5.031, 5.132, 5.125], [5.108, 5.188, 5.121], [5.048, 5.128, 5.066], [5.034, 5.156, 5.047], [4.868, 5.057, 4.944], [4.903, 5.08, 5.07], [5.056, 5.255, 5.172], [4.967, 5.24, 4.983], [4.951, 5.108, 5.035], [5.0, 5.163, 5.083], [4.963, 5.096, 5.036], [5.018, 5.205, 5.15], [5.144, 5.385, 5.34], [5.225, 5.454, 5.282], [5.269, 5.416, 5.335], [5.289, 5.47, 5.305], [5.278, 5.435, 5.332], [5.266, 5.541, 5.38], [5.356, 5.595, 5.381], [5.155, 5.408, 5.296], [5.068, 5.309, 5.085], [4.899, 5.11, 4.998], [4.619, 5.042, 4.633], [4.386, 4.767, 4.43], [4.301, 4.589, 4.576], [4.495, 4.614, 4.532], [4.449, 4.573, 4.464], [4.445, 4.7, 4.682], [4.625, 4.798, 4.784], [4.695, 4.882, 4.842], [4.812, 4.899, 4.876], [4.78, 4.875, 4.806], [4.739, 4.922, 4.878], [4.769, 4.886, 4.773], [4.731, 4.826, 4.753], [4.667, 4.807, 4.713], [4.635, 4.751, 4.654], [4.654, 4.873, 4.858], [4.787, 4.98, 4.885], [4.871, 5.025, 5.022], [4.938, 5.043, 4.954], [4.954, 5.201, 5.178], [5.15, 5.243, 5.231], [5.194, 5.309, 5.273], [5.222, 5.33, 5.311], [5.261, 5.381, 5.364], [5.342, 5.44, 5.365], [5.316, 5.422, 5.332], [5.279, 5.35, 5.32], [5.311, 5.396, 5.334], [5.274, 5.344, 5.295], [5.258, 5.361, 5.303], [5.169, 5.333, 5.193], [5.192, 5.313, 5.228], [5.198, 5.268, 5.206], [5.196, 5.308, 5.229], [5.209, 5.304, 5.29], [5.288, 5.425, 5.364], [5.307, 5.9, 5.791], [5.667, 5.851, 5.72], [5.626, 5.776, 5.677], [5.562, 5.773, 5.756], [5.711, 5.934, 5.896], [5.759, 5.956, 5.825], [5.786, 5.902, 5.874], [5.807, 6.0, 5.893], [5.786, 5.917, 5.849], [5.752, 5.853, 5.823], [5.601, 5.824, 5.65], [5.587, 5.712, 5.648], [5.514, 5.664, 5.554], [5.374, 5.594, 5.422], [5.395, 5.507, 5.468], [5.016, 5.541, 5.153], [5.007, 5.225, 5.093], [4.89, 5.206, 5.187], [5.18, 5.34, 5.318], [5.287, 5.368, 5.309], [5.152, 5.345, 5.197], [5.086, 5.237, 5.111], [5.009, 5.163, 5.033], [4.976, 5.127, 4.995], [4.92, 5.136, 4.949], [4.946, 5.031, 4.987], [4.972, 5.083, 5.015], [5.003, 5.087, 5.069], [5.019, 5.094, 5.04], [5.035, 5.182, 5.118], [5.081, 5.19, 5.084], [4.989, 5.13, 5.022], [5.009, 5.081, 5.039], [4.965, 5.149, 5.03], [5.008, 5.11, 5.094], [4.888, 5.17, 4.944], [4.811, 5.005, 4.844], [4.807, 4.944, 4.84], [4.767, 4.856, 4.807], [4.771, 4.869, 4.849], [4.815, 4.922, 4.884], [4.73, 4.925, 4.745], [4.601, 4.834, 4.659], [4.607, 4.76, 4.619], [4.585, 4.773, 4.759], [4.61, 4.759, 4.651], [4.539, 4.659, 4.592], [4.527, 4.66, 4.586], [4.563, 5.125, 5.117], [5.083, 5.285, 5.272], [5.246, 5.44, 5.413], [5.275, 5.418, 5.337], [5.231, 5.37, 5.263], [5.238, 5.394, 5.292], [5.12, 5.327, 5.228], [5.169, 5.278, 5.221], [5.173, 5.249, 5.207], [5.202, 5.293, 5.271], [5.232, 5.361, 5.316], [5.21, 5.323, 5.252], [5.045, 5.289, 5.049], [4.921, 5.151, 5.03], [4.957, 5.074, 5.031], [4.952, 5.048, 4.999], [4.997, 5.131, 5.068], [4.995, 5.078, 5.068], [5.024, 5.145, 5.075], [5.064, 5.116, 5.086], [5.039, 5.126, 5.107], [5.086, 5.197, 5.163], [5.118, 5.198, 5.12], [4.987, 5.122, 5.062], [4.878, 5.11, 4.891], [4.829, 4.955, 4.886], [4.883, 5.001, 4.981], [4.764, 5.014, 4.856], [4.805, 4.912, 4.863], [4.826, 5.01, 4.937], [4.923, 5.063, 5.042], [4.919, 5.054, 4.94], [4.932, 5.024, 4.966], [4.94, 5.023, 5.008], [4.896, 5.013, 4.929], [4.808, 4.948, 4.808], [4.678, 4.815, 4.739], [4.722, 4.834, 4.773], [4.633, 4.797, 4.647], [4.621, 4.767, 4.756], [4.754, 5.032, 5.016], [4.974, 5.095, 5.054], [4.991, 5.086, 5.028], [5.013, 5.09, 5.059], [5.043, 5.141, 5.069], [5.02, 5.103, 5.049], [4.919, 5.067, 4.953], [4.923, 5.043, 4.928], [4.865, 5.002, 4.908], [4.89, 4.997, 4.922], [4.894, 4.987, 4.92], [4.878, 4.973, 4.892], [4.893, 4.988, 4.904], [4.786, 4.917, 4.868], [4.789, 4.89, 4.866], [4.766, 4.877, 4.785], [4.751, 4.808, 4.781], [4.695, 4.786, 4.706], [4.634, 4.711, 4.673], [4.656, 4.759, 4.754], [4.747, 5.097, 4.851], [4.807, 4.981, 4.963], [4.819, 4.966, 4.864], [4.837, 4.998, 4.967], [4.884, 4.999, 4.933], [4.908, 5.08, 5.012], [4.983, 5.098, 5.033], [4.97, 5.058, 4.973], [4.963, 5.254, 5.206], [5.152, 5.28, 5.199], [5.117, 5.219, 5.172], [5.138, 5.273, 5.177], [5.149, 5.405, 5.386], [5.299, 5.451, 5.358], [5.23, 5.381, 5.309], [5.247, 5.379, 5.348], [5.219, 5.351, 5.262], [5.191, 5.337, 5.209], [5.102, 5.231, 5.125], [4.998, 5.143, 5.009], [4.976, 5.037, 5.016], [4.911, 5.031, 4.972], [4.964, 5.019, 4.973], [4.941, 5.066, 5.044], [4.889, 5.067, 4.946], [4.862, 4.964, 4.886], [4.828, 4.958, 4.922], [4.839, 4.95, 4.911], [4.85, 4.93, 4.884], [4.866, 5.0, 4.93], [4.915, 5.011, 4.956], [4.906, 4.987, 4.966], [4.92, 5.005, 4.925], [4.892, 4.994, 4.926], [4.857, 4.954, 4.932], [4.889, 4.969, 4.957], [4.788, 4.985, 4.862], [4.808, 4.896, 4.877], [4.725, 4.879, 4.742], [4.721, 4.839, 4.782], [4.588, 4.812, 4.691], [4.562, 4.711, 4.645], [4.621, 4.686, 4.635], [4.616, 4.675, 4.624], [4.557, 4.664, 4.572], [4.427, 4.585, 4.456], [4.445, 4.543, 4.5], [4.42, 4.513, 4.441], [4.25, 4.449, 4.407], [4.367, 4.472, 4.428], [4.41, 4.496, 4.46], [4.42, 4.515, 4.426], [4.426, 4.521, 4.5], [4.478, 4.532, 4.503], [4.442, 4.512, 4.486], [4.426, 4.508, 4.44], [4.391, 4.456, 4.441], [4.351, 4.445, 4.399], [4.382, 4.498, 4.483], [4.426, 4.494, 4.437], [4.421, 4.574, 4.546], [4.518, 4.699, 4.663], [4.563, 4.668, 4.575], [4.514, 4.58, 4.521], [4.522, 4.645, 4.596], [4.449, 4.62, 4.518], [4.431, 4.545, 4.459], [4.459, 4.545, 4.518], [4.436, 4.528, 4.472], [4.449, 4.574, 4.551], [4.505, 4.599, 4.584], [4.497, 4.604, 4.531], [4.523, 4.665, 4.578], [4.479, 4.582, 4.511], [4.444, 4.533, 4.48], [4.438, 4.495, 4.463], [4.426, 4.515, 4.51], [4.446, 4.539, 4.474], [4.389, 4.481, 4.429], [4.406, 4.463, 4.447], [4.408, 4.494, 4.464], [4.42, 4.487, 4.437], [4.392, 4.524, 4.482], [4.466, 4.604, 4.516], [4.483, 4.609, 4.563], [4.563, 4.656, 4.613], [4.588, 4.667, 4.642], [4.599, 4.807, 4.677], [4.65, 4.726, 4.682], [4.634, 4.731, 4.731], [4.697, 4.755, 4.703], [4.656, 4.709, 4.686], [4.675, 4.737, 4.735], [4.717, 4.789, 4.726], [4.649, 4.736, 4.664], [4.573, 4.668, 4.6], [4.544, 4.649, 4.632], [4.561, 4.64, 4.597], [4.584, 4.749, 4.748], [4.658, 4.81, 4.753], [4.713, 4.758, 4.734], [4.475, 4.735, 4.486], [4.406, 4.508, 4.423], [4.404, 4.518, 4.489], [4.284, 4.505, 4.317], [4.312, 4.391, 4.37], [4.353, 4.44, 4.42], [4.384, 4.516, 4.448], [4.422, 4.665, 4.652], [4.454, 4.69, 4.503], [4.372, 4.511, 4.406], [4.104, 4.408, 4.149], [4.043, 4.166, 4.059]]}</script>
+
+<main>
+  <header class="read-wide">
+    <a class="home" href="/en/">← GridReplay</a> <a class="home" href="/informes/ias-de-pionex/" hreflang="es" lang="es" style="margin-left:1rem">ES</a>
+    <p class="eyebrow">GridReplay report · October 2026</p>
+    <h1>We put Pionex’s AI agents to the test</h1>
+    <p class="dek read">Their assistant Pai suggests grid bot configurations and their agent Quant promises backtests. We replayed their suggestions over real market history, minute by minute, to see what would have happened to the money.</p>
+    <div class="ladder">
+      <svg id="hero" viewBox="0 0 960 300" role="img" aria-label="NEAR price from September 30 to October 30, 2026 against the 36 levels of the grid suggested by Pai, from 3.60 to 6.00 USDT"></svg>
+      <p class="caption">NEAR/USDT, last 30 days, 2-hour candles. The horizontal lines are the 36 levels of the geometric grid Pai suggests (3.60–6.00 USDT, 35 grids). Every time the price crosses one, the bot buys or sells.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-resumen">
+    <h2 id="h-resumen" class="read">Three takeaways</h2>
+    <div class="findings">
+      <div class="finding">
+        <span class="big" id="k-pos">51–58%</span>
+        <p>of months end in profit when Pai’s method is applied again and again over two years. On average, it loses money: <span class="num" id="k-mean">−2.2%</span> a month on SOL and <span class="num" id="k-mean-near">−1.8%</span> on NEAR.</p>
+      </div>
+      <div class="finding">
+        <span class="big" id="k-third">35%</span>
+        <p>of months are profitable on SOL when entering in the lower third of the range, exactly what Pai presents as the favorable moment. All other entries: <span class="num" id="k-rest">64%</span>.</p>
+      </div>
+      <div class="finding">
+        <span class="big">96.6%</span>
+        <p>median match between GridReplay and 33 real Pionex grids, order by order. Quant, by its own account, doesn’t simulate funding or liquidation and has never been compared with real bots.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-pai" class="read">
+    <p class="eyebrow">1 · What Pai suggests</p>
+    <h2 id="h-pai">Well-written technical analysis, no simulation</h2>
+    <p>We asked Pai, the Pionex.AI assistant, for assets suited to grid trading and a specific configuration. It picked SOL and NEAR for their volatility and proposed ranges based on support, resistance, RSI and Bollinger Bands. Its market data was correct: the lows it cited (92.35 and 3.91 USDT) had been set that same day.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Pai’s suggestion</th><th>Range (USDT)</th><th>Grids</th><th>Mode</th><th>Stop loss</th></tr></thead>
+        <tbody>
+          <tr><td>SOL/USDT spot</td><td>85 – 125</td><td>45 – 65</td><td>geometric</td><td>80</td></tr>
+          <tr><td>NEAR/USDT spot</td><td>3.60 – 6.00</td><td>35 – 50</td><td>geometric</td><td>3.30</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>What it doesn’t give is any result figure: not how much that configuration would have made or lost, not how often the stop gets hit, not how it compares with simply buying and holding. So we calculated it. First, its exact configurations over the last month:</p>
+    <div class="table-wrap">
+      <table id="t-exact">
+        <thead><tr><th>Last 30 days</th><th>Result</th><th>From grid</th><th>From position</th><th>Buy and hold</th><th>Cycles</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">This test favors Pai: its range comes from that very month, so the price never left it. Even so, the grid profits from the swings while the inventory it bought loses value as the price falls. It beats buy and hold, but doesn’t make money on SOL.</p>
+  </section>
+
+  <section aria-labelledby="h-metodo">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">2 · The method, over two years</p>
+      <h2 id="h-metodo">We repeated its reasoning 200 times</h2>
+      <p>A single configuration says little: what matters is whether the approach works repeatedly. We turned Pai’s reasoning into a fixed rule, derived from its two suggestions, and applied it every week since late 2024, holding each bot for 30 days:</p>
+      <ul class="plain">
+        <li>Lower bound: 8% below the low of the previous 30 days.</li>
+        <li>Upper bound: the high of those 30 days.</li>
+        <li>Geometric grid with ~1% between levels, stop loss 7% below the lower bound, 0.05% fee.</li>
+      </ul>
+    </div>
+    <figure>
+      <p class="fig-title">30-day result of each bot, as % of investment</p>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--s1)"></i>Entry in the rest of the range</span>
+        <span><i style="background:var(--s2)"></i>Entry in the lower third (the one Pai considers favorable)</span>
+      </div>
+      <svg id="strip" viewBox="0 0 960 330" role="img" aria-label="Distribution of 30-day results of Pai’s method on SOL and NEAR, split by entry point"></svg>
+      <figcaption>Each dot is a bot. The dark vertical mark is each row’s median. Hover over a dot for details.</figcaption>
+    </figure>
+    <div class="table-wrap">
+      <table id="t-walk">
+        <thead><tr><th>Asset and entry</th><th>Bots</th><th>Profitable</th><th>Median</th><th>Mean</th><th>Worst</th><th>Stop hit</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p>The outcome looks like a coin toss: a little over half the months end in profit, but the losses are bigger than the gains and the average is negative. One bot in four hits its stop loss, losing around 20%.</p>
+      <p>And the advice to enter when the price is in the lower third of the range makes results worse on SOL and doesn’t improve them on NEAR. When the price is near the monthly low, it’s often because it keeps falling.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-quant" class="read">
+    <p class="eyebrow">3 · What Quant says about itself</p>
+    <h2 id="h-quant">AI-written backtests, never validated</h2>
+    <p>Quant is Pionex.AI’s paid agent for strategy research. We asked it for the same NEAR backtest and it replied that backtest execution was disabled, without making up numbers, which is to its credit. Then we asked how it works. Here is a summary of its answers (quotes translated from Spanish):</p>
+    <ul class="plain">
+      <li>For each request it writes a new Python script, which Pionex’s engine runs candle by candle.</li>
+      <li>It describes this as <q>a Python model of the grid idea</q>, not as the real bot.</li>
+      <li>It uses a single fee per trade, without distinguishing limit orders from market orders, and has no evidence that it calculates funding or liquidations.</li>
+      <li>On its accuracy versus real bots: <q>I don’t have any validation figures</q>.</li>
+      <li>It has no access to the user’s bot history.</li>
+    </ul>
+    <div class="table-wrap">
+      <table class="compare">
+        <thead><tr><th></th><th>Pai</th><th>Quant</th><th>GridReplay</th></tr></thead>
+        <tbody>
+          <tr><td>Simulates results</td><td class="no">No</td><td class="yes">Yes*</td><td class="yes">Yes</td></tr>
+          <tr><td>Maker and taker fees</td><td class="no">—</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Futures funding</td><td class="no">—</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Liquidation</td><td class="no">—</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Validated against real bots</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+          <tr><td>Analyzes your bot history</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="meta">* Disabled on October 30, 2026. Source: the agent’s own answers.</p>
+  </section>
+
+  <section aria-labelledby="h-valid">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">4 · Is our simulator accurate?</p>
+      <h2 id="h-valid">Checked against 33 real bots</h2>
+      <p>Asking for rigor means applying it to ourselves. We took the trade history of a real Pionex account (March 2025 to October 2026), rebuilt every futures grid from its orders and replayed it in GridReplay on Binance 1-minute candles, with the actual funding.</p>
+      <p><span id="v-total">45</span> grids rebuilt. We left out <span id="v-mod">12</span> that were modified while running (investment added or range changed) because they aren’t comparable. That leaves <span id="v-clean">33</span>: <span id="v-mix">18 long, 13 short and 2 neutral</span>, on BTC, LINK, AVAX, HBAR, WLFI, XRP and others, with <span id="v-orders">2,298</span> filled orders.</p>
+    </div>
+    <figure>
+      <p class="fig-title">Difference between simulated and real net result, per bot</p>
+      <svg id="valid" viewBox="0 0 960 200" role="img" aria-label="Percentage difference between simulated and real net result across 33 bots"></svg>
+      <figcaption>The band marks ±5%. The two dots off the chart on the right are bots with a near-zero real result (+0.43 and +5.13 USDT), where a difference of cents or 2 USDT becomes a large percentage. Liquidated bots are shown as rings.</figcaption>
+    </figure>
+    <div class="findings">
+      <div class="finding"><span class="big">96.6%</span><p>median order match by level and side between simulation and reality.</p></div>
+      <div class="finding"><span class="big" id="v-within">30 / 33</span><p>bots with a net result within ±5% (or ±1 USDT) of the real one.</p></div>
+      <div class="finding"><span class="big" id="v-liq">3 / 3</span><p>liquidations reproduced, with the result within the margin.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-metodologia" class="read">
+    <p class="eyebrow">Methodology and limits</p>
+    <h2 id="h-metodologia">What we measured and what we didn’t</h2>
+    <ul class="plain">
+      <li>Data: Binance 1-minute candles (spot for SOL and NEAR; perpetuals and funding for the validation), downloaded from its public archive and verified by checksum.</li>
+      <li>Within each minute we assume a conservative path (on bullish candles, low first and then high). Orders fill when the price touches their level.</li>
+      <li>The rule for Pai’s method is derived from two examples and was tested on two assets. Bots from consecutive weeks overlap, so there are about 25 truly independent periods per asset. It’s a clear signal, not definitive proof.</li>
+      <li>Pionex aggregates prices from several markets; small differences with Binance explain part of the deviations in the validation.</li>
+      <li>Past performance does not guarantee future results. This report is not financial advice or an investment recommendation.</li>
+    </ul>
+  </section>
+
+  <section class="cta read" aria-labelledby="h-cta">
+    <h2 id="h-cta">Check your own configuration</h2>
+    <p>With the free simulator you test your setup at 100 different moments over the past year, with fees, funding and liquidation. And if you already run futures grids on Pionex, the analyzer reviews your bots from your history, without the file ever leaving your browser.</p>
+    <p><a class="btn" href="/en/simulator/">Test my setup</a> &nbsp; <a href="/en/analyzer/">Analyze my bots →</a></p>
+  </section>
+
+  <footer>
+    <p><strong>GridReplay</strong> is an independent grid bot simulator: it replays your configuration over real market history, minute by minute, before you risk any money, and analyzes the bots you’ve already run.</p>
+    <p>Independent report. GridReplay is not affiliated with Pionex. Pionex and Pionex.AI are trademarks of their respective owners.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("report-data").textContent);
+  const NS = "http://www.w3.org/2000/svg";
+  const fmt = (v, d = 1, sign = true) => {
+    const s = Math.abs(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+    return (v < 0 ? "−" : sign && v > 0 ? "+" : "") + s;
+  };
+  const el = (tag, attrs, parent, text) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const median = a => { const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+  const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
+  const pct = (a, f) => 100 * a.filter(f).length / a.length;
+
+  // Tooltip compartido
+  function tooltip(fig) {
+    const tip = document.createElement("div");
+    tip.className = "tip"; tip.hidden = true; fig.appendChild(tip);
+    return {
+      show(evt, html) {
+        tip.innerHTML = html; tip.hidden = false;
+        const box = fig.getBoundingClientRect();
+        let x = evt.clientX - box.left + 12, y = evt.clientY - box.top - 10 - tip.offsetHeight;
+        if (x + tip.offsetWidth > box.width - 8) x = evt.clientX - box.left - tip.offsetWidth - 12;
+        tip.style.left = Math.max(4, x) + "px"; tip.style.top = Math.max(4, y) + "px";
+      },
+      hide() { tip.hidden = true; }
+    };
+  }
+
+  // ── Cabecera: escalera de niveles de Pai sobre NEAR ──
+  (function hero() {
+    const svg = document.getElementById("hero");
+    const P = D.near_path, W = 960, H = 300, L = 8, R = 72, T = 14, B = 26;
+    const lo = 3.2, hi = 6.15;
+    const y = v => T + (H - T - B) * (Math.log(hi) - Math.log(v)) / (Math.log(hi) - Math.log(lo));
+    const x = i => L + (W - L - R) * i / (P.length - 1);
+    const levels = Array.from({ length: 36 }, (_, k) => 3.6 * Math.pow(6 / 3.6, k / 35));
+    levels.forEach((v, k) => el("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--rule)", "stroke-width": (k === 0 || k === 35) ? 1.5 : 1 }, svg));
+    el("line", { x1: L, x2: W - R, y1: y(3.3), y2: y(3.3), stroke: "var(--s2)", "stroke-width": 1.5, "stroke-dasharray": "5 4" }, svg);
+    let band = "", line = "";
+    P.forEach((p, i) => { band += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p[1]).toFixed(1); });
+    for (let i = P.length - 1; i >= 0; i--) band += "L" + x(i).toFixed(1) + " " + y(P[i][0]).toFixed(1);
+    el("path", { d: band + "Z", fill: "var(--s1)", "fill-opacity": 0.14 }, svg);
+    P.forEach((p, i) => { line += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p[2]).toFixed(1); });
+    const path = el("path", { d: line, fill: "none", stroke: "var(--s1)", "stroke-width": 2, "stroke-linejoin": "round", class: "path-draw" }, svg);
+    try { path.style.setProperty("--len", path.getTotalLength()); } catch (e) {}
+    const lab = (v, t, cls) => el("text", { x: W - R + 8, y: y(v) + 4, class: cls || "lbl" }, svg, t);
+    lab(6, "6.00 top", "lbl-strong"); lab(4.8, "4.80"); lab(4.2, "4.20"); lab(3.6, "3.60 bottom", "lbl-strong");
+    el("text", { x: W - R + 8, y: y(3.3) + 4, class: "lbl", fill: "var(--s2)" }, svg, "3.30 stop");
+    const last = P[P.length - 1];
+    el("circle", { cx: x(P.length - 1), cy: y(last[2]), r: 4, fill: "var(--s1)", stroke: "var(--surface)", "stroke-width": 2 }, svg);
+    [["Sep 30", 0], ["Oct 15", 180], ["Oct 29", P.length - 1]].forEach(([t, i], j) =>
+      el("text", { x: x(i), y: H - 6, class: "lbl", "text-anchor": j === 0 ? "start" : j === 2 ? "end" : "middle" }, svg, t));
+  })();
+
+  // ── Tabla de configuraciones exactas ──
+  (function exact() {
+    const tb = document.querySelector("#t-exact tbody");
+    D.exact.forEach(r => {
+      const tr = document.createElement("tr");
+      const name = r.symbol.replace("USDT", "") + " " + fmt(r.lower, r.lower < 10 ? 2 : 0, false) + "–" + fmt(r.upper, r.upper < 10 ? 2 : 0, false) + ", " + r.grids + " grids";
+      [name, fmt(r.total, 1) + "%", fmt(r.grid, 1) + "%", fmt(r.position, 1) + "%", fmt(r.bh, 1) + "%", r.cycles].forEach(v => {
+        const td = document.createElement("td"); td.textContent = v; tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  })();
+
+  // ── Método de Pai: puntos por bot ──
+  const groups = [];
+  [["SOLUSDT", "SOL"], ["NEARUSDT", "NEAR"]].forEach(([k, name]) => {
+    const all = D.walk[k];
+    groups.push({ name, label: name + " · rest of range", rows: all.filter(r => !r.lower_third), color: "var(--s1)" });
+    groups.push({ name, label: name + " · lower third", rows: all.filter(r => r.lower_third), color: "var(--s2)" });
+    groups.push({ name, label: name + " · all", rows: all, total: true });
+  });
+
+  (function strip() {
+    const svg = document.getElementById("strip"), fig = svg.parentNode, tip = tooltip(fig);
+    const rows = groups.filter(g => !g.total);
+    const W = 960, L = 190, R = 20, T = 18, rowH = 72, xmin = -30, xmax = 25;
+    const x = v => L + (W - L - R) * (Math.max(xmin, Math.min(xmax, v)) - xmin) / (xmax - xmin);
+    const H = T + rowH * rows.length + 28;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    for (let v = -30; v <= 25; v += 5) {
+      el("line", { x1: x(v), x2: x(v), y1: T, y2: H - 28, stroke: v === 0 ? "var(--ink-3)" : "var(--rule)", "stroke-width": v === 0 ? 1.25 : 1 }, svg);
+      el("text", { x: x(v), y: H - 10, class: "lbl", "text-anchor": "middle" }, svg, (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) + "%");
+    }
+    rows.forEach((g, ri) => {
+      const cy = T + rowH * ri + rowH / 2;
+      if (ri === 2) el("line", { x1: 0, x2: W, y1: T + rowH * ri, y2: T + rowH * ri, stroke: "var(--rule)" }, svg);
+      el("text", { x: 0, y: cy - 4, class: "lbl-strong" }, svg, g.label);
+      el("text", { x: 0, y: cy + 12, class: "lbl" }, svg, g.rows.length + " bots · " + Math.round(pct(g.rows, r => r.total > 0)) + "% profitable");
+      g.rows.forEach((r, i) => {
+        const jitter = (((i * 2654435761) >>> 0) % 1000) / 1000 - 0.5;
+        const c = el("circle", { cx: x(r.total), cy: cy + jitter * (rowH - 30), r: 5, fill: g.color, "fill-opacity": 0.85, stroke: "var(--surface)", "stroke-width": 1.5, tabindex: 0 }, svg);
+        const html = `${g.name} · start ${r.start}<br>Result ${fmt(r.total)}%<br>From grid ${fmt(r.grid)}%<br>Buy and hold ${fmt(r.bh)}%${r.stopped ? "<br>Stop loss hit" : ""}`;
+        c.addEventListener("mousemove", e => tip.show(e, html));
+        c.addEventListener("mouseleave", () => tip.hide());
+        c.addEventListener("focus", () => { const b = c.getBoundingClientRect(); tip.show({ clientX: b.left + b.width / 2, clientY: b.top }, html); });
+        c.addEventListener("blur", () => tip.hide());
+      });
+      const m = median(g.rows.map(r => r.total));
+      el("line", { x1: x(m), x2: x(m), y1: cy - rowH / 2 + 8, y2: cy + rowH / 2 - 8, stroke: "var(--ink)", "stroke-width": 2.5, "stroke-linecap": "round" }, svg);
+    });
+  })();
+
+  (function walkTable() {
+    const tb = document.querySelector("#t-walk tbody");
+    groups.forEach(g => {
+      const t = g.rows.map(r => r.total);
+      const tr = document.createElement("tr"); if (g.total) tr.className = "em";
+      [g.label, g.rows.length, Math.round(pct(g.rows, r => r.total > 0)) + "%", fmt(median(t)) + "%", fmt(mean(t)) + "%", fmt(Math.min(...t)) + "%", Math.round(pct(g.rows, r => r.stopped)) + "%"].forEach(v => {
+        const td = document.createElement("td"); td.textContent = v; tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    const sol = D.walk.SOLUSDT, near = D.walk.NEARUSDT;
+    const p = [pct(sol, r => r.total > 0), pct(near, r => r.total > 0)].map(Math.round).sort((a, b) => a - b);
+    document.getElementById("k-pos").textContent = p[0] + "–" + p[1] + "%";
+    document.getElementById("k-mean").textContent = fmt(mean(sol.map(r => r.total))) + "%";
+    document.getElementById("k-mean-near").textContent = fmt(mean(near.map(r => r.total))) + "%";
+    document.getElementById("k-third").textContent = Math.round(pct(sol.filter(r => r.lower_third), r => r.total > 0)) + "%";
+    document.getElementById("k-rest").textContent = Math.round(pct(sol.filter(r => !r.lower_third), r => r.total > 0)) + "%";
+  })();
+
+  // ── Validación ──
+  (function valid() {
+    const all = D.validation, clean = all.filter(v => !v.modified);
+    const count = (a, k) => a.filter(v => v.direction === k).length;
+    document.getElementById("v-total").textContent = all.length;
+    document.getElementById("v-mod").textContent = all.length - clean.length;
+    document.getElementById("v-clean").textContent = clean.length;
+    document.getElementById("v-mix").textContent = `${count(clean, "long")} long, ${count(clean, "short")} short and ${count(clean, "neutral")} neutral`;
+    document.getElementById("v-orders").textContent = clean.reduce((s, v) => s + v.fills, 0).toLocaleString("en-US");
+    document.getElementById("v-within").textContent = `${clean.filter(v => v.within).length} / ${clean.length}`;
+    const liq = clean.filter(v => v.liquidated);
+    document.getElementById("v-liq").textContent = `${liq.filter(v => v.within).length} / ${liq.length}`;
+
+    const svg = document.getElementById("valid"), fig = svg.parentNode, tip = tooltip(fig);
+    const W = 960, L = 20, R = 40, T = 16, H = 200, base = 150, xmin = -10, xmax = 10;
+    const x = v => L + (W - L - R) * (Math.max(xmin, Math.min(xmax, v)) - xmin) / (xmax - xmin);
+    el("rect", { x: x(-5), y: T, width: x(5) - x(-5), height: base - T + 6, fill: "var(--band)" }, svg);
+    for (let v = -10; v <= 10; v += 2.5) {
+      el("line", { x1: x(v), x2: x(v), y1: T, y2: base + 6, stroke: v === 0 ? "var(--ink-3)" : "var(--rule)", "stroke-width": v === 0 ? 1.25 : 1 }, svg);
+      if (v % 5 === 0) el("text", { x: x(v), y: H - 22, class: "lbl", "text-anchor": "middle" }, svg, (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) + "%");
+    }
+    el("text", { x: x(0), y: H - 4, class: "lbl", "text-anchor": "middle" }, svg, "simulated lower  ←   real   →  simulated higher");
+    // Apilado simple por cubos de 0,5 %
+    const stacks = {};
+    clean.slice().sort((a, b) => a.net_diff_pct - b.net_diff_pct).forEach(v => {
+      const clipped = v.net_diff_pct > xmax || v.net_diff_pct < xmin;
+      const key = clipped ? (v.net_diff_pct > 0 ? "hi" : "lo") : Math.round(v.net_diff_pct * 2) / 2;
+      const n = stacks[key] = (stacks[key] || 0) + 1;
+      const cx = clipped ? (v.net_diff_pct > 0 ? W - R + 18 : L - 10) : x(key);
+      const cy = base - 8 - (n - 1) * 13;
+      const c = el("circle", { cx, cy, r: 5.5, fill: v.liquidated ? "var(--surface)" : "var(--s1)", stroke: v.liquidated ? "var(--s1)" : "var(--surface)", "stroke-width": v.liquidated ? 2.5 : 1.5, tabindex: 0 }, svg);
+      const html = `${v.symbol} · ${v.direction} · ${v.year} · ${v.days} days<br>${v.fills} orders, match ${fmt(v.match, 1, false)}%<br>Net difference ${fmt(v.net_diff_pct)}%${v.liquidated ? "<br>Bot liquidated" : ""}`;
+      c.addEventListener("mousemove", e => tip.show(e, html));
+      c.addEventListener("mouseleave", () => tip.hide());
+      c.addEventListener("focus", () => { const b = c.getBoundingClientRect(); tip.show({ clientX: b.left + b.width / 2, clientY: b.top }, html); });
+      c.addEventListener("blur", () => tip.hide());
+    });
+    if (stacks.hi) el("text", { x: W - R + 18, y: base + 20, class: "lbl", "text-anchor": "middle" }, svg, "> +10%");
+  })();
+})();
+</script>
+</body>
+</html>

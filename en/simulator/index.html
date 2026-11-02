@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/en/simulator/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/simulador/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/simulator/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/simulator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Grid Simulator: Robustness Test">
+<meta property="og:description" content="Test your grid bot across up to 100 periods from the past year, minute by minute, with real fees and funding: how often it wins, how much it loses when it goes wrong and how often it gets liquidated. Free.">
+<meta property="og:url" content="https://gridreplay.com/en/simulator/">
+<meta property="og:image" content="https://gridreplay.com/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-en.png">
+<title>Grid Simulator: Robustness Test</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Test your grid bot across up to 100 periods from the past year, minute by minute, with real fees and funding: how often it wins, how much it loses when it goes wrong and how often it gets liquidated. Free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: columna de lectura (~68ch) con figuras y tablas que se ensanchan hasta 960px. Misma base que la página de validación. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7;
+  --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.kpi { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.kpi b { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+.kpi .src { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2; }
+.table-wrap { overflow-x: auto; min-width: 0; max-height: 34rem; overflow-y: auto; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.45rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { position: sticky; top: 0; background: var(--bg); font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+tr.out td { color: var(--ink-3); }
+.pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
+.pill.ok { border-color: var(--accent); color: var(--accent); }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+</style>
+<style>
+/* Analizador: pasos numerados, zona para soltar el archivo, progreso y resultados. Generado por make_pages.py. */
+.promises { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.promises li { font: 500 0.8rem/1 var(--font-data); padding: 0.45rem 0.7rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; }
+ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; color: var(--ink-2); }
+ol.steps b { color: var(--ink); font-weight: 600; }
+.drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
+.drop b { font: 600 1.1rem/1.3 var(--font-body); }
+.drop span { font-size: 0.92rem; color: var(--ink-3); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.status { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.2rem; }
+.status p { color: var(--ink-2); }
+.bar { height: 6px; background: var(--band); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.status.err { border-color: var(--s2); }
+.status.err p:first-child { color: var(--s2); font-weight: 600; }
+.pos { color: var(--accent); }
+.neg { color: var(--s2); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+button.btn { border: 0; cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button.btn:disabled { opacity: .55; cursor: default; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; }
+details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); border-radius: 6px; padding: 0.8rem; overflow-x: auto; max-height: 16rem; }
+</style>
+<style>
+/* Simulador: formulario en rejilla, resultados con KPIs y una barra por periodo. */
+form.sim { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); align-items: end; gap: 1rem 1.2rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1.3rem; }
+form.sim label { display: grid; gap: 0.35rem; font: 500 0.78rem/1.2 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+form.sim option { color: var(--ink); background: var(--surface); }
+form.sim input, form.sim select { font: 400 1rem/1.3 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 0.55rem 0.6rem; min-width: 0; text-transform: none; letter-spacing: 0; }
+form.sim input:focus, form.sim select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+form.sim .full { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); text-transform: none; letter-spacing: 0; }
+.chart { position: relative; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .bar-pos { fill: var(--accent); }
+.chart .bar-neg { fill: var(--s2); }
+.chart .bar-liq { fill: var(--ink); }
+.chart .axis { stroke: var(--ink-3); stroke-width: 1; }
+.chart .grid { stroke: var(--rule); stroke-width: 1; }
+.chart .hit { fill: transparent; }
+.chart .hl { pointer-events: none; }
+.chart .hl.on { stroke: var(--ink); stroke-width: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.85rem; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.4rem; vertical-align: -1px; }
+</style>
+</head>
+<body>
+<script id="example" type="application/json">{"symbol":"BTCUSDT","from":"2025-11-01","to":"2026-11-01","computed":"2026-11-01","params":{"symbol":"BTC","exchange":"pionex","direction":"neutral","unit":"pct","below":10,"above":10,"grids":40,"mode":"arithmetic","leverage":3,"days":30,"months":12},"rows":[{"start":"2025-11-01","price":109907.8,"ret":-20.24,"hold":-21.27,"grid":4.28,"fees":0.38,"funding":-0.43,"dd":30.29,"in_range":40.3,"trips":124,"liquidated":false},{"start":"2025-11-05","price":101724.8,"ret":0.54,"hold":-9.25,"grid":6.88,"fees":0.61,"funding":-0.26,"dd":20.16,"in_range":56.0,"trips":199,"liquidated":false},{"start":"2025-11-08","price":101744.4,"ret":-4.01,"hold":-11.27,"grid":5.35,"fees":0.47,"funding":-0.3,"dd":20.51,"in_range":45.6,"trips":155,"liquidated":false},{"start":"2025-11-12","price":103134.7,"ret":-5.11,"hold":-10.7,"grid":3.48,"fees":0.31,"funding":-0.39,"dd":22.68,"in_range":24.8,"trips":101,"liquidated":false},{"start":"2025-11-15","price":95882.7,"ret":6.93,"hold":-6.41,"grid":9.99,"fees":0.84,"funding":-0.21,"dd":14.72,"in_range":89.5,"trips":288,"liquidated":false},{"start":"2025-11-18","price":93100.3,"ret":6.36,"hold":-9.23,"grid":12.58,"fees":1.07,"funding":-0.15,"dd":11.42,"in_range":98.8,"trips":363,"liquidated":false},{"start":"2025-11-22","price":84247.6,"ret":10.68,"hold":5.51,"grid":12.48,"fees":1.17,"funding":0.28,"dd":8.41,"in_range":94.1,"trips":363,"liquidated":false},{"start":"2025-11-25","price":86873.9,"ret":12.08,"hold":0.9,"grid":11.97,"fees":1.07,"funding":0.14,"dd":4.64,"in_range":100.0,"trips":347,"liquidated":false},{"start":"2025-11-28","price":91024.2,"ret":8.92,"hold":-3.61,"grid":9.9,"fees":0.85,"funding":-0.13,"dd":4.14,"in_range":100.0,"trips":286,"liquidated":false},{"start":"2025-12-02","price":86395.0,"ret":11.06,"hold":1.53,"grid":10.99,"fees":1.0,"funding":0.18,"dd":5.32,"in_range":100.0,"trips":319,"liquidated":false},{"start":"2025-12-05","price":88829.5,"ret":7.97,"hold":2.86,"grid":8.5,"fees":0.75,"funding":-0.01,"dd":2.79,"in_range":100.0,"trips":246,"liquidated":false},{"start":"2025-12-09","price":90241.5,"ret":8.25,"hold":0.71,"grid":8.34,"fees":0.72,"funding":-0.1,"dd":2.62,"in_range":100.0,"trips":241,"liquidated":false},{"start":"2025-12-12","price":92381.4,"ret":6.6,"hold":-1.81,"grid":7.04,"fees":0.59,"funding":-0.27,"dd":4.38,"in_range":100.0,"trips":203,"liquidated":false},{"start":"2025-12-15","price":85542.4,"ret":-4.68,"hold":13.9,"grid":8.0,"fees":0.76,"funding":0.33,"dd":10.67,"in_range":96.0,"trips":233,"liquidated":false},{"start":"2025-12-19","price":86884.6,"ret":-0.38,"hold":9.49,"grid":5.79,"fees":0.56,"funding":0.24,"dd":9.21,"in_range":95.0,"trips":169,"liquidated":false},{"start":"2025-12-22","price":89564.0,"ret":6.28,"hold":0.47,"grid":6.21,"fees":0.55,"funding":0.06,"dd":5.13,"in_range":100.0,"trips":180,"liquidated":false},{"start":"2025-12-26","price":87088.5,"ret":6.06,"hold":2.44,"grid":6.13,"fees":0.57,"funding":0.29,"dd":8.97,"in_range":96.1,"trips":178,"liquidated":false},{"start":"2025-12-29","price":87959.1,"ret":6.96,"hold":1.5,"grid":6.86,"fees":0.62,"funding":0.22,"dd":7.66,"in_range":98.4,"trips":199,"liquidated":false},{"start":"2026-01-01","price":88150.4,"ret":-1.37,"hold":-11.61,"grid":8.02,"fees":0.74,"funding":0.18,"dd":11.4,"in_range":98.8,"trips":233,"liquidated":false},{"start":"2026-01-05","price":92790.6,"ret":-12.38,"hold":-17.34,"grid":5.93,"fees":0.54,"funding":-0.12,"dd":22.38,"in_range":84.8,"trips":172,"liquidated":false},{"start":"2026-01-08","price":90023.6,"ret":-21.18,"hold":-23.36,"grid":5.99,"fees":0.55,"funding":0.06,"dd":39.21,"in_range":77.1,"trips":174,"liquidated":false},{"start":"2026-01-11","price":90664.7,"ret":-23.41,"hold":-24.35,"grid":5.23,"fees":0.48,"funding":0.08,"dd":40.25,"in_range":65.5,"trips":152,"liquidated":false},{"start":"2026-01-15","price":96473.9,"ret":-32.68,"hold":-28.55,"grid":2.48,"fees":0.23,"funding":-0.13,"dd":46.88,"in_range":47.0,"trips":72,"liquidated":false},{"start":"2026-01-18","price":95134.5,"ret":-33.34,"hold":-28.95,"grid":2.41,"fees":0.23,"funding":-0.1,"dd":45.76,"in_range":36.4,"trips":70,"liquidated":false},{"start":"2026-01-22","price":90060.0,"ret":-26.39,"hold":-24.57,"grid":2.64,"fees":0.25,"funding":0.02,"dd":40.58,"in_range":32.0,"trips":77,"liquidated":false},{"start":"2026-01-25","price":88575.6,"ret":-32.75,"hold":-28.67,"grid":2.44,"fees":0.23,"funding":0.03,"dd":38.88,"in_range":20.8,"trips":71,"liquidated":false},{"start":"2026-01-28","price":89604.6,"ret":-31.26,"hold":-26.85,"grid":1.19,"fees":0.13,"funding":0.04,"dd":40.64,"in_range":9.5,"trips":35,"liquidated":false},{"start":"2026-02-01","price":78888.0,"ret":-7.23,"hold":-13.34,"grid":4.87,"fees":0.43,"funding":0.08,"dd":25.63,"in_range":14.9,"trips":141,"liquidated":false},{"start":"2026-02-04","price":75469.5,"ret":3.72,"hold":-9.28,"grid":9.79,"fees":0.82,"funding":0.06,"dd":21.33,"in_range":51.1,"trips":282,"liquidated":false},{"start":"2026-02-07","price":69229.3,"ret":17.15,"hold":-1.04,"grid":17.18,"fees":1.47,"funding":0.01,"dd":5.68,"in_range":100.0,"trips":496,"liquidated":false},{"start":"2026-02-11","price":66946.7,"ret":14.28,"hold":7.09,"grid":17.77,"fees":1.6,"funding":0.0,"dd":6.65,"in_range":99.9,"trips":515,"liquidated":false},{"start":"2026-02-14","price":69750.9,"ret":13.07,"hold":6.05,"grid":15.57,"fees":1.35,"funding":0.02,"dd":6.88,"in_range":100.0,"trips":450,"liquidated":false},{"start":"2026-02-18","price":67395.3,"ret":15.63,"hold":4.46,"grid":16.98,"fees":1.52,"funding":-0.02,"dd":8.12,"in_range":96.7,"trips":492,"liquidated":false},{"start":"2026-02-21","price":67962.3,"ret":16.36,"hold":3.35,"grid":17.09,"fees":1.52,"funding":-0.02,"dd":7.26,"in_range":99.5,"trips":495,"liquidated":false},{"start":"2026-02-24","price":63903.2,"ret":6.67,"hold":8.05,"grid":11.33,"fees":1.08,"funding":-0.08,"dd":17.0,"in_range":55.4,"trips":330,"liquidated":false},{"start":"2026-02-28","price":63830.8,"ret":8.09,"hold":5.48,"grid":10.23,"fees":0.97,"funding":-0.1,"dd":17.61,"in_range":54.0,"trips":298,"liquidated":false},{"start":"2026-03-03","price":67467.2,"ret":15.09,"hold":-1.0,"grid":15.13,"fees":1.37,"funding":-0.01,"dd":8.53,"in_range":97.4,"trips":439,"liquidated":false},{"start":"2026-03-07","price":68307.6,"ret":12.51,"hold":0.85,"grid":12.53,"fees":1.12,"funding":-0.0,"dd":7.32,"in_range":99.7,"trips":363,"liquidated":false},{"start":"2026-03-10","price":70859.1,"ret":11.71,"hold":0.67,"grid":11.7,"fees":1.01,"funding":0.02,"dd":3.8,"in_range":100.0,"trips":338,"liquidated":false},{"start":"2026-03-13","price":71153.7,"ret":10.25,"hold":-0.05,"grid":10.25,"fees":0.88,"funding":-0.0,"dd":4.33,"in_range":100.0,"trips":296,"liquidated":false},{"start":"2026-03-17","price":74121.3,"ret":8.71,"hold":1.07,"grid":8.75,"fees":0.72,"funding":0.01,"dd":9.31,"in_range":89.6,"trips":252,"liquidated":false},{"start":"2026-03-20","price":70292.8,"ret":4.89,"hold":8.1,"grid":9.62,"fees":0.87,"funding":-0.09,"dd":7.04,"in_range":99.2,"trips":279,"liquidated":false},{"start":"2026-03-23","price":70721.9,"ret":0.65,"hold":10.96,"grid":9.37,"fees":0.85,"funding":-0.14,"dd":7.92,"in_range":97.4,"trips":272,"liquidated":false},{"start":"2026-03-27","price":68560.9,"ret":-6.35,"hold":13.86,"grid":6.87,"fees":0.65,"funding":-0.28,"dd":13.18,"in_range":74.3,"trips":200,"liquidated":false},{"start":"2026-03-30","price":67167.1,"ret":-7.6,"hold":13.0,"grid":4.38,"fees":0.43,"funding":-0.33,"dd":17.39,"in_range":48.0,"trips":128,"liquidated":false},{"start":"2026-04-03","price":66577.3,"ret":-15.67,"hold":17.27,"grid":2.79,"fees":0.29,"funding":-0.38,"dd":19.24,"in_range":35.4,"trips":82,"liquidated":false},{"start":"2026-04-06","price":69654.1,"ret":-15.32,"hold":18.65,"grid":5.2,"fees":0.51,"funding":-0.37,"dd":17.38,"in_range":56.9,"trips":152,"liquidated":false},{"start":"2026-04-09","price":72389.7,"ret":-3.35,"hold":11.54,"grid":6.37,"fees":0.62,"funding":-0.27,"dd":11.73,"in_range":82.2,"trips":186,"liquidated":false},{"start":"2026-04-13","price":70803.7,"ret":-9.8,"hold":14.46,"grid":4.33,"fees":0.44,"funding":-0.28,"dd":14.93,"in_range":52.4,"trips":127,"liquidated":false},{"start":"2026-04-16","price":73953.6,"ret":4.01,"hold":5.71,"grid":6.35,"fees":0.6,"funding":-0.1,"dd":8.79,"in_range":93.6,"trips":185,"liquidated":false},{"start":"2026-04-20","price":74046.9,"ret":5.54,"hold":3.4,"grid":6.32,"fees":0.6,"funding":-0.05,"dd":8.32,"in_range":95.5,"trips":184,"liquidated":false},{"start":"2026-04-23","price":77575.3,"ret":4.46,"hold":-3.76,"grid":5.38,"fees":0.49,"funding":-0.01,"dd":2.72,"in_range":100.0,"trips":156,"liquidated":false},{"start":"2026-04-26","price":78129.8,"ret":5.41,"hold":-2.64,"grid":5.87,"fees":0.52,"funding":-0.03,"dd":2.05,"in_range":100.0,"trips":170,"liquidated":false},{"start":"2026-04-30","price":75884.2,"ret":5.25,"hold":-3.09,"grid":5.85,"fees":0.54,"funding":-0.0,"dd":4.78,"in_range":100.0,"trips":170,"liquidated":false},{"start":"2026-05-03","price":78754.1,"ret":-5.55,"hold":-12.3,"grid":5.23,"fees":0.48,"funding":-0.18,"dd":9.45,"in_range":98.6,"trips":152,"liquidated":false},{"start":"2026-05-06","price":81434.5,"ret":-25.72,"hold":-24.5,"grid":3.55,"fees":0.32,"funding":-0.33,"dd":31.25,"in_range":82.8,"trips":103,"liquidated":false},{"start":"2026-05-10","price":80718.8,"ret":-21.46,"hold":-21.47,"grid":3.23,"fees":0.3,"funding":-0.31,"dd":30.61,"in_range":73.9,"trips":94,"liquidated":false},{"start":"2026-05-13","price":78919.3,"ret":-18.2,"hold":-19.18,"grid":2.99,"fees":0.28,"funding":-0.24,"dd":28.54,"in_range":64.5,"trips":87,"liquidated":false},{"start":"2026-05-17","price":77959.1,"ret":-12.15,"hold":-14.87,"grid":2.5,"fees":0.24,"funding":-0.19,"dd":27.19,"in_range":54.1,"trips":73,"liquidated":false},{"start":"2026-05-20","price":77500.5,"ret":-19.72,"hold":-19.48,"grid":1.84,"fees":0.19,"funding":-0.17,"dd":26.74,"in_range":43.1,"trips":54,"liquidated":false},{"start":"2026-05-23","price":75902.5,"ret":-13.4,"hold":-15.17,"grid":1.67,"fees":0.17,"funding":-0.16,"dd":24.56,"in_range":32.6,"trips":49,"liquidated":false},{"start":"2026-05-27","price":75570.5,"ret":-22.53,"hold":-20.79,"grid":1.01,"fees":0.12,"funding":-0.17,"dd":26.11,"in_range":21.4,"trips":30,"liquidated":false},{"start":"2026-05-30","price":73940.6,"ret":-21.35,"hold":-19.95,"grid":0.95,"fees":0.11,"funding":-0.19,"dd":23.31,"in_range":14.3,"trips":28,"liquidated":false},{"start":"2026-06-02","price":66502.8,"ret":6.51,"hold":-7.66,"grid":10.82,"fees":0.91,"funding":-0.19,"dd":9.37,"in_range":89.1,"trips":312,"liquidated":false},{"start":"2026-06-06","price":61374.7,"ret":10.58,"hold":2.73,"grid":11.01,"fees":0.98,"funding":0.01,"dd":5.73,"in_range":100.0,"trips":319,"liquidated":false},{"start":"2026-06-09","price":61707.8,"ret":10.22,"hold":2.11,"grid":10.47,"fees":0.92,"funding":0.01,"dd":5.09,"in_range":100.0,"trips":303,"liquidated":false},{"start":"2026-06-13","price":63541.5,"ret":9.33,"hold":-0.2,"grid":9.42,"fees":0.8,"funding":-0.12,"dd":4.39,"in_range":100.0,"trips":272,"liquidated":false},{"start":"2026-06-16","price":66456.0,"ret":5.34,"hold":-3.35,"grid":6.42,"fees":0.54,"funding":-0.37,"dd":9.97,"in_range":89.7,"trips":185,"liquidated":false},{"start":"2026-06-19","price":63178.0,"ret":8.43,"hold":2.08,"grid":8.73,"fees":0.75,"funding":-0.05,"dd":3.99,"in_range":100.0,"trips":252,"liquidated":false},{"start":"2026-06-23","price":63000.0,"ret":7.61,"hold":4.22,"grid":8.79,"fees":0.76,"funding":-0.01,"dd":3.77,"in_range":100.0,"trips":254,"liquidated":false},{"start":"2026-06-26","price":60148.1,"ret":3.39,"hold":7.6,"grid":7.04,"fees":0.66,"funding":0.4,"dd":7.01,"in_range":96.9,"trips":205,"liquidated":false},{"start":"2026-06-30","price":59787.6,"ret":4.62,"hold":6.72,"grid":7.21,"fees":0.69,"funding":0.54,"dd":7.64,"in_range":94.2,"trips":210,"liquidated":false},{"start":"2026-07-03","price":61713.2,"ret":6.13,"hold":2.49,"grid":6.2,"fees":0.57,"funding":0.3,"dd":4.25,"in_range":100.0,"trips":180,"liquidated":false},{"start":"2026-07-06","price":63731.3,"ret":5.53,"hold":1.6,"grid":5.63,"fees":0.5,"funding":0.04,"dd":1.56,"in_range":100.0,"trips":163,"liquidated":false},{"start":"2026-07-10","price":63934.9,"ret":4.83,"hold":1.31,"grid":4.87,"fees":0.43,"funding":0.03,"dd":1.38,"in_range":100.0,"trips":141,"liquidated":false},{"start":"2026-07-13","price":62493.5,"ret":4.51,"hold":2.38,"grid":4.62,"fees":0.42,"funding":0.22,"dd":3.0,"in_range":100.0,"trips":134,"liquidated":false},{"start":"2026-07-16","price":64020.1,"ret":3.9,"hold":-1.41,"grid":3.97,"fees":0.35,"funding":0.02,"dd":1.32,"in_range":100.0,"trips":115,"liquidated":false},{"start":"2026-07-20","price":64102.1,"ret":3.65,"hold":0.38,"grid":3.63,"fees":0.32,"funding":0.01,"dd":1.2,"in_range":100.0,"trips":105,"liquidated":false},{"start":"2026-07-23","price":64725.4,"ret":-18.03,"hold":19.71,"grid":3.63,"fees":0.35,"funding":0.07,"dd":24.51,"in_range":92.2,"trips":106,"liquidated":false},{"start":"2026-07-27","price":65185.6,"ret":-19.89,"hold":20.81,"grid":3.32,"fees":0.32,"funding":0.2,"dd":27.27,"in_range":81.2,"trips":97,"liquidated":false},{"start":"2026-07-30","price":64549.8,"ret":-19.51,"hold":20.24,"grid":2.63,"fees":0.27,"funding":0.4,"dd":29.31,"in_range":69.6,"trips":77,"liquidated":false},{"start":"2026-08-02","price":63473.9,"ret":-22.17,"hold":21.81,"grid":2.07,"fees":0.22,"funding":0.66,"dd":32.58,"in_range":58.2,"trips":61,"liquidated":false},{"start":"2026-08-06","price":64932.4,"ret":-23.41,"hold":22.43,"grid":1.76,"fees":0.19,"funding":0.67,"dd":30.04,"in_range":47.1,"trips":52,"liquidated":false},{"start":"2026-08-09","price":65161.7,"ret":-20.08,"hold":20.16,"grid":1.63,"fees":0.18,"funding":0.72,"dd":29.42,"in_range":36.1,"trips":48,"liquidated":false},{"start":"2026-08-12","price":63382.6,"ret":-22.88,"hold":21.72,"grid":0.97,"fees":0.12,"funding":0.92,"dd":34.93,"in_range":24.3,"trips":29,"liquidated":false},{"start":"2026-08-16","price":63039.6,"ret":-23.56,"hold":22.0,"grid":0.59,"fees":0.09,"funding":1.04,"dd":36.23,"in_range":12.2,"trips":18,"liquidated":false},{"start":"2026-08-19","price":68149.8,"ret":-18.38,"hold":18.7,"grid":0.83,"fees":0.11,"funding":1.02,"dd":21.52,"in_range":4.8,"trips":25,"liquidated":false},{"start":"2026-08-23","price":77079.6,"ret":-0.23,"hold":11.0,"grid":8.22,"fees":0.76,"funding":0.19,"dd":10.5,"in_range":97.8,"trips":239,"liquidated":false},{"start":"2026-08-26","price":78612.9,"ret":3.93,"hold":7.16,"grid":7.48,"fees":0.68,"funding":0.05,"dd":7.67,"in_range":98.8,"trips":217,"liquidated":false},{"start":"2026-08-29","price":78071.6,"ret":3.7,"hold":6.86,"grid":6.85,"fees":0.63,"funding":0.12,"dd":9.0,"in_range":95.6,"trips":199,"liquidated":false},{"start":"2026-09-02","price":77582.2,"ret":-1.79,"hold":10.81,"grid":6.35,"fees":0.61,"funding":0.22,"dd":9.94,"in_range":93.1,"trips":185,"liquidated":false},{"start":"2026-09-05","price":79720.0,"ret":3.48,"hold":6.97,"grid":6.78,"fees":0.63,"funding":0.08,"dd":5.94,"in_range":100.0,"trips":197,"liquidated":false},{"start":"2026-09-09","price":78671.9,"ret":6.29,"hold":3.95,"grid":7.16,"fees":0.66,"funding":0.16,"dd":7.85,"in_range":98.4,"trips":208,"liquidated":false},{"start":"2026-09-12","price":77365.6,"ret":1.31,"hold":7.91,"grid":5.45,"fees":0.53,"funding":0.27,"dd":10.72,"in_range":82.1,"trips":159,"liquidated":false},{"start":"2026-09-15","price":76150.0,"ret":-0.58,"hold":8.35,"grid":4.0,"fees":0.4,"funding":0.36,"dd":13.55,"in_range":54.4,"trips":117,"liquidated":false},{"start":"2026-09-19","price":81006.7,"ret":6.56,"hold":1.95,"grid":6.65,"fees":0.61,"funding":0.12,"dd":4.07,"in_range":100.0,"trips":193,"liquidated":false},{"start":"2026-09-22","price":85901.4,"ret":3.85,"hold":-4.83,"grid":5.53,"fees":0.48,"funding":-0.12,"dd":2.84,"in_range":100.0,"trips":160,"liquidated":false},{"start":"2026-09-25","price":84059.4,"ret":3.99,"hold":-4.23,"grid":5.25,"fees":0.46,"funding":-0.07,"dd":1.94,"in_range":100.0,"trips":152,"liquidated":false},{"start":"2026-09-29","price":84027.3,"ret":3.59,"hold":-4.94,"grid":5.35,"fees":0.47,"funding":-0.12,"dd":1.96,"in_range":100.0,"trips":155,"liquidated":false},{"start":"2026-10-02","price":85056.4,"ret":0.01,"hold":-8.17,"grid":4.97,"fees":0.44,"funding":-0.27,"dd":6.06,"in_range":99.9,"trips":144,"liquidated":false}],"summary":{"windows":100,"win_rate":58.0,"median":3.67,"p10":-22.57,"p90":10.72,"worst":-33.34,"best":17.15,"liquidations":0,"median_dd":9.34,"median_in_range":95.2,"median_fees":0.56,"beats_hold":61.0}}</script>
+<script id="affiliates" type="application/json">{"pionex": "https://www.pionex.com/{lang}/signUp?r=0jw3MvqQjFQ"}</script>
+<main>
+  <header>
+    <div><a class="home" href="/en/">← GridReplay</a> <a class="home" href="/simulador/" hreflang="es" lang="es" style="margin-left:1rem">ES</a></div>
+    <p class="eyebrow">Free simulator · before you launch the bot</p>
+    <h1>You can’t know which market your bot will get</h1>
+    <p class="dek read">When you launch a grid you don’t know whether a sideways month, a rally or a drop is coming, and a single-period backtest only shows you one of those cases. Here your setup is launched at up to 100 different moments over the past year, minute by minute with real fees and funding, so you see everything that could happen to it before you risk money: how often it would have won, how much it loses when things go wrong and how often it would have been liquidated.</p>
+    <ul class="promises">
+      <li>Free, no sign-up</li>
+      <li>Binance 1-minute candles</li>
+      <li>Engine <a href="/en/validation/" style="color:inherit">validated order by order</a></li>
+    </ul>
+  </header>
+
+  <section aria-labelledby="h-cfg">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Your setup</p>
+      <h2 id="h-cfg">Set up your bot as you would on the exchange</h2>
+      <p>Choose any pair, direction, price range, grid count and leverage. Since each historical period starts at a different price, your range is converted to a percentage of the start price (the current one by default): if you start with BTC at 80,000 and enter 72,000–88,000, in every period the bot trades between 10% below and 10% above its entry price. If you plan to launch the bot later at a different price, enter it under “Start price”. You can also enter the range in % directly.</p>
+    </div>
+    <form class="sim" id="sim">
+      <label>Pair<input name="symbol" value="BTC" list="pairs" required autocomplete="off" spellcheck="false"></label>
+      <datalist id="pairs"><option>BTC</option><option>ETH</option><option>SOL</option><option>XRP</option><option>DOGE</option><option>BNB</option><option>ADA</option><option>LINK</option><option>AVAX</option><option>SUI</option></datalist>
+      <label>Exchange<select name="exchange"><option value="pionex">Pionex</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="kucoin">KuCoin</option></select></label>
+      <label>Direction<select name="direction"><option value="neutral">Neutral</option><option value="long">Long</option><option value="short">Short</option></select></label>
+      <label>Range in<select name="unit" id="unit"><option value="price">Price (USDT)</option><option value="pct">% from entry</option></select></label>
+      <label data-unit="price">Lower price<input name="lower" type="number" step="any" min="0"></label>
+      <label data-unit="price">Upper price<input name="upper" type="number" step="any" min="0"></label>
+      <label data-unit="price">Start price (optional)<input name="entry" type="number" step="any" min="0"></label>
+      <label data-unit="pct" hidden>Lower limit (−%)<input name="below" type="number" value="10" min="0.1" max="95" step="any"></label>
+      <label data-unit="pct" hidden>Upper limit (+%)<input name="above" type="number" value="10" min="0.1" max="500" step="any"></label>
+      <p class="hint full" id="range-hint" aria-live="polite"></p>
+      <label>Grids<input name="grids" type="number" value="40" min="2" max="500" step="1" required></label>
+      <label>Mode<select name="mode"><option value="arithmetic">Arithmetic</option><option value="geometric">Geometric</option></select></label>
+      <label>Leverage<input name="leverage" type="number" value="3" min="1" max="125" step="1" required></label>
+      <label>Bot duration<select name="days"><option value="3">3 days</option><option value="7">7 days</option><option value="14">14 days</option><option value="30" selected>30 days</option><option value="60">60 days</option><option value="90">90 days</option><option value="180">180 days</option></select></label>
+      <label>History<select name="months"><option value="3">3 months</option><option value="6">6 months</option><option value="12" selected>12 months</option><option value="18">18 months</option><option value="24">24 months</option><option value="36">36 months</option></select></label>
+      <div class="full">
+        <button class="btn" type="submit" id="go">Test across all periods</button>
+        <span class="hint">Runs in your browser. The first time it downloads the engine (about 15 MB) and the pair’s prices (about 2 MB per month); it takes from half a minute to a couple of minutes.</span>
+      </div>
+    </form>
+    <div class="status" id="status" hidden aria-live="polite">
+      <p id="st-main"></p>
+      <div class="bar"><i id="st-bar"></i></div>
+      <p class="meta" id="st-sub"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-res" id="results" hidden>
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow" id="res-eyebrow">Results</p>
+      <h2 id="h-res"></h2>
+      <p id="res-dek" style="color:var(--ink-2)"></p>
+      <p class="note" id="res-note" hidden>This is an example with the default setup, calculated on <span id="res-date"></span>. Change the values above and press “Test across all periods” to see yours.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Profitable periods</span><b id="k-win">—</b><p id="k-win-p"></p></div>
+      <div class="kpi"><span class="src">Typical result</span><b id="k-med">—</b><p>median net result on the investment (fees and funding included).</p></div>
+      <div class="kpi"><span class="src">When it goes wrong</span><b id="k-p10">—</b><p>the result of the worst 10% of periods. The very worst: <span id="k-worst"></span>.</p></div>
+      <div class="kpi"><span class="src">Liquidations</span><b id="k-liq">—</b><p>periods in which the bot would have been liquidated, losing the whole investment.</p></div>
+    </div>
+    <figure class="chart">
+      <p class="fig-title">Result of each period, by start date</p>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Profit</span><span><i style="background:var(--s2)"></i>Loss</span><span><i style="background:var(--ink)"></i>Liquidation</span></div>
+      <svg id="chart" role="img" aria-label="Bar chart of each period’s result"></svg>
+      <div class="tip" id="tip" hidden></div>
+      <figcaption id="cap"></figcaption>
+    </figure>
+    <ul class="plain read" id="facts"></ul>
+    <div class="row-actions" id="useful">
+      <span>Was this useful?</span>
+      <button class="btn ghost" type="button" data-useful="yes">Yes</button>
+      <button class="btn ghost" type="button" data-useful="no">No</button>
+      <span class="meta" id="useful-msg" aria-live="polite"></span>
+    </div>
+    <p class="meta read">Periods overlap (starts every few days), so they aren’t independent: read this as a map of how the setup behaves across different markets, not as an exact probability. Past returns don’t guarantee future returns, and none of this is financial advice.</p>
+
+    <div class="cta read" id="aff" hidden>
+      <h2>Convinced? Create it on your exchange</h2>
+      <p id="aff-text"></p>
+      <a class="btn" id="aff-btn" href="#" target="_blank" rel="sponsored noopener"></a>
+      <p class="meta">Affiliate link: if you sign up through it, the exchange pays us part of its fees at no cost to you, which keeps GridReplay free. It doesn’t change the result. Investing in crypto-assets carries risks, including losing all the capital invested.</p>
+    </div>
+
+    <div class="cta read">
+      <h2>And once it’s running</h2>
+      <p>We’re building GridReplay alerts: they warn you when the price nears the edge of the range or liquidation, or when funding is eating your profit. Join and you’ll try them for free.</p>
+      <a class="btn" href="/en/#waitlist-signup">Join the waitlist</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>GridReplay is independent and not affiliated with Pionex, Binance, Bybit, KuCoin or any other exchange. Fees: each exchange’s base futures rate, with no discounts.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const ES = document.documentElement.lang !== "en";
+  const L = ES ? "es-ES" : "en-US";
+  const P = ES ? " %" : "%";
+  const T = ES ? {
+    engine: "Cargando el motor de cálculo…", prices: "Descargando precios de Binance…", sim: "Simulando periodos…",
+    simN: (d, t) => `Periodo ${d} de ${t} simulado`, dl: (f, mb) => `${f} archivos de precios · ${mb} MB`,
+    errTitle: "No se ha podido simular", noData: (s) => `Binance no tiene velas de futuros para ${s}. Revisa el par (por ejemplo BTC, ETH o SOL).`,
+    short: (s) => `${s} no tiene suficiente histórico para periodos de esa duración. Prueba con menos días o menos meses.`,
+    config: "Revisa la configuración: el rango, los grids o el apalancamiento no son válidos.", retry: "Revisa tu conexión y vuelve a intentarlo.",
+    equiv: (p, b, a, own) => `${own ? "Arranque" : "Precio actual"}: ${p}. Tu rango equivale a ${b}${P} / ${a}${P}, y en cada periodo el bot usa ese mismo rango relativo a su precio de entrada.`,
+    badRange: (p) => `El precio de arranque (${p}) tiene que estar dentro del rango, entre el precio inferior y el superior (ambos incluidos).`,
+    noPrice: "No se ha podido leer el precio actual de ese par. Revisa el par o escribe el rango en %.",
+    loadingPrice: "Leyendo el precio actual…",
+    title: (s, d, n) => `${s}: ${n} bots de ${d} días`, dek: (f, t, dir, b, a, g, lev) => `Del ${f} al ${t}. ${dir} con rango ${b}${P} / ${a}${P}, ${g} grids y ${lev}x.`,
+    asPrice: (lo, hi, e) => ` (tu rango de ${lo} a ${hi} arrancando a ${e})`,
+    win: (n) => `de ${n} periodos acabaron en beneficio.`, liqOf: (n) => `de ${n}`,
+    facts: (s) => [
+      `Supera a comprar y mantener en el ${num(s.beats_hold, 0)}${P} de los periodos.`,
+      `Caída máxima típica durante el bot: −${num(s.median_dd, 1)}${P} de la inversión.`,
+      `El precio pasa de media el ${num(s.median_in_range, 0)}${P} del tiempo dentro del rango.`,
+      `Las comisiones se llevan de media un ${num(s.median_fees, 2)}${P} de la inversión por periodo.`,
+    ],
+    cap: "Cada barra es un bot lanzado ese día con tu configuración. Pasa el ratón por encima para ver el detalle.",
+    tip: (r) => `${r.start} · arranque ${r.price.toLocaleString(L, { maximumSignificantDigits: 6 })}\nResultado ${num(r.ret, 2, true)}${P}${r.liquidated ? " (liquidado)" : ""}\nGrid ${num(r.grid, 2, true)}${P} · comisiones −${num(r.fees, 2)}${P} · funding ${num(r.funding, 2, true)}${P}\nComprar y mantener ${num(r.hold, 2, true)}${P} · ${r.trips} ciclos`,
+    dir: { neutral: "Neutral", long: "Long", short: "Short" },
+    exampleTag: "Ejemplo · configuración por defecto", resultsTag: "Tus resultados",
+    thanksYes: "¡Gracias!", thanksNo: "Gracias. Si nos cuentas qué echas en falta en contact@gridreplay.com, lo tendremos en cuenta.",
+    affBtn: (n) => `Crear mi bot en ${n}`,
+    affPrice: (n, lo, hi, g, lev) => `Crea tu grid en ${n} con el rango ${lo}–${hi}, ${g} grids y ${lev}x, igual que en la simulación.`,
+    affPct: (n, b, a, g, lev) => `Crea tu grid en ${n} con un rango de −${b} % / +${a} % sobre el precio de entrada, ${g} grids y ${lev}x, igual que en la simulación.`,
+  } : {
+    engine: "Loading the calculation engine…", prices: "Downloading Binance prices…", sim: "Simulating periods…",
+    simN: (d, t) => `Period ${d} of ${t} simulated`, dl: (f, mb) => `${f} price files · ${mb} MB`,
+    errTitle: "Couldn’t run the simulation", noData: (s) => `Binance has no futures candles for ${s}. Check the pair (e.g. BTC, ETH or SOL).`,
+    short: (s) => `${s} doesn’t have enough history for periods that long. Try fewer days or fewer months.`,
+    config: "Check the setup: the range, grids or leverage aren’t valid.", retry: "Check your connection and try again.",
+    equiv: (p, b, a, own) => `${own ? "Start" : "Current price"}: ${p}. Your range equals ${b}${P} / ${a}${P}, and in every period the bot uses that same range relative to its entry price.`,
+    badRange: (p) => `The start price (${p}) must be inside the range, between the lower and upper prices (both included).`,
+    noPrice: "Couldn’t read the current price for that pair. Check the pair or enter the range in %.",
+    loadingPrice: "Reading the current price…",
+    title: (s, d, n) => `${s}: ${n} bots of ${d} days`, dek: (f, t, dir, b, a, g, lev) => `From ${f} to ${t}. ${dir} with range ${b}${P} / ${a}${P}, ${g} grids and ${lev}x.`,
+    asPrice: (lo, hi, e) => ` (your ${lo} to ${hi} range starting at ${e})`,
+    win: (n) => `of ${n} periods ended in profit.`, liqOf: (n) => `of ${n}`,
+    facts: (s) => [
+      `Beats buy-and-hold in ${num(s.beats_hold, 0)}${P} of periods.`,
+      `Typical maximum drawdown during the bot: −${num(s.median_dd, 1)}${P} of the investment.`,
+      `On average the price spends ${num(s.median_in_range, 0)}${P} of the time inside the range.`,
+      `Fees take on average ${num(s.median_fees, 2)}${P} of the investment per period.`,
+    ],
+    cap: "Each bar is a bot launched that day with your setup. Hover for details.",
+    tip: (r) => `${r.start} · entry ${r.price.toLocaleString(L, { maximumSignificantDigits: 6 })}\nResult ${num(r.ret, 2, true)}${P}${r.liquidated ? " (liquidated)" : ""}\nGrid ${num(r.grid, 2, true)}${P} · fees −${num(r.fees, 2)}${P} · funding ${num(r.funding, 2, true)}${P}\nBuy and hold ${num(r.hold, 2, true)}${P} · ${r.trips} cycles`,
+    dir: { neutral: "Neutral", long: "Long", short: "Short" },
+    exampleTag: "Example · default setup", resultsTag: "Your results",
+    thanksYes: "Thank you!", thanksNo: "Thanks. If you tell us what’s missing at contact@gridreplay.com, we’ll take it into account.",
+    affBtn: (n) => `Create my bot on ${n}`,
+    affPrice: (n, lo, hi, g, lev) => `Create your grid on ${n} with the range ${lo}–${hi}, ${g} grids and ${lev}x, just like in the simulation.`,
+    affPct: (n, b, a, g, lev) => `Create your grid on ${n} with a range of −${b}% / +${a}% from the entry price, ${g} grids and ${lev}x, just like in the simulation.`,
+  };
+  const $ = (id) => document.getElementById(id);
+  const num = (v, d = 2, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  const cls = (v) => (v > 0 ? "pos" : v < 0 ? "neg" : "");
+  // Límite del rango en %: −10,0 / +15,0, o 0 si el arranque coincide con el límite.
+  const lim = (v) => (Math.abs(v) < 0.05 ? "0" : num(v, 1, true));
+
+  let worker = null, params = null;
+  function startWorker() {
+    if (worker) return worker;
+    worker = new Worker("/app/worker.js?v=d9a0da9ef7");
+    worker.onmessage = ({ data: m }) => {
+      if (m.type === "stage" && m.stage === "prices") say(T.prices, 0.03, "");
+      else if (m.type === "download") $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString(L, { maximumFractionDigits: 1 }));
+      else if (m.type === "progress" && m.stage === "sim") say(T.sim, 0.1);
+      else if (m.type === "progress" && m.total) say(T.simN(m.done, m.total), 0.1 + 0.9 * m.done / m.total);
+      else if (m.type === "done") show(m);
+      else if (m.type === "error") { if (!m.code) grEvent("simulator_crash"); fail(m.code === "no_data" ? T.noData(m.symbol) : m.code === "too_short" ? T.short(m.symbol) : m.code === "symbol" ? T.noData(params.symbol) : m.code === "config" ? T.config : `${T.retry} (${m.message || m.code})`); }
+    };
+    worker.onerror = (e) => { grEvent("simulator_crash"); fail(`${T.retry} (${e.message})`); };
+    return worker;
+  }
+  new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { startWorker().postMessage({ type: "warmup" }); ob.disconnect(); } }).observe($("sim"));
+
+  function say(main, frac, sub) {
+    const st = $("status"); st.hidden = false; st.classList.remove("err");
+    $("st-main").textContent = main;
+    if (frac != null) $("st-bar").style.width = `${Math.round(frac * 100)}%`;
+    if (sub != null) $("st-sub").textContent = sub;
+  }
+  function fail(msg) {
+    const st = $("status"); st.hidden = false; st.classList.add("err");
+    $("st-main").textContent = T.errTitle; $("st-sub").textContent = msg; $("st-bar").style.width = "0";
+    $("go").disabled = false;
+  }
+
+  // Rango en precio: se convierte a % sobre el precio actual de Binance.
+  const form = $("sim");
+  let price = null, priceFor = "";
+  const pairOf = () => form.symbol.value.trim().toUpperCase().replace(/\/?USDT$/, "") + "USDT";
+  const fmtP = (v) => v.toLocaleString(L, { maximumSignificantDigits: 6 });
+  const round = (v) => Number(v.toPrecision(5));
+  const pct = (v) => Math.round(v * 100) / 100;
+  const startPrice = () => +form.entry.value || price;
+  function relative() {
+    const lo = +form.lower.value, hi = +form.upper.value, p0 = startPrice();
+    return p0 && lo && hi ? { b: pct((1 - lo / p0) * 100), a: pct((hi / p0 - 1) * 100) } : null;
+  }
+  function hint() {
+    const h = $("range-hint");
+    if (form.unit.value !== "price") return void (h.textContent = "");
+    if (!startPrice()) return void (h.textContent = priceFor ? T.noPrice : T.loadingPrice);
+    const r = relative(), own = !!+form.entry.value;
+    h.textContent = !r ? "" : r.b >= 0 && r.a >= 0 ? T.equiv(fmtP(startPrice()), lim(-r.b), lim(r.a), own) : T.badRange(fmtP(startPrice()));
+  }
+  async function loadPrice() {
+    const sym = pairOf();
+    price = null; priceFor = ""; form.entry.value = ""; hint();
+    try {
+      const resp = await fetch(`https://fapi.binance.com/fapi/v1/ticker/price?symbol=${encodeURIComponent(sym)}`);
+      if (!resp.ok) throw new Error(resp.status);
+      price = +(await resp.json()).price;
+      form.lower.value = round(price * (1 - form.below.value / 100));
+      form.upper.value = round(price * (1 + form.above.value / 100));
+      form.entry.placeholder = `${fmtP(price)} (${ES ? "actual" : "current"})`;
+    } catch { price = null; form.entry.placeholder = ""; }
+    priceFor = sym; hint();
+  }
+  form.symbol.addEventListener("change", loadPrice);
+  form.lower.addEventListener("input", hint);
+  form.upper.addEventListener("input", hint);
+  form.entry.addEventListener("input", hint);
+  form.unit.addEventListener("change", () => {
+    const byPrice = form.unit.value === "price";
+    if (!byPrice) { const r = relative(); if (r && r.b >= 0 && r.a >= 0) { form.below.value = r.b; form.above.value = r.a; } }
+    else if (startPrice()) { const p0 = startPrice(); form.lower.value = round(p0 * (1 - form.below.value / 100)); form.upper.value = round(p0 * (1 + form.above.value / 100)); }
+    form.querySelectorAll("[data-unit]").forEach(l => { l.hidden = l.dataset.unit !== form.unit.value; });
+    hint();
+  });
+  loadPrice();
+
+  // Enlace de afiliado al exchange elegido (affiliates.json); sin enlace no se muestra nada.
+  let AFF = {};
+  try { AFF = JSON.parse($("affiliates").textContent); } catch { AFF = {}; }
+  const EXCH = { pionex: "Pionex", binance: "Binance", bybit: "Bybit", kucoin: "KuCoin" };
+  function affiliate(example) {
+    const url = (AFF[params.exchange] || "").replace("{lang}", ES ? "es" : "en"), name = EXCH[params.exchange];
+    $("aff").hidden = example || !url;
+    if (example || !url) return;
+    $("aff-btn").href = url;
+    $("aff-btn").textContent = T.affBtn(name);
+    $("aff-text").textContent = params.unit === "price"
+      ? T.affPrice(name, fmtP(+params.lower), fmtP(+params.upper), params.grids, params.leverage)
+      : T.affPct(name, params.below, params.above, params.grids, params.leverage);
+  }
+  $("aff-btn").addEventListener("click", () => grEvent("aff_" + params.exchange));
+
+  // ¿Útil? Una respuesta por resultado, contada de forma anónima.
+  document.querySelectorAll("[data-useful]").forEach(b => b.addEventListener("click", () => {
+    grEvent("useful_" + b.dataset.useful);
+    document.querySelectorAll("[data-useful]").forEach(x => { x.disabled = true; });
+    $("useful-msg").textContent = b.dataset.useful === "yes" ? T.thanksYes : T.thanksNo;
+  }));
+
+  // Ejemplo precalculado (make_example.py): se ve un resultado real sin esperar.
+  try {
+    const ex = JSON.parse($("example").textContent);
+    params = ex.params; show(ex, true);
+  } catch { /* sin ejemplo: la sección de resultados sigue oculta */ }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    params = Object.fromEntries(f.entries());
+    if (params.unit === "price") {
+      const r = relative();
+      if (!r || !(r.b >= 0 && r.a >= 0)) return fail(startPrice() ? T.badRange(fmtP(startPrice())) : T.noPrice);
+      params.entry = startPrice();
+      params.below = r.b; params.above = r.a;
+    } else if (!(+params.below >= 0 && +params.above >= 0 && +params.below + +params.above > 0)) return fail(T.config);
+    $("go").disabled = true; $("results").hidden = true;
+    say(T.engine, 0.01, "");
+    grEvent("simulator_run");
+    startWorker().postMessage({ type: "robust", params });
+  });
+
+  function show(m, example = false) {
+    if (!example) grEvent("simulator_done");
+    $("res-note").hidden = !example;
+    $("useful").hidden = example;
+    affiliate(example);
+    document.querySelectorAll("[data-useful]").forEach(x => { x.disabled = false; });
+    $("useful-msg").textContent = "";
+    $("res-eyebrow").textContent = example ? T.exampleTag : T.resultsTag;
+    if (example) $("res-date").textContent = new Date(m.computed + "T00:00Z").toLocaleDateString(L, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+    $("status").hidden = true; $("go").disabled = false;
+    const s = m.summary, n = s.windows, base = m.symbol.replace(/USDT$/, "");
+    $("h-res").textContent = T.title(base, params.days, n);
+    $("res-dek").textContent = T.dek(m.from, m.to, T.dir[params.direction], lim(-params.below), lim(+params.above), params.grids, params.leverage)
+      .replace(/,( \d+ grids)/, (params.unit === "price" ? T.asPrice(fmtP(+params.lower), fmtP(+params.upper), fmtP(+params.entry)) : "") + ",$1");
+    $("k-win").textContent = num(s.win_rate, 0) + P; $("k-win-p").textContent = T.win(n);
+    $("k-med").textContent = num(s.median, 1, true) + P; $("k-med").className = cls(s.median);
+    $("k-p10").textContent = num(s.p10, 1, true) + P; $("k-p10").className = cls(s.p10);
+    $("k-worst").textContent = num(s.worst, 1, true) + P;
+    $("k-liq").textContent = `${s.liquidations} / ${n}`; $("k-liq").className = s.liquidations ? "neg" : "";
+    $("facts").textContent = "";
+    for (const t of T.facts(s)) { const li = document.createElement("li"); li.textContent = t; $("facts").appendChild(li); }
+    $("cap").textContent = T.cap;
+    draw(m.rows);
+    $("results").hidden = false;
+    if (!example) $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // Barras divergentes desde cero: verde beneficio, naranja pérdida, tinta liquidación.
+  function draw(rows) {
+    const NS = "http://www.w3.org/2000/svg", svg = $("chart");
+    const W = 900, H = 300, ml = 46, mr = 8, mt = 10, mb = 26;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.textContent = "";
+    const vals = rows.map(r => r.ret);
+    const hi = Math.max(0, ...vals), lo = Math.min(0, ...vals);
+    const pad = (hi - lo) * 0.06 || 1;
+    const y = (v) => mt + (hi + pad - v) / (hi - lo + 2 * pad) * (H - mt - mb);
+    const bw = (W - ml - mr) / rows.length, gap = Math.min(2, bw * 0.25);
+    const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+    const step = niceStep((hi - lo + 2 * pad) / 5);
+    for (let v = Math.ceil((lo - pad) / step) * step; v <= hi + pad; v += step) {
+      el("line", { x1: ml, x2: W - mr, y1: y(v), y2: y(v), class: "grid" });
+      el("text", { x: ml - 6, y: y(v) + 4, "text-anchor": "end", class: "lbl" }).textContent = num(v, step < 1 ? 1 : 0) + P;
+    }
+    el("line", { x1: ml, x2: W - mr, y1: y(0), y2: y(0), class: "axis" });
+    let lastMonth = "", lastX = -Infinity;
+    rows.forEach((r, i) => {
+      const x = ml + i * bw, top = Math.min(y(r.ret), y(0)), h = Math.max(Math.abs(y(r.ret) - y(0)), 1);
+      const month = r.start.slice(0, 7);
+      if (month !== lastMonth && x - lastX > 64) {
+        el("text", { x, y: H - 8, class: "lbl" }).textContent = new Date(r.start + "T00:00Z").toLocaleDateString(L, { month: "short", year: "2-digit", timeZone: "UTC" });
+        lastX = x;
+      }
+      lastMonth = month;
+      const hit = el("rect", { x, y: mt, width: bw, height: H - mt - mb, class: "hit" });
+      const bar = el("rect", { x: x + gap / 2, y: top, width: Math.max(bw - gap, 1), height: h, rx: Math.min(2, bw / 4), class: "hl " + (r.liquidated ? "bar-liq" : r.ret >= 0 ? "bar-pos" : "bar-neg") });
+      const tip = $("tip");
+      hit.addEventListener("mousemove", (e) => {
+        tip.hidden = false; tip.style.whiteSpace = "pre"; tip.textContent = T.tip(r);
+        const box = svg.parentNode.getBoundingClientRect();
+        const left = Math.min(e.clientX - box.left + 12, box.width - tip.offsetWidth - 4);
+        tip.style.left = `${Math.max(left, 4)}px`; tip.style.top = `${e.clientY - box.top + 12}px`;
+        bar.classList.add("on");
+      });
+      hit.addEventListener("mouseleave", () => { tip.hidden = true; bar.classList.remove("on"); });
+    });
+  }
+  function niceStep(raw) {
+    const p = 10 ** Math.floor(Math.log10(raw)), f = raw / p;
+    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p;
+  }
+})();
+</script>
+</body>
+</html>
