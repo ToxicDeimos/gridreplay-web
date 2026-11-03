@@ -117,5 +117,12 @@ a { color: var(--accent); text-underline-offset: 3px; }
     <p>Esta web no usa cookies. Para saber cuánta gente la visita contamos las visitas a cada página y cuántas veces se usan el simulador y el analizador con un contador propio, que solo suma por página y día: sin cookies, sin IP y sin ningún dato que te identifique.</p>
   </section>
 </main>
+<div id="gr-lang" hidden style="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);box-sizing:border-box;display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:10px;background:#11151b;color:#f5f6f8;font:14px/1.4 system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.25)">
+<a href="/en/privacy/" style="color:#f5f6f8;font-weight:600">This page is also in English →</a>
+<button type="button" aria-label="Close" style="all:unset;cursor:pointer;padding:0 4px;font-size:18px;line-height:1;opacity:.7">×</button>
+</div>
+<script>(function(){var b=document.getElementById("gr-lang"),k="gr-lang-hint";try{if(localStorage.getItem(k))return}catch(e){}
+var l=(navigator.languages||[navigator.language||""]).join(" ").toLowerCase(),es=/(^|\s)es/.test(l);
+if(es===false){b.hidden=false;b.querySelector("button").onclick=function(){b.hidden=true;try{localStorage.setItem(k,"1")}catch(e){}}}})()</script>
 </body>
 </html>

@@ -470,5 +470,12 @@ footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; 
   })();
 })();
 </script>
+<div id="gr-lang" hidden style="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);box-sizing:border-box;display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:10px;background:#11151b;color:#f5f6f8;font:14px/1.4 system-ui,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.25)">
+<a href="/informes/ias-de-pionex/" style="color:#f5f6f8;font-weight:600">Esta página también está en español →</a>
+<button type="button" aria-label="Cerrar" style="all:unset;cursor:pointer;padding:0 4px;font-size:18px;line-height:1;opacity:.7">×</button>
+</div>
+<script>(function(){var b=document.getElementById("gr-lang"),k="gr-lang-hint";try{if(localStorage.getItem(k))return}catch(e){}
+var l=(navigator.languages||[navigator.language||""]).join(" ").toLowerCase(),es=/(^|\s)es/.test(l);
+if(es===true){b.hidden=false;b.querySelector("button").onclick=function(){b.hidden=true;try{localStorage.setItem(k,"1")}catch(e){}}}})()</script>
 </body>
 </html>
