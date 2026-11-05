@@ -141,6 +141,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .meter::before, .meter::after { content: ""; position: absolute; top: 0; bottom: 0; width: 33.3%; opacity: .18; }
 .meter::before { left: 0; background: var(--s2); }
 .meter::after { right: 0; background: var(--accent); }
+.zones { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: .3rem; font: 400 0.75rem/1.4 var(--font-data); color: var(--ink-3); }
+.zones span:nth-child(2) { text-align: center; }
+.zones span:last-child { text-align: right; }
+.zones .on { color: var(--ink); font-weight: 600; }
 .facts { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.8rem; font-size: 0.92rem; margin: 0; }
 .facts dt { color: var(--ink-3); }
 .facts dd { margin: 0; font-family: var(--font-data); text-align: right; }
@@ -261,7 +265,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   const T = ES ? {
     dir: { long: "Long", short: "Short", neutral: "Neutral" },
     why: { long: "Posicionamiento favorable a subidas", short: "Posicionamiento favorable a bajadas", neutral: "Sin sesgo claro: grid neutral" },
-    range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal", zones: "short si ≤ 33 · long si ≥ 67",
+    range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal de hoy (0–100): short hasta 33, long desde 67",
     low: "Volatilidad muy baja para este par: en estos momentos los grids neutrales perdieron de media. Mejor esperar o usar un grid direccional.",
     sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
     affNote: 'Enlace de afiliado: el exchange nos paga una parte de sus comisiones, sin coste para ti. No cambia la sugerencia, que sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
@@ -277,7 +281,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   } : {
     dir: { long: "Long", short: "Short", neutral: "Neutral" },
     why: { long: "Positioning favours upside", short: "Positioning favours downside", neutral: "No clear bias: neutral grid" },
-    range: "Range", grids: "Grids", lev: "Tested with", signal: "Signal", zones: "short if ≤ 33 · long if ≥ 67",
+    range: "Range", grids: "Grids", lev: "Tested with", signal: "Today's signal (0–100): short up to 33, long from 67",
     low: "Very low volatility for this pair: at such times neutral grids lost money on average. Better to wait or use a directional grid.",
     sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
     affNote: 'Affiliate link: the exchange pays us part of its fees at no cost to you. It doesn’t change the suggestion, which applies on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
@@ -361,7 +365,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     el.innerHTML = `
       <div class="card-head"><b>${o.base}/USDT</b><span>${price(o.price)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
-      <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 1px)"></i></div><p class="meta" style="margin-top:.3rem">${T.signal}: ${Math.round(o.sig * 100)} / 100 · ${T.zones}</p></div>
+      <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 1px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
       <dl class="facts">
         <dt>${T.range}</dt><dd>${price(lo)} – ${price(hi)} (±${num(o.half * 100, 1)}${P})</dd>
         <dt>${T.grids}</dt><dd>${o.grids}</dd>
