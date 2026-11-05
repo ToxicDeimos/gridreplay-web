@@ -6,7 +6,7 @@
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
 const MODULES = ["__init__", "data", "fees", "pionex", "robust", "sim", "validate", "web"];
-const VERSION = "d38cf7ed35";
+const VERSION = "aa5f71e35e";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");
@@ -101,7 +101,8 @@ self.onmessage = async ({ data }) => {
     py = await ready;
   } catch (err) {
     ready = null; // se puede reintentar (p. ej. tras perder la conexión)
-    return fail(err);
+    // Un fallo al precargar no es un fallo del usuario: lo reintenta su primera ejecución.
+    return data.type === "warmup" ? post({ type: "error", code: "warmup" }) : fail(err);
   }
   if (data.type === "warmup") return post({ type: "stage", stage: "ready" });
   try {

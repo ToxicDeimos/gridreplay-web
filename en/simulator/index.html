@@ -312,16 +312,17 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
   let worker = null, params = null;
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=d38cf7ed35");
+    worker = new Worker("/app/worker.js?v=aa5f71e35e");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "prices") say(T.prices, 0.03, "");
       else if (m.type === "download") $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString(L, { maximumFractionDigits: 1 }));
       else if (m.type === "progress" && m.stage === "sim") say(T.sim, 0.1);
       else if (m.type === "progress" && m.total) say(T.simN(m.done, m.total), 0.1 + 0.9 * m.done / m.total);
       else if (m.type === "done") show(m);
+      else if (m.type === "error" && m.code === "warmup") return;
       else if (m.type === "error") { if (!m.code) grEvent("simulator_crash"); fail(m.code === "no_data" ? T.noData(m.symbol) : m.code === "too_short" ? T.short(m.symbol) : m.code === "symbol" ? T.noData(params.symbol) : m.code === "config" ? T.config : `${T.retry} (${m.message || m.code})`); }
     };
-    worker.onerror = (e) => { grEvent("simulator_crash"); fail(`${T.retry} (${e.message})`); };
+    worker.onerror = (e) => { if (!$("go").disabled) { worker.terminate(); worker = null; return; } grEvent("simulator_crash"); fail(`${T.retry} (${e.message})`); };
     return worker;
   }
   new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { startWorker().postMessage({ type: "warmup" }); ob.disconnect(); } }).observe($("sim"));

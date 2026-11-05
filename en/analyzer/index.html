@@ -276,16 +276,17 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   let worker = null, rows = [], share = [], fileBytes = null, engineReady = false;
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=d38cf7ed35");
+    worker = new Worker("/app/worker.js?v=aa5f71e35e");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
       else if (m.type === "download") { $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString(L, { maximumFractionDigits: 1 })); if ($("st-main").textContent === T.reading) $("st-main").textContent = T.prices; }
       else if (m.type === "progress") say(T.bot(m.done, m.total, m.symbol), 0.05 + 0.95 * m.done / m.total);
       else if (m.type === "done") show(m);
+      else if (m.type === "error" && m.code === "warmup") return;
       else if (m.type === "error") { if (!m.code) grEvent("analyzer_crash"); fail(m.code === "not_export" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
     };
-    worker.onerror = (e) => { grEvent("analyzer_crash"); fail(`${T.retry} (${e.message})`); };
+    worker.onerror = (e) => { if (!$("drop").hidden) { worker.terminate(); worker = null; return; } grEvent("analyzer_crash"); fail(`${T.retry} (${e.message})`); };
     return worker;
   }
   // Empieza a cargar el motor en cuanto se ve la zona de subida, para ganar tiempo.
