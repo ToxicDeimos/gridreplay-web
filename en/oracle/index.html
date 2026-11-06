@@ -35,17 +35,17 @@
   --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
-  --read: 68ch; --wide: 960px;
+  --read: 68ch; --wide: 960px; --zone: .22;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
-    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; --zone: .55; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
-  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; --zone: .55; color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -136,9 +136,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .dir.long { color: var(--accent); }
 .dir.short { color: var(--s2); }
 .dir.neutral { color: var(--ink-2); }
-.meter { height: 6px; background: var(--band); border-radius: 3px; position: relative; overflow: hidden; }
-.meter i { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--ink); border-radius: 2px; }
-.meter::before, .meter::after { content: ""; position: absolute; top: 0; bottom: 0; width: 33.3%; opacity: .18; }
+.meter { height: 8px; background: var(--band); border-radius: 3px; position: relative; overflow: hidden; }
+.meter i { position: absolute; top: 0; bottom: 0; width: 4px; background: var(--ink); border-radius: 2px; box-shadow: 0 0 0 2px var(--surface); z-index: 1; }
+.meter::before, .meter::after { content: ""; position: absolute; top: 0; bottom: 0; width: 33.3%; opacity: var(--zone); }
 .meter::before { left: 0; background: var(--s2); }
 .meter::after { right: 0; background: var(--accent); }
 .zones { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: .3rem; font: 400 0.75rem/1.4 var(--font-data); color: var(--ink-3); }
@@ -365,7 +365,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     el.innerHTML = `
       <div class="card-head"><b>${o.base}/USDT</b><span>${price(o.price)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
-      <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 1px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
+      <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 2px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
       <dl class="facts">
         <dt>${T.range}</dt><dd>${price(lo)} – ${price(hi)} (±${num(o.half * 100, 1)}${P})</dd>
         <dt>${T.grids}</dt><dd>${o.grids}</dd>
