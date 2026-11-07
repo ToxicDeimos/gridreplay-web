@@ -410,8 +410,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const results = await Promise.allSettled(O.pairs.map(oracle));
     const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
     if (!ok.length) { $("status").textContent = T.fail; return; }
-    const order = { long: 0, short: 1, neutral: 2 };
-    ok.sort((a, b) => order[a.dir] - order[b.dir] || Math.abs(b.sig - 0.5) - Math.abs(a.sig - 0.5));
+    // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
     const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
     document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
       profile = b.dataset.profile;
