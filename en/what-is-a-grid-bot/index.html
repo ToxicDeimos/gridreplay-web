@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/en/what-is-a-grid-bot/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/que-es-un-grid-bot/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/what-is-a-grid-bot/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/what-is-a-grid-bot/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="What is a grid bot, and when does it work">
+<meta property="og:description" content="A plain guide to grid bots: how they buy and sell on their own inside a range, when they win and when they lose, and a real example with 100 BTC bots from the past year.">
+<meta property="og:url" content="https://gridreplay.com/en/what-is-a-grid-bot/">
+<meta property="og:image" content="https://gridreplay.com/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-en.png">
+<title>What is a grid bot, and when does it work</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A plain guide to grid bots: how they buy and sell on their own inside a range, when they win and when they lose, and a real example with 100 BTC bots from the past year.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one reading column (~68ch); the grid diagram and the example widen a little. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89;
+  --rule: #dde1e7; --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 820px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3rem; max-width: var(--wide); margin: 0 auto; }
+main > * { max-width: var(--read); }
+main > .wide { max-width: var(--wide); }
+section { display: grid; gap: 1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 800; font-stretch: 82%; }
+h3 { font-size: 1.1rem; font-weight: 700; font-stretch: 90%; }
+p { margin: 0; }
+p, li { color: var(--ink-2); }
+strong { color: var(--ink); font-weight: 600; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+header { display: grid; gap: 1.1rem; padding-top: 3rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.2rem; line-height: 1.5; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+ul, ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1rem 0.8rem; display: grid; gap: 0.7rem; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.85rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.lvl { stroke: var(--rule); stroke-width: 1.5; }
+.lvl-edge { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.price { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.part { border-top: 3px solid var(--ink); padding-top: 0.7rem; display: grid; gap: 0.35rem; align-content: start; }
+.part p { font-size: 0.95rem; line-height: 1.5; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+.box { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem; display: grid; gap: 0.45rem; align-content: start; }
+.box p { font-size: 0.95rem; line-height: 1.5; }
+.good { border-top: 3px solid var(--accent); }
+.bad { border-top: 3px solid var(--s2); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
+.stat { display: grid; gap: 0.3rem; }
+.stat .big { font: 600 1.9rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--ink); }
+.stat p { font-size: 0.9rem; line-height: 1.45; }
+.note { font-size: 0.92rem; background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.tools a.box { text-decoration: none; color: inherit; }
+.tools a.box:hover { border-color: var(--accent); }
+.tools h3 { color: var(--accent); }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+.small { font-size: 0.85rem; color: var(--ink-3); }
+details { border-bottom: 1px solid var(--rule); padding: 0.7rem 0; }
+summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+details p { margin-top: 0.5rem; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; }
+footer p { color: var(--ink-3); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><a class="home" href="/en/">← GridReplay</a> <a class="home" href="/que-es-un-grid-bot/" hreflang="es" lang="es" style="margin-left:1rem">ES</a></div>
+    <p class="eyebrow">Guide · 6 minutes</p>
+    <h1>What is a grid bot, and when does it work</h1>
+    <p class="dek">A grid bot buys and sells on its own, at prices set in advance, while the price moves up and down. It makes money when the market goes sideways and loses when it trends away. Here's how it works, what you decide, and a real example with 100 Bitcoin bots from the past year.</p>
+  </header>
+
+  <section class="wide" aria-labelledby="h-idea">
+    <h2 id="h-idea">The idea, in one picture</h2>
+    <figure>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--s1)"></i>Buy</span>
+        <span><i style="background:var(--s2)"></i>Sell</span>
+      </div>
+      <svg viewBox="0 0 640 260" role="img" aria-label="The price moves up and down across five levels. The bot buys each time the price drops to a level and sells each time it rises to the next one.">
+        <line class="lvl-edge" x1="0" x2="640" y1="30" y2="30"/>
+        <line class="lvl" x1="0" x2="640" y1="90" y2="90"/>
+        <line class="lvl" x1="0" x2="640" y1="130" y2="130"/>
+        <line class="lvl" x1="0" x2="640" y1="170" y2="170"/>
+        <line class="lvl" x1="0" x2="640" y1="210" y2="210"/>
+        <line class="lvl-edge" x1="0" x2="640" y1="245" y2="245"/>
+        <text class="lbl" x="4" y="24">top of the range</text>
+        <text class="lbl" x="4" y="258">bottom of the range</text>
+        <polyline class="price" points="20,130 90,178 150,214 210,165 260,125 320,84 380,140 430,174 490,128 550,84 620,100"/>
+        <g fill="var(--s1)"><circle cx="78" cy="170" r="6"/><circle cx="146" cy="210" r="6"/><circle cx="369" cy="130" r="6"/><circle cx="427" cy="170" r="6"/></g>
+        <g fill="var(--s2)"><circle cx="204" cy="170" r="6"/><circle cx="254" cy="130" r="6"/><circle cx="313" cy="90" r="6"/><circle cx="487" cy="130" r="6"/><circle cx="542" cy="90" r="6"/></g>
+      </svg>
+      <figcaption>Each line is a grid level. When the price drops to a level, the bot buys; when it rises to the level above, it sells what it bought. Each buy followed by its sell is a <strong>cycle</strong>, and it earns the gap between the two levels, minus fees.</figcaption>
+    </figure>
+    <p>That's the whole trick: it doesn't try to guess where the price is going. It spreads buy orders below the current price and sell orders above it, and keeps refilling them. The more the price zigzags inside the range, the more cycles it completes and the more it earns.</p>
+  </section>
+
+  <section aria-labelledby="h-eliges">
+    <h2 id="h-eliges">What you decide</h2>
+    <div class="parts">
+      <div class="part"><h3>Range</h3><p>The lowest and highest price it trades between. If the price leaves the range, the bot sits still until it comes back.</p></div>
+      <div class="part"><h3>Number of grids</h3><p>How many levels fit inside the range. More grids: more frequent cycles, each one earning less, and more fees.</p></div>
+      <div class="part"><h3>Direction</h3><p>On spot the bot starts partly in coins. On futures you pick <strong>long</strong> (earns more if it rises), <strong>short</strong> (if it falls) or <strong>neutral</strong> (neither).</p></div>
+      <div class="part"><h3>Leverage</h3><p>Futures only. It multiplies what the cycles earn, and the losses too. If the price moves far enough against you, the exchange <strong>liquidates</strong> the bot and you lose what you put in.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-gana">
+    <h2 id="h-gana">Where it wins and where it loses</h2>
+    <p>A grid bot's result has two parts: the <strong>cycle profit</strong>, which always adds up, and the value of the <strong>position</strong> the bot holds at any moment, which can take away much more.</p>
+    <div class="two">
+      <div class="box good"><h3>Works well</h3><p>When the price goes back and forth inside the range for days. Every swing is a cycle banked, and at the end the price isn't far from where it started.</p></div>
+      <div class="box bad"><h3>Works badly</h3><p>When the price trends one way and doesn't come back. If it falls below the range, you're left holding coins bought higher. If it rises above, the bot has already sold everything and you miss the rally.</p></div>
+    </div>
+    <p>That's why a grid bot <strong>isn't easy money</strong>. Cycles give a steady trickle; a strong trend against you can take it all at once. And in a strong rally, simply buying and holding usually beats the bot.</p>
+  </section>
+
+  <section class="wide" aria-labelledby="h-ejemplo">
+    <h2 id="h-ejemplo">A real example: 100 BTC bots</h2>
+    <p>With the <a href="/en/simulator/">simulator</a>, we launched the same bot at 100 different moments between November 2025 and October 2026: <strong>BTC futures, neutral, range ±10% around the entry price, 40 grids, 3x leverage, 30 days</strong>. With fees, funding and liquidation, minute by minute.</p>
+    <div class="stats">
+      <div class="stat"><span class="big">58 of 100</span><p>ended in profit</p></div>
+      <div class="stat"><span class="big">+3.7%</span><p>typical (median) result over 30 days</p></div>
+      <div class="stat"><span class="big">+17.2%</span><p>the best: 7 Feb 2026, 496 cycles, the price never left the range</p></div>
+      <div class="stat"><span class="big">−33.3%</span><p>the worst: 18 Jan 2026, BTC fell 29% and spent almost two thirds of the time outside the range</p></div>
+    </div>
+    <p>None were liquidated, and in 61 of the 100 the bot did better than buying BTC and holding for those same 30 days. But notice the asymmetry: the best case gained half of what the worst one lost. What decides the result isn't so much the number of grids as <strong>whether the price stays inside the range</strong>.</p>
+    <p class="note">In our validation across 23 pairs and six years of data, a neutral bot with its range sized to each coin's volatility ended in profit between 65% and 79% of the time, depending on the pair. The most volatile coins, such as PEPE or NEAR, have much harsher worst cases. Details are on the <a href="/en/validation/">validation</a> page.</p>
+  </section>
+
+  <section aria-labelledby="h-errores">
+    <h2 id="h-errores">Common beginner mistakes</h2>
+    <ul>
+      <li><strong>A range that's too narrow.</strong> Lots of cycles at first, but the price soon leaves it and the bot stops with a losing position.</li>
+      <li><strong>Too many grids.</strong> If the gap between levels is tiny, fees eat a big share of every cycle.</li>
+      <li><strong>High leverage.</strong> At 10x or more, an ordinary week's move can liquidate the bot.</li>
+      <li><strong>Trusting the annual return the exchange shows.</strong> It usually comes from the last few days, or from bots that did well. It says nothing about a bot you launch today.</li>
+      <li><strong>Going long right when everyone is already long</strong> (or short when everyone is selling). That's when the price is most likely to turn against you.</li>
+    </ul>
+  </section>
+
+  <section class="wide" aria-labelledby="h-tools">
+    <h2 id="h-tools">How GridReplay helps</h2>
+    <p>GridReplay is independent of any exchange. Use it to decide before you launch, and to understand afterwards what happened.</p>
+    <div class="tools">
+      <a class="box" href="/en/oracle/"><h3>Oracle →</h3><p>Every day, which direction the market favours (long, short or neutral), with what range and how many grids. BTC and ETH, free.</p></a>
+      <a class="box" href="/en/simulator/"><h3>Simulator →</h3><p>Test your setup at 100 moments over the past year: how often it wins, the typical result and the worst cases.</p></a>
+      <a class="box" href="/en/analyzer/"><h3>Analyzer →</h3><p>Upload your Pionex bot history and see how much came from cycles and how much from the position. It runs in your browser.</p></a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-donde">
+    <div class="cta">
+      <h2 id="h-donde">Where do you create a grid bot?</h2>
+      <p>The big exchanges offer them ready-made: pick a pair, range, grids and amount, and the bot runs on its own. Pionex was built around bots, and it's the one we used to validate the simulator against real bots.</p>
+      <a class="btn" href="https://www.pionex.com/en/signUp?r=0jw3MvqQjFQ" target="_blank" rel="sponsored noopener" onclick="grEvent('aff_pionex')">Create a grid bot on Pionex</a>
+      <p class="small">Affiliate link: if you sign up through it, GridReplay gets a commission from Pionex at no cost to you. Start small and without leverage until you understand how it behaves.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-faq">
+    <h2 id="h-faq">FAQ</h2>
+    <div>
+      <details><summary>Does a grid bot always win?</summary><p>No. It wins in a sideways market and loses when the price moves far from the range and doesn't come back. In the example above, 42 of 100 bots ended at a loss.</p></details>
+      <details><summary>Spot or futures?</summary><p>On spot there's no liquidation and the risk is that of holding the coin. On futures you can choose direction and leverage, but a strong move can liquidate the bot. To start, use spot or futures without leverage.</p></details>
+      <details><summary>How many grids should I use?</summary><p>Enough for frequent cycles, but with a gap between levels clearly larger than the round-trip fees. The <a href="/en/oracle/">oracle</a> suggests a number for each pair based on its volatility, and the <a href="/en/simulator/">simulator</a> lets you compare several.</p></details>
+      <details><summary>When should I stop a bot?</summary><p>Once the price leaves the range and doesn't look like coming back, the bot stops cycling and all you have left is the position. Decide in advance at what price you'd close it (the stop) so you don't improvise.</p></details>
+    </div>
+  </section>
+
+  <footer>
+    <p>GridReplay simulates results on historical data. Past performance does not guarantee future results. Nothing it shows is financial advice or an investment recommendation.</p>
+    <p>GridReplay is independent and not owned by Pionex, Binance or any other exchange. Exchange links may be affiliate links and are always marked.</p>
+  </footer>
+</main>
+</body>
+</html>
