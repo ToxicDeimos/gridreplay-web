@@ -162,9 +162,15 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .card.locked { position: relative; overflow: hidden; }
 .card.locked .ghost { filter: blur(5px); user-select: none; pointer-events: none; display: grid; gap: 0.6rem; color: var(--ink-3); }
 .card.locked .ghost span { display: block; height: 0.8rem; border-radius: 4px; background: var(--band); }
-.lock { position: absolute; inset: auto 1rem 1rem 1rem; display: grid; gap: 0.5rem; justify-items: start; }
-.pro-tag { font: 600 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--surface); background: var(--accent); padding: 0.3rem 0.5rem; border-radius: 4px; }
+.lock { display: grid; gap: 0.5rem; justify-items: start; }
+.pro-tag { font: 600 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); border: 1px solid var(--accent); padding: 0.28rem 0.45rem; border-radius: 4px; white-space: nowrap; }
 #pro form { display: grid; gap: 0.7rem; max-width: 30rem; }
+#pro .steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.6rem; color: var(--ink-2); }
+#pro .steps .btn { margin-top: 0.4rem; padding: 0.6rem 0.9rem; font-size: 0.92rem; }
+#pro details.already { border-top: 1px solid var(--rule); padding-top: 0.8rem; display: grid; gap: 0.7rem; }
+#pro details.already summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+#pro details.already[open] > p { margin: 0.6rem 0; }
+.unlocked-tag { font: 600 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
 #pro input, #pro select { font: 400 1rem/1.3 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 0.6rem 0.7rem; }
 #pro label.consent { display: flex; gap: 0.5rem; align-items: start; font-size: 0.88rem; color: var(--ink-2); }
 </style>
@@ -177,7 +183,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <div><a class="home" href="/en/">← GridReplay</a> <a class="home" href="/oraculo/" hreflang="es" lang="es" style="margin-left:1rem">ES</a></div>
     <p class="eyebrow">Grid oracle · live</p>
     <h1>Which grid to launch today</h1>
-    <p class="dek read">BTC and ETH for free; the other pairs with GridReplay Pro. For each pair: whether market positioning favours a long, short or neutral grid, with which range and how many grids. Calculated right now from Binance data with a method validated over six years of history, with its hits and misses published.</p>
+    <p class="dek read">BTC and ETH for free; the other pairs, also free with your Pionex account. For each pair: whether market positioning favours a long, short or neutral grid, with which range and how many grids. Calculated right now from Binance data with a method validated over six years of history, with its hits and misses published.</p>
     <ul class="promises">
       <li>BTC and ETH free</li>
       <li>Validated out of sample</li>
@@ -225,28 +231,41 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   </section>
 
   <section id="pro" class="cta read" aria-labelledby="h-pro">
-    <p class="eyebrow">GridReplay Pro · coming soon</p>
-    <h2 id="h-pro">Unlock the full oracle</h2>
-    <ul class="plain">
-      <li><b>Every pair</b> in the oracle (today, <span id="pro-count"></span> more, including altcoins like PEPE, SUI or AAVE), with range and grids sized to its volatility and the direction with its track record on each pair.</li>
-      <li><b>Alerts</b> by Telegram or email when the suggested direction changes or the price nears the edge of your range.</li>
-      <li><b>History</b> of every suggestion and its real outcome, to see how the oracle does month by month.</li>
-    </ul>
-    <p><b>€2.99 a month.</b> We’re not charging anything yet: sign up and we’ll let you know when it opens. Everyone who signs up now gets the first month free.</p>
-    <form id="pro-form" novalidate>
-      <input name="email" type="email" autocomplete="email" required placeholder="you@email.com" aria-label="Email">
-      <select name="exchange" required aria-label="Where do you run your grid bots?">
-        <option value="" selected disabled>Where do you run your grid bots?</option>
-        <option value="pionex">Pionex</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="kucoin">KuCoin</option>
-        <option value="okx">OKX</option><option value="bitget">Bitget</option><option value="gate">Gate.io</option><option value="mexc">MEXC</option><option value="bingx">BingX</option>
-        <option value="otro">Another exchange</option><option value="ninguno">I don’t use grid bots yet</option>
-      </select>
-      <input name="exchange_other" type="text" maxlength="40" autocomplete="off" hidden placeholder="Which exchange?" aria-label="Which exchange?">
-      <label class="consent"><input type="checkbox" name="consent" required> <span>I agree that GridReplay may store my email to tell me about Pro, as described in the <a href="/en/privacy/">privacy policy</a>. I can unsubscribe at any time.</span></label>
+    <p class="eyebrow">Every pair · free</p>
+    <h2 id="h-pro">Unlock the full oracle with your Pionex account</h2>
+    <p><b>Every pair</b> in the oracle (today, <span id="pro-count"></span> more, including altcoins like PEPE, SUI or AAVE), with range, grids and direction, without paying anything. In return, you sign up to Pionex through our link: Pionex pays us part of its fees, at no cost to you.</p>
+    <ol class="steps">
+      <li>Create your Pionex account through this link: <a class="btn" id="unlock-aff" href="#" target="_blank" rel="sponsored noopener">Sign up to Pionex</a></li>
+      <li>Copy your UID: on Pionex, tap your profile picture (top right). It’s the number under your name.</li>
+      <li>Paste it here and you’re done:</li>
+    </ol>
+    <form id="unlock-form" novalidate>
+      <input name="uid" inputmode="numeric" autocomplete="off" required placeholder="Pionex UID (e.g. 12345678)" aria-label="Pionex UID">
+      <input name="email" type="email" autocomplete="email" placeholder="Email (optional)" aria-label="Email (optional)">
+      <label class="consent"><input type="checkbox" name="consent" required> <span>I agree that GridReplay may store my Pionex UID (and my email, if I give it) to check that I signed up through its link and, with the email, send me news, as described in the <a href="/en/privacy/">privacy policy</a>.</span></label>
       <div style="display:none"><input name="website" tabindex="-1" autocomplete="off"></div>
-      <button class="btn" type="submit">Notify me when Pro opens</button>
-      <p class="meta" id="pro-msg" aria-live="polite"></p>
+      <button class="btn" type="submit">Unlock every pair</button>
+      <p class="meta" id="unlock-msg" aria-live="polite"></p>
     </form>
+    <p class="meta">Access is immediate. Every few days we check that the UID appears among our Pionex referrals; if it doesn’t, access is removed. We never ask for API keys or access to your account.</p>
+    <details class="already">
+      <summary>Already have a Pionex account, or use another exchange? GridReplay Pro, €2.99 a month</summary>
+      <p>Pionex only recognises the link when you create a new account. If you already have one or use another exchange, <b>GridReplay Pro</b> will give you every pair for <b>€2.99 a month</b>, plus the Telegram and email alerts we’re working on. We’re not charging anything yet: sign up and we’ll tell you when it opens, with the first month free.</p>
+      <form id="pro-form" novalidate>
+        <input name="email" type="email" autocomplete="email" required placeholder="you@email.com" aria-label="Email">
+        <select name="exchange" required aria-label="Where do you run your grid bots?">
+          <option value="" selected disabled>Where do you run your grid bots?</option>
+          <option value="pionex">Pionex</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="kucoin">KuCoin</option>
+          <option value="okx">OKX</option><option value="bitget">Bitget</option><option value="gate">Gate.io</option><option value="mexc">MEXC</option><option value="bingx">BingX</option>
+          <option value="otro">Another exchange</option><option value="ninguno">I don’t use grid bots yet</option>
+        </select>
+        <input name="exchange_other" type="text" maxlength="40" autocomplete="off" hidden placeholder="Which exchange?" aria-label="Which exchange?">
+        <label class="consent"><input type="checkbox" name="consent" required> <span>I agree that GridReplay may store my email to tell me about Pro and send me news, as described in the <a href="/en/privacy/">privacy policy</a>. I can unsubscribe at any time.</span></label>
+        <div style="display:none"><input name="website" tabindex="-1" autocomplete="off"></div>
+        <button class="btn" type="submit">Notify me when Pro opens</button>
+        <p class="meta" id="pro-msg" aria-live="polite"></p>
+      </form>
+    </details>
   </section>
 
   <footer>
@@ -275,7 +294,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     status: (t) => `Calculado a las ${t} con datos en directo de Binance. Se recalcula al recargar la página.`,
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
     edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
-    lockedTxt: "Rango, grids y dirección de este par, con GridReplay Pro.", unlock: "Desbloquear con Pro",
+    lockedTxt: "Rango, grids y dirección de este par, gratis con tu cuenta de Pionex.", unlock: "Desbloquear gratis",
+    badUid: "Escribe tu UID de Pionex: solo números, como aparece debajo de tu nombre.", unlockErr: "No se ha podido desbloquear. Inténtalo de nuevo en unos minutos.",
+    revoked: "Ese UID no aparece entre los registrados con nuestro enlace de Pionex, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.",
+    unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
+    statusAll: "Todos los pares desbloqueados.",
     trackShort: (t) => `Dirección: mejor que neutral en ${t.better} de ${t.months} meses (${num(t.edge, 1, true)} por bot).`,
     track: (t) => `Historial de la dirección en este par: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} puntos por bot). Es orientativa; el rango es lo que más protege.`,
     badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
@@ -293,7 +316,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     status: (t) => `Calculated at ${t} from live Binance data. Recalculated when you reload the page.`,
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
     edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
-    lockedTxt: "Range, grids and direction for this pair, with GridReplay Pro.", unlock: "Unlock with Pro",
+    lockedTxt: "Range, grids and direction for this pair, free with your Pionex account.", unlock: "Unlock for free",
+    badUid: "Enter your Pionex UID: digits only, as shown under your name.", unlockErr: "Couldn’t unlock. Please try again in a few minutes.",
+    revoked: "That UID isn’t among the accounts registered through our Pionex link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.",
+    unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
+    statusAll: "Every pair unlocked.",
     trackShort: (t) => `Direction: beat neutral in ${t.better} of ${t.months} months (${num(t.edge, 1, true)} per bot).`,
     track: (t) => `Direction track record on this pair: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} points per bot). It’s a guide; the range is what protects you most.`,
     badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
@@ -390,13 +417,67 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   function locked(base) {
     const el = document.createElement("article"); el.className = "card locked";
     el.innerHTML = `
-      <div class="card-head"><b>${base}/USDT</b><span class="pro-tag">Pro</span></div>
+      <div class="card-head"><b>${base}/USDT</b><span class="pro-tag">Free</span></div>
       <div class="ghost"><span style="width:60%"></span><span></span><span style="width:80%"></span><span style="width:70%"></span><span style="width:40%"></span></div>
       ${O.track?.[base] ? `<p class="track">${T.trackShort(O.track[base])}</p>` : ""}
       <div class="lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
-    el.querySelector("a").addEventListener("click", () => grEvent("pro_click"));
+    el.querySelector(".lock a").addEventListener("click", () => grEvent("pro_click"));
     return el;
   }
+  // Acceso con la cuenta de Pionex: la clave se guarda en este navegador (o llega en ?k=,
+  // el enlace personal para otros dispositivos) y con ella /api/pro da las referencias del resto.
+  const KEY = "gr_access";
+  let token = null;
+  try { token = localStorage.getItem(KEY); } catch { token = null; }
+  const qk = new URLSearchParams(location.search).get("k");
+  if (qk && /^[0-9a-f]{32}$/.test(qk)) {
+    token = qk;
+    try { localStorage.setItem(KEY, qk); } catch { /* sin almacenamiento: vale para esta visita */ }
+    history.replaceState(null, "", location.pathname + location.hash);
+  }
+  const forget = () => { token = null; try { localStorage.removeItem(KEY); } catch { /* nada */ } };
+  async function loadPro() {
+    if (!token) return false;
+    try {
+      const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token);
+      if (r.status === 401 || r.status === 403) {
+        forget();
+        if (r.status === 403) $("unlock-msg").textContent = T.revoked;
+        return false;
+      }
+      if (!r.ok) return false;
+      Object.assign(O.refs, (await r.json()).refs);
+      return true;
+    } catch { return false; }
+  }
+  function showUnlocked() {
+    const link = location.origin + location.pathname + "?k=" + token;
+    $("pro").querySelectorAll(".steps, #unlock-form, #unlock-form + .meta").forEach(e => { e.hidden = true; });
+    const p = document.createElement("p"); p.className = "note"; p.innerHTML = T.unlocked(link);
+    $("h-pro").after(p);
+  }
+  const affUnlock = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
+  if (affUnlock) $("unlock-aff").href = affUnlock; else $("unlock-aff").closest("li").hidden = true;
+  $("unlock-aff").addEventListener("click", () => grEvent("unlock_aff"));
+  $("unlock-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target, msg = $("unlock-msg"), uid = f.uid.value.replace(/\s+/g, ""), email = f.email.value.trim();
+    if (!/^\d{5,15}$/.test(uid)) return void (msg.textContent = T.badUid);
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return void (msg.textContent = T.badEmail);
+    if (!f.consent.checked) return void (msg.textContent = T.needConsent);
+    try {
+      const r = await fetch("https://gridreplay.pages.dev/api/unlock", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ uid, email, consent: true, source: location.pathname, website: f.website.value }) });
+      if (r.status === 403) return void (msg.textContent = T.revoked);
+      if (!r.ok) throw new Error(r.status);
+      const d = await r.json();
+      if (!d.token) throw new Error("token");
+      try { localStorage.setItem(KEY, d.token); sessionStorage.setItem("gr_unlocked", "1"); } catch { /* sin almacenamiento */ }
+      grEvent("unlock");
+      location.href = location.pathname + "?k=" + d.token;
+    } catch { msg.textContent = T.unlockErr; }
+  });
+
   $("pro-count").textContent = O.locked.length;
   $("pro-form").exchange.addEventListener("change", (e) => { e.target.form.exchange_other.hidden = e.target.value !== "otro"; });
   $("pro-form").addEventListener("submit", async (e) => {
@@ -416,18 +497,21 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 
   (async function run() {
     const box = $("cards");
-    const results = await Promise.allSettled(O.pairs.map(oracle));
+    const all = await loadPro();
+    if (all) { showUnlocked(); grEvent("unlock_view"); }
+    const results = await Promise.allSettled((all ? [...O.pairs, ...O.locked] : O.pairs).map(oracle));
     const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
     if (!ok.length) { $("status").textContent = T.fail; return; }
     // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
-    const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
+    const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); if (!all) O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
     document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
       profile = b.dataset.profile;
       document.querySelectorAll("[data-profile]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
       render();
     }));
     render();
-    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" }));
+    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" })) + (all ? " " + T.statusAll : "");
+    try { if (all && sessionStorage.getItem("gr_unlocked")) { sessionStorage.removeItem("gr_unlocked"); box.scrollIntoView(); } } catch { /* nada */ }
     grEvent("oracle_view");
   })();
 })();
