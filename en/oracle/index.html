@@ -127,7 +127,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 <style>
 /* Oráculo: una tarjeta por par con dirección, rango y grids, calculados en directo. */
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; }
-.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 1.1rem 1.15rem; display: grid; gap: 0.7rem; align-content: start; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--rule); border-radius: 8px; padding: 1rem 1.15rem 1.1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.card.is-long { border-top-color: var(--accent); }
+.card.is-short { border-top-color: var(--s2); }
+.card.is-neutral { border-top-color: var(--ink-3); }
 .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
 .card-head b { font: 700 1.25rem/1 var(--font-display); }
 .card-head span { font: 400 0.9rem/1 var(--font-data); color: var(--ink-3); }
@@ -145,13 +148,21 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .zones span:nth-child(2) { text-align: center; }
 .zones span:last-child { text-align: right; }
 .zones .on { color: var(--ink); font-weight: 600; }
-.track { font: 400 0.78rem/1.45 var(--font-data); color: var(--ink-3); margin: 0; }
-.track b { color: var(--ink-2); font-weight: 500; }
-.facts { display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.8rem; font-size: 0.92rem; margin: 0; }
-.facts dt { color: var(--ink-3); }
-.facts dd { margin: 0; font-family: var(--font-data); text-align: right; }
+/* Rango sugerido: el dato principal de la tarjeta */
+.rng { background: var(--band); border-radius: 6px; padding: 0.7rem 0.8rem; display: grid; gap: 0.3rem; }
+.rng-label { font: 500 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+.rng-val { font: 500 1.2rem/1.2 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); letter-spacing: -0.01em; }
+.rng-val span { color: var(--ink-3); padding: 0 0.15em; }
+.rng-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.9rem; font: 400 0.82rem/1.3 var(--font-data); color: var(--ink-2); }
+.rng-meta b { font-weight: 500; color: var(--ink); }
+/* Historial de la dirección en el par: barra de meses mejores + texto corto */
+.track { display: grid; gap: 0.35rem; margin: 0; font-size: 0.82rem; line-height: 1.4; color: var(--ink-3); }
+.track b { color: var(--ink-2); font-weight: 600; }
+.track-bar { height: 4px; border-radius: 2px; background: var(--rule); overflow: hidden; }
+.track-bar i { display: block; height: 100%; background: var(--ink-3); border-radius: 2px; }
 .warn { font-size: 0.85rem; color: var(--s2); background: var(--band); border-radius: 6px; padding: 0.5rem 0.65rem; }
-.card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; font-size: 0.92rem; }
+.card-foot { margin-top: auto; display: grid; gap: 0.45rem; padding-top: 0.2rem; }
+.card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between; font-size: 0.92rem; }
 .card-actions .btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
 .aff-note { font-size: 0.75rem; color: var(--ink-3); line-height: 1.4; }
 .skeleton { color: var(--ink-3); font-size: 0.92rem; }
@@ -160,9 +171,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .profiles button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--band); }
 .profile-note { font-size: 0.9rem; color: var(--ink-2); }
 .card.locked { position: relative; overflow: hidden; }
-.card.locked .ghost { filter: blur(5px); user-select: none; pointer-events: none; display: grid; gap: 0.6rem; color: var(--ink-3); }
-.card.locked .ghost span { display: block; height: 0.8rem; border-radius: 4px; background: var(--band); }
-.lock { display: grid; gap: 0.5rem; justify-items: start; }
+.card.locked .ghost { filter: blur(4px); user-select: none; pointer-events: none; display: grid; gap: 0.55rem; }
+.card.locked .ghost span { display: block; height: 0.75rem; border-radius: 4px; background: var(--band); }
+.card.locked .ghost .rng { height: 4.6rem; }
+.lock { display: grid; gap: 0.6rem; justify-items: start; }
+.lock .meta { font: 400 0.88rem/1.45 var(--font-body); color: var(--ink-2); }
 .pro-tag { font: 600 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); border: 1px solid var(--accent); padding: 0.28rem 0.45rem; border-radius: 4px; white-space: nowrap; }
 #pro form { display: grid; gap: 0.7rem; max-width: 30rem; }
 #pro .steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.6rem; color: var(--ink-2); }
@@ -290,7 +303,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal de hoy (0–100): short hasta 33, long desde 67",
     low: "Volatilidad muy baja para este par: en estos momentos los grids neutrales perdieron de media. Mejor esperar o usar un grid direccional.",
     sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
-    affNote: 'Enlace de afiliado: el exchange nos paga una parte de sus comisiones, sin coste para ti. No cambia la sugerencia, que sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
+    affNote: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
     status: (t) => `Calculado a las ${t} con datos en directo de Binance. Se recalcula al recargar la página.`,
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
     edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
@@ -299,8 +312,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: "Ese UID no aparece entre los registrados con nuestro enlace de Pionex, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.",
     unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
     statusAll: "Todos los pares desbloqueados.",
-    trackShort: (t) => `Dirección: mejor que neutral en ${t.better} de ${t.months} meses (${num(t.edge, 1, true)} por bot).`,
-    track: (t) => `Historial de la dirección en este par: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} puntos por bot). Es orientativa; el rango es lo que más protege.`,
+    trackShort: (t) => `Dirección: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
+    track: (t) => `Dirección en este par: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
+    trackTip: "Orientativa: la dirección no acierta siempre; el rango es lo que más protege.", rangeLabel: "Rango sugerido", gridsU: "grids", levU: "apalanc.",
     badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
     proOk: "¡Apuntado! Te avisaremos cuando abra Pro, con el primer mes gratis.", proErr: "No se ha podido enviar. Inténtalo de nuevo en unos minutos.",
     worstP: (f) => `resultado del 10 % de bots peores con el rango equilibrado del oráculo, frente a ${f} con un rango fijo de ±10 %.`,
@@ -312,7 +326,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Range", grids: "Grids", lev: "Tested with", signal: "Today's signal (0–100): short up to 33, long from 67",
     low: "Very low volatility for this pair: at such times neutral grids lost money on average. Better to wait or use a directional grid.",
     sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
-    affNote: 'Affiliate link: the exchange pays us part of its fees at no cost to you. It doesn’t change the suggestion, which applies on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
+    affNote: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
     status: (t) => `Calculated at ${t} from live Binance data. Recalculated when you reload the page.`,
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
     edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
@@ -321,8 +335,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: "That UID isn’t among the accounts registered through our Pionex link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.",
     unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
     statusAll: "Every pair unlocked.",
-    trackShort: (t) => `Direction: beat neutral in ${t.better} of ${t.months} months (${num(t.edge, 1, true)} per bot).`,
-    track: (t) => `Direction track record on this pair: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} points per bot). It’s a guide; the range is what protects you most.`,
+    trackShort: (t) => `Direction: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
+    track: (t) => `Direction on this pair: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
+    trackTip: "A guide: the direction isn’t always right; the range is what protects you most.", rangeLabel: "Suggested range", gridsU: "grids", levU: "leverage",
     badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
     proOk: "You’re on the list! We’ll let you know when Pro opens, with the first month free.", proErr: "Couldn’t send. Please try again in a few minutes.",
     worstP: (f) => `result of the worst 10% of bots with the oracle’s balanced range, versus ${f} with a fixed ±10% range.`,
@@ -393,24 +408,33 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   function card(o) {
     o = sized(o);
     const lo = o.price * (1 - o.half), hi = o.price * (1 + o.half);
-    const el = document.createElement("article"); el.className = "card";
+    const el = document.createElement("article"); el.className = "card is-" + o.dir;
+    const rp = (v) => v.toLocaleString(L, { maximumSignificantDigits: 5 });
     const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
     const affUrl = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
     el.innerHTML = `
       <div class="card-head"><b>${o.base}/USDT</b><span>${price(o.price)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
       <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 2px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
-      ${O.track?.[o.base] ? `<p class="track">${T.track(O.track[o.base])}</p>` : ""}
-      <dl class="facts">
-        <dt>${T.range}</dt><dd>${price(lo)} – ${price(hi)} (±${num(o.half * 100, 1)}${P})</dd>
-        <dt>${T.grids}</dt><dd>${o.grids}</dd>
-        <dt>${T.lev}</dt><dd>2x</dd>
-      </dl>
+      <div class="rng">
+        <span class="rng-label">${T.rangeLabel}</span>
+        <span class="rng-val">${rp(lo)}<span>–</span>${rp(hi)}</span>
+        <span class="rng-meta"><span><b>±${num(o.half * 100, 1)}${P}</b></span><span><b>${o.grids}</b> ${T.gridsU}</span><span><b>2x</b> ${T.levU}</span></span>
+      </div>
       ${o.low ? `<p class="warn">${T.low}</p>` : ""}
-      <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff("Pionex")}</a>` : ""}</div>
-      ${affUrl ? `<p class="aff-note">${T.affNote}</p>` : ""}`;
+      ${trackHtml(o.base, T.track)}
+      <div class="card-foot">
+        <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff("Pionex")}</a>` : ""}</div>
+        ${affUrl ? `<p class="aff-note">${T.affNote}</p>` : ""}
+      </div>`;
     el.querySelector("[data-aff]")?.addEventListener("click", () => grEvent("aff_pionex"));
     return el;
+  }
+
+  function trackHtml(base, fmt) {
+    const t = O.track?.[base];
+    if (!t) return "";
+    return `<div class="track" title="${T.trackTip}"><div class="track-bar"><i style="width:${(100 * t.better / t.months).toFixed(0)}%"></i></div><p style="margin:0">${fmt(t)}</p></div>`;
   }
 
   // Pares de Pro: tarjeta bloqueada sin datos (sus referencias no están en la página).
@@ -418,9 +442,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const el = document.createElement("article"); el.className = "card locked";
     el.innerHTML = `
       <div class="card-head"><b>${base}/USDT</b><span class="pro-tag">Free</span></div>
-      <div class="ghost"><span style="width:60%"></span><span></span><span style="width:80%"></span><span style="width:70%"></span><span style="width:40%"></span></div>
-      ${O.track?.[base] ? `<p class="track">${T.trackShort(O.track[base])}</p>` : ""}
-      <div class="lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
+      <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
+      ${trackHtml(base, T.trackShort)}
+      <div class="card-foot lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
     el.querySelector(".lock a").addEventListener("click", () => grEvent("pro_click"));
     return el;
   }
