@@ -166,6 +166,18 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .card-foot { margin-top: auto; display: grid; gap: 0.45rem; padding-top: 0.2rem; }
 .card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between; font-size: 0.92rem; }
 .card-actions .btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
+/* Ajustes para Pionex: cada valor se copia con un toque, en el orden del formulario */
+.pset { border: 1px solid var(--rule); border-radius: 6px; font-size: 0.88rem; }
+.pset summary { cursor: pointer; padding: 0.55rem 0.75rem; font-weight: 600; color: var(--ink); list-style-position: inside; }
+.pset[open] summary { border-bottom: 1px solid var(--rule); }
+.pset-body { padding: 0.5rem 0.75rem 0.7rem; display: grid; gap: 0.15rem; }
+.pset-how { margin: 0 0 0.35rem; font-size: 0.78rem; line-height: 1.4; color: var(--ink-3); }
+.pset-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem; width: 100%; padding: 0.4rem 0.1rem; background: none; border: 0; border-bottom: 1px dashed var(--rule); color: var(--ink-2); font: inherit; text-align: left; cursor: pointer; }
+.pset-row b { font: 500 0.92rem/1.2 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); word-break: break-all; text-align: right; }
+.pset-row:hover b, .pset-row:focus-visible b { color: var(--accent); }
+.pset-row.done b::after { content: " ✓"; color: var(--accent); }
+.pset-all { justify-self: start; margin-top: 0.5rem; font: 600 0.85rem/1 var(--font-body); padding: 0.55rem 0.8rem; border-radius: 6px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
+.pset-msg { font-size: 0.78rem; color: var(--ink-3); min-height: 1em; margin: 0; }
 .aff-note { font-size: 0.75rem; color: var(--ink-3); line-height: 1.4; }
 .skeleton { color: var(--ink-3); font-size: 0.92rem; }
 .profiles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -306,6 +318,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal de hoy (0–100): short hasta 33, long desde 67",
     low: "Volatilidad muy baja para este par: en estos momentos los grids neutrales perdieron de media. Mejor esperar o usar un grid direccional.",
     sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
+    pset: "Ajustes para copiar en Pionex", psetHow: "En Pionex: Bots → Grid de futuros → configuración manual. Toca cada valor para copiarlo.",
+    pDir: "Dirección", pLo: "Precio inferior", pHi: "Precio superior", pGrids: "Número de grids", pMode: "Modo", pModeV: "Aritmético", pLev: "Apalancamiento",
+    pAll: "Copiar todo", pCopied: "Copiado ✓", pAllOk: "Ajustes copiados. Pégalos donde quieras o compártelos.", pFail: "No se pudo copiar: selecciona el valor a mano.",
+    pTitle: "Grid de futuros", pFrom: "Rango, dirección y grids de hoy: gridreplay.com/oraculo/",
     affNote: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
     status: (t) => `Calculado a las ${t} con datos en directo de Binance. Se recalcula al recargar la página.`,
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
@@ -330,6 +346,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Range", grids: "Grids", lev: "Tested with", signal: "Today's signal (0–100): short up to 33, long from 67",
     low: "Very low volatility for this pair: at such times neutral grids lost money on average. Better to wait or use a directional grid.",
     sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
+    pset: "Settings to copy into Pionex", psetHow: "On Pionex: Bots → Futures Grid → manual setup. Tap each value to copy it.",
+    pDir: "Direction", pLo: "Lower price", pHi: "Upper price", pGrids: "Number of grids", pMode: "Mode", pModeV: "Arithmetic", pLev: "Leverage",
+    pAll: "Copy all", pCopied: "Copied ✓", pAllOk: "Settings copied. Paste them anywhere or share them.", pFail: "Couldn’t copy: select the value by hand.",
+    pTitle: "Futures Grid", pFrom: "Today’s range, direction and grids: gridreplay.com/en/oracle/",
     affNote: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
     status: (t) => `Calculated at ${t} from live Binance data. Recalculated when you reload the page.`,
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
@@ -433,12 +453,46 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       </div>
       ${o.low ? `<p class="warn">${T.low}</p>` : ""}
       ${trackHtml(o.base, T.track)}
+      ${psetHtml(o, u, lo, hi)}
       <div class="card-foot">
         <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff("Pionex")}</a>` : ""}</div>
         ${affUrl ? `<p class="aff-note">${T.affNote}</p>` : ""}
       </div>`;
     el.querySelector("[data-aff]")?.addEventListener("click", () => grEvent("aff_pionex"));
+    wirePset(el);
     return el;
+  }
+
+  // Valor tal cual se escribe en Pionex: punto decimal, sin separador de miles ni notación científica.
+  const plain = (v) => v.toLocaleString("en-US", { maximumSignificantDigits: 5, useGrouping: false });
+  function psetHtml(o, u, lo, hi) {
+    const rows = [[T.pDir, T.dir[o.dir]], [T.pLo, plain(lo / u.k)], [T.pHi, plain(hi / u.k)], [T.pGrids, String(o.grids)], [T.pMode, T.pModeV], [T.pLev, "2x"]];
+    const all = [`Pionex · ${T.pTitle} · ${u.name}/USDT`, ...rows.map(([k, v]) => `${k}: ${v}`), T.pFrom].join("\n");
+    return `<details class="pset"><summary>${T.pset}</summary><div class="pset-body">
+      <p class="pset-how">${T.psetHow}</p>
+      ${rows.map(([k, v]) => `<button type="button" class="pset-row" data-copy="${v}"><span>${k}</span><b>${v}</b></button>`).join("")}
+      <button type="button" class="pset-all" data-copy-all="${all.replace(/"/g, "&quot;")}">${T.pAll}</button>
+      <p class="pset-msg" aria-live="polite"></p></div></details>`;
+  }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch { /* sin permiso: método antiguo */ }
+    const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch { ok = false; }
+    ta.remove(); return ok;
+  }
+  function wirePset(el) {
+    const msg = el.querySelector(".pset-msg");
+    let counted = false;
+    el.querySelector(".pset").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-copy], [data-copy-all]");
+      if (!b) return;
+      const all = b.hasAttribute("data-copy-all");
+      const ok = await copyText(all ? b.dataset.copyAll : b.dataset.copy);
+      msg.textContent = ok ? (all ? T.pAllOk : T.pCopied) : T.pFail;
+      if (ok && !all) { b.classList.add("done"); }
+      if (ok && !counted) { counted = true; grEvent("copy_settings"); }
+    });
   }
 
   function trackHtml(base, fmt) {
