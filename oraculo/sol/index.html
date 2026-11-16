@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/oraculo/sol/">
+<link rel="alternate" hreflang="es" href="https://gridreplay.com/oraculo/sol/">
+<link rel="alternate" hreflang="en" href="https://gridreplay.com/en/oracle/sol/">
+<link rel="alternate" hreflang="x-default" href="https://gridreplay.com/en/oracle/sol/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Grid bot de SOL (Solana): rango, grids y dirección de hoy">
+<meta property="og:description" content="Qué rango y cuántos grids poner hoy a un grid bot de SOL/USDT en Pionex, y si conviene long, short o neutral. Calculado en directo con datos de Binance; validado en 588 bots de SOL desde diciembre de 2021. Gratis con tu cuenta de Pionex.">
+<meta property="og:url" content="https://gridreplay.com/oraculo/sol/">
+<meta property="og:image" content="https://gridreplay.com/og-es.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-es.png">
+<title>Grid bot de SOL (Solana): rango, grids y dirección de hoy</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Qué rango y cuántos grids poner hoy a un grid bot de SOL/USDT en Pionex, y si conviene long, short o neutral. Calculado en directo con datos de Binance; validado en 588 bots de SOL desde diciembre de 2021. Gratis con tu cuenta de Pionex.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: columna de lectura (~68ch) con figuras y tablas que se ensanchan hasta 960px. Misma base que la página de validación. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7;
+  --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 960px; --zone: .22;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; --zone: .55; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; --zone: .55; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.kpi { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.kpi b { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+.kpi .src { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2; }
+.table-wrap { overflow-x: auto; min-width: 0; max-height: 34rem; overflow-y: auto; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.45rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { position: sticky; top: 0; background: var(--bg); font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+tr.out td { color: var(--ink-3); }
+.pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
+.pill.ok { border-color: var(--accent); color: var(--accent); }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+</style>
+<style>
+/* Analizador: pasos numerados, zona para soltar el archivo, progreso y resultados. Generado por make_pages.py. */
+.promises { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.promises li { font: 500 0.8rem/1 var(--font-data); padding: 0.45rem 0.7rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; }
+.vote { display: grid; gap: 0.6rem; background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; font-size: 0.95rem; color: var(--ink-2); }
+.vote div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.vote button { font: 500 0.85rem/1 var(--font-body); padding: 0.5rem 0.8rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
+.vote button:disabled { opacity: .5; cursor: default; }
+ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; color: var(--ink-2); }
+ol.steps b { color: var(--ink); font-weight: 600; }
+.drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
+.drop b { font: 600 1.1rem/1.3 var(--font-body); }
+.drop span { font-size: 0.92rem; color: var(--ink-3); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.status { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.2rem; }
+.status p { color: var(--ink-2); }
+.bar { height: 6px; background: var(--band); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.status.err { border-color: var(--s2); }
+.status.err p:first-child { color: var(--s2); font-weight: 600; }
+.pos { color: var(--accent); }
+.neg { color: var(--s2); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+button.btn { border: 0; cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button.btn:disabled { opacity: .55; cursor: default; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; }
+details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); border-radius: 6px; padding: 0.8rem; overflow-x: auto; max-height: 16rem; }
+</style>
+<style>
+/* Oráculo: una tarjeta por par con dirección, rango y grids, calculados en directo. */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--rule); border-radius: 8px; padding: 1rem 1.15rem 1.1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.card.is-long { border-top-color: var(--accent); }
+.card.is-short { border-top-color: var(--s2); }
+.card.is-neutral { border-top-color: var(--ink-3); }
+.card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
+.card-head b { font: 700 1.25rem/1 var(--font-display); }
+.card-head b a { color: inherit; text-decoration: none; }
+.card-head b a:hover { text-decoration: underline; }
+.pairs-list { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; font: 400 0.92rem/1.5 var(--font-data); }
+.card-head span { font: 400 0.9rem/1 var(--font-data); color: var(--ink-3); }
+.dir { display: inline-flex; align-items: center; gap: 0.5rem; font: 600 1.05rem/1 var(--font-body); }
+.dir i { font-style: normal; font: 600 0.78rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.6rem; border-radius: 999px; border: 1px solid currentColor; }
+.dir.long { color: var(--accent); }
+.dir.short { color: var(--s2); }
+.dir.neutral { color: var(--ink-2); }
+.meter { height: 8px; background: var(--band); border-radius: 3px; position: relative; overflow: hidden; }
+.meter i { position: absolute; top: 0; bottom: 0; width: 4px; background: var(--ink); border-radius: 2px; box-shadow: 0 0 0 2px var(--surface); z-index: 1; }
+.meter::before, .meter::after { content: ""; position: absolute; top: 0; bottom: 0; width: 33.3%; opacity: var(--zone); }
+.meter::before { left: 0; background: var(--s2); }
+.meter::after { right: 0; background: var(--accent); }
+.zones { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: .3rem; font: 400 0.75rem/1.4 var(--font-data); color: var(--ink-3); }
+.zones span:nth-child(2) { text-align: center; }
+.zones span:last-child { text-align: right; }
+.zones .on { color: var(--ink); font-weight: 600; }
+/* Rango sugerido: el dato principal de la tarjeta */
+.rng { background: var(--band); border-radius: 6px; padding: 0.7rem 0.8rem; display: grid; gap: 0.3rem; }
+.rng-label { font: 500 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+.rng-val { font: 500 1.2rem/1.2 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); letter-spacing: -0.01em; }
+.rng-val { display: flex; flex-wrap: wrap; column-gap: 0.3em; }
+.rng-val i { font-style: normal; color: var(--ink-3); margin-right: 0.3em; }
+.rng-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.9rem; font: 400 0.82rem/1.3 var(--font-data); color: var(--ink-2); }
+.rng-meta b { font-weight: 500; color: var(--ink); }
+.rng-note { font-size: 0.75rem; line-height: 1.35; color: var(--ink-3); }
+/* Historial de la dirección en el par: barra de meses mejores + texto corto */
+.track { display: grid; gap: 0.35rem; margin: 0; font-size: 0.82rem; line-height: 1.4; color: var(--ink-3); }
+.track b { color: var(--ink-2); font-weight: 600; }
+.track-bar { height: 4px; border-radius: 2px; background: var(--rule); overflow: hidden; }
+.track-bar i { display: block; height: 100%; background: var(--ink-3); border-radius: 2px; }
+.warn { font-size: 0.85rem; color: var(--s2); background: var(--band); border-radius: 6px; padding: 0.5rem 0.65rem; }
+.card-foot { margin-top: auto; display: grid; gap: 0.45rem; padding-top: 0.2rem; }
+.card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; justify-content: space-between; font-size: 0.92rem; }
+.card-actions .btn { padding: 0.6rem 0.9rem; font-size: 0.9rem; }
+/* Ajustes para Pionex: cada valor se copia con un toque, en el orden del formulario */
+.pset { border: 1px solid var(--rule); border-radius: 6px; font-size: 0.88rem; }
+.pset summary { cursor: pointer; padding: 0.55rem 0.75rem; font-weight: 600; color: var(--ink); list-style-position: inside; }
+.pset[open] summary { border-bottom: 1px solid var(--rule); }
+.pset-body { padding: 0.5rem 0.75rem 0.7rem; display: grid; gap: 0.15rem; }
+.pset-how { margin: 0 0 0.35rem; font-size: 0.78rem; line-height: 1.4; color: var(--ink-3); }
+.pset-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.8rem; width: 100%; padding: 0.4rem 0.1rem; background: none; border: 0; border-bottom: 1px dashed var(--rule); color: var(--ink-2); font: inherit; text-align: left; cursor: pointer; }
+.pset-row b { font: 500 0.92rem/1.2 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); word-break: break-all; text-align: right; }
+.pset-row:hover b, .pset-row:focus-visible b { color: var(--accent); }
+.pset-row.done b::after { content: " ✓"; color: var(--accent); }
+.pset-all { justify-self: start; margin-top: 0.5rem; font: 600 0.85rem/1 var(--font-body); padding: 0.55rem 0.8rem; border-radius: 6px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
+.pset-msg { font-size: 0.78rem; color: var(--ink-3); min-height: 1em; margin: 0; }
+.aff-note { font-size: 0.75rem; color: var(--ink-3); line-height: 1.4; }
+.skeleton { color: var(--ink-3); font-size: 0.92rem; }
+.profiles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.profiles button { font: 500 0.9rem/1 var(--font-body); padding: 0.55rem 0.9rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.profiles button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--band); }
+.profile-note { font-size: 0.9rem; color: var(--ink-2); }
+.card.locked { position: relative; overflow: hidden; }
+.card.locked .ghost { filter: blur(4px); user-select: none; pointer-events: none; display: grid; gap: 0.55rem; }
+.card.locked .ghost span { display: block; height: 0.75rem; border-radius: 4px; background: var(--band); }
+.card.locked .ghost .rng { height: 4.6rem; }
+.lock { display: grid; gap: 0.6rem; justify-items: start; }
+.lock .meta { font: 400 0.88rem/1.45 var(--font-body); color: var(--ink-2); }
+.pro-tag { font: 600 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); border: 1px solid var(--accent); padding: 0.28rem 0.45rem; border-radius: 4px; white-space: nowrap; }
+#pro form { display: grid; gap: 0.7rem; max-width: 30rem; }
+#pro .steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.6rem; color: var(--ink-2); }
+#pro .steps .btn { margin-top: 0.4rem; padding: 0.6rem 0.9rem; font-size: 0.92rem; }
+#pro details.already { border-top: 1px solid var(--rule); padding-top: 0.8rem; display: grid; gap: 0.7rem; }
+#pro details.already summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+#pro details.already[open] > p { margin: 0.6rem 0; }
+.unlocked-tag { font: 600 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); }
+#pro input, #pro select { font: 400 1rem/1.3 var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 6px; padding: 0.6rem 0.7rem; }
+#pro label.consent { display: flex; gap: 0.5rem; align-items: start; font-size: 0.88rem; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<script id="oracle" type="application/json">{"updated":"2026-11-15","pairs":["BTC","ETH"],"locked":["SOL","XRP","DOGE","BNB","ADA","LINK","AVAX","TRX","DOT","LTC","BCH","1000SHIB","SUI","1000PEPE","NEAR","UNI","AAVE","ATOM","ETC","FIL","SAND"],"refs":{"BTCUSDT":{"ls_top":[0.68937,0.81913,0.9081,0.98153,1.01135,1.02087,1.04113,1.05227,1.06093,1.06684,1.07459,1.07909,1.08457,1.08807,1.09394,1.09888,1.10221,1.10539,1.10888,1.11138,1.11465,1.11921,1.1239,1.1276,1.13189,1.13641,1.13994,1.14357,1.14745,1.15166,1.15385,1.15824,1.16387,1.16817,1.17287,1.17877,1.18465,1.18888,1.19517,1.20254,1.20756,1.21581,1.22064,1.22562,1.22866,1.23634,1.24336,1.24837,1.2547,1.25891,1.26574,1.27133,1.27829,1.28614,1.29183,1.30239,1.31011,1.31664,1.32676,1.33601,1.3523,1.3661,1.37997,1.39131,1.39835,1.4103,1.42084,1.43546,1.45222,1.47071,1.48446,1.49914,1.51299,1.53184,1.54804,1.56803,1.58404,1.60514,1.62651,1.64831,1.66923,1.70229,1.75469,1.78696,1.81116,1.84971,1.87327,1.89472,1.91826,1.93526,1.95318,2.00483,2.03313,2.05988,2.09542,2.12177,2.16214,2.21292,2.26536,2.35258,2.71952],"ls_top_acc":[0.52308,0.63539,0.69024,0.71872,0.74427,0.76563,0.7808,0.80053,0.81747,0.83463,0.85757,0.87422,0.89142,0.90708,0.92589,0.94156,0.95673,0.96959,0.98887,1.0019,1.01848,1.03382,1.0495,1.06438,1.08088,1.09238,1.10829,1.1274,1.13675,1.14973,1.16078,1.18613,1.2036,1.22103,1.2322,1.24623,1.25562,1.27359,1.28583,1.29985,1.31621,1.33721,1.35232,1.36963,1.38831,1.40366,1.41483,1.43395,1.45341,1.46919,1.48604,1.50482,1.52261,1.5424,1.55648,1.5836,1.59972,1.61646,1.63257,1.64772,1.66548,1.68233,1.69642,1.71715,1.74567,1.76294,1.79856,1.82007,1.84672,1.87019,1.88778,1.91427,1.93798,1.95785,1.97344,1.99024,2.01967,2.04734,2.07268,2.09864,2.11297,2.1454,2.18503,2.2159,2.25267,2.28805,2.32113,2.35635,2.38998,2.44019,2.50124,2.55359,2.6316,2.69872,2.80837,2.87938,3.04211,3.13752,3.33493,3.74439,5.31589],"taker_3d":[0.87355,0.99364,1.01203,1.02084,1.02607,1.02906,1.03233,1.03622,1.03901,1.04153,1.04318,1.045,1.04743,1.04917,1.05105,1.05249,1.054,1.05535,1.05737,1.05912,1.06072,1.0624,1.06455,1.06613,1.06793,1.06986,1.07117,1.07251,1.07373,1.07495,1.07617,1.07739,1.07861,1.08054,1.08171,1.08311,1.08437,1.08579,1.0875,1.08901,1.09098,1.09206,1.09321,1.09475,1.09624,1.09738,1.09841,1.09918,1.10009,1.10107,1.10212,1.10347,1.10473,1.10642,1.10752,1.10885,1.10983,1.11141,1.11274,1.11424,1.1156,1.11777,1.11929,1.12119,1.12289,1.12436,1.1252,1.12704,1.12906,1.13139,1.13363,1.13597,1.13761,1.13965,1.14179,1.14347,1.14523,1.14742,1.15025,1.15304,1.15629,1.15851,1.16099,1.16453,1.16775,1.17077,1.17428,1.17766,1.18203,1.1865,1.19151,1.19809,1.20348,1.2099,1.21753,1.23382,1.25027,1.28501,1.32676,1.37874,1.56225],"taker_1d":[0.886,0.98499,0.99506,1.00624,1.0122,1.01722,1.02257,1.02564,1.02827,1.03098,1.03345,1.03633,1.03853,1.04094,1.04312,1.04473,1.04638,1.04901,1.05068,1.05245,1.0538,1.05526,1.05696,1.05855,1.05985,1.06148,1.06332,1.0643,1.06553,1.06724,1.06885,1.07058,1.07217,1.07349,1.07419,1.07575,1.07719,1.07884,1.08026,1.08188,1.08303,1.08495,1.08598,1.08721,1.0885,1.08988,1.09145,1.09323,1.09445,1.09603,1.09711,1.09865,1.10019,1.10162,1.10298,1.10477,1.10652,1.10776,1.10989,1.11156,1.11332,1.11463,1.11583,1.11813,1.12023,1.12238,1.12525,1.12641,1.12873,1.13084,1.13279,1.13477,1.13608,1.13947,1.14249,1.14523,1.14776,1.15058,1.15398,1.15797,1.16144,1.16402,1.16833,1.17093,1.17468,1.18049,1.18506,1.19046,1.19746,1.20461,1.21156,1.21792,1.2266,1.23935,1.24993,1.26937,1.29097,1.31859,1.3569,1.41551,1.63485],"vol":[0.00983,0.011122,0.013211,0.014393,0.014856,0.015335,0.0155,0.015582,0.015626,0.015654,0.015695,0.015774,0.015819,0.015876,0.015988,0.016058,0.016138,0.016245,0.016357,0.016461,0.016509,0.016569,0.016638,0.016698,0.016901,0.016971,0.017014,0.017081,0.017153,0.017233,0.01726,0.017474,0.017505,0.017765,0.017859,0.018003,0.018151,0.018365,0.018537,0.018907,0.019132,0.019271,0.019411,0.019521,0.019631,0.019777,0.020116,0.020471,0.020587,0.020812,0.021133,0.021447,0.02168,0.021867,0.021993,0.022218,0.022307,0.022356,0.022422,0.022522,0.022687,0.023015,0.023157,0.023273,0.023652,0.023693,0.023914,0.024103,0.024322,0.024551,0.024779,0.024896,0.025101,0.025364,0.025551,0.025648,0.025772,0.025873,0.026127,0.026458,0.02679,0.027034,0.027184,0.02734,0.027601,0.028218,0.028725,0.028856,0.029224,0.029539,0.029798,0.03004,0.030168,0.03061,0.031255,0.031868,0.03211,0.036622,0.038874,0.039294,0.040009]},"ETHUSDT":{"ls_top":[0.89366,0.93277,0.96299,1.00087,1.02384,1.04845,1.06977,1.08544,1.09337,1.10172,1.11704,1.12385,1.13411,1.14005,1.15065,1.16157,1.16729,1.17517,1.18076,1.18949,1.20016,1.20507,1.21372,1.22406,1.23401,1.24521,1.25597,1.27218,1.28365,1.29799,1.31618,1.32867,1.34437,1.36182,1.3823,1.39893,1.42085,1.43758,1.46049,1.49,1.5115,1.52992,1.54086,1.5638,1.58943,1.60264,1.62364,1.64308,1.65585,1.67575,1.71042,1.7289,1.75341,1.76896,1.79632,1.82185,1.85101,1.89905,1.92238,1.97485,2.01815,2.03671,2.06158,2.11228,2.1499,2.18444,2.21991,2.26262,2.29471,2.34509,2.39832,2.43809,2.50195,2.54749,2.58953,2.63637,2.66507,2.7093,2.72905,2.7631,2.8054,2.83807,2.86724,2.89014,2.94247,2.98094,3.02855,3.07281,3.1145,3.16316,3.2101,3.24914,3.287,3.34274,3.40287,3.48788,3.65282,3.84202,4.10053,4.49358,5.91914],"ls_top_acc":[0.54531,0.78554,0.87233,0.93471,0.98931,1.04684,1.08274,1.1247,1.17385,1.20929,1.23721,1.2632,1.30905,1.33229,1.35812,1.38252,1.40103,1.41569,1.438,1.4706,1.48058,1.49793,1.5175,1.54016,1.56226,1.58588,1.60571,1.61693,1.6381,1.65589,1.68311,1.70503,1.72301,1.74285,1.75916,1.78694,1.82929,1.85488,1.87675,1.89617,1.9295,1.96289,1.988,2.009,2.04792,2.06687,2.09573,2.13117,2.15757,2.17756,2.21313,2.23685,2.26225,2.30278,2.33264,2.35966,2.38854,2.4184,2.45906,2.50773,2.53493,2.56214,2.592,2.61893,2.65653,2.70011,2.73295,2.76193,2.79565,2.85077,2.89647,2.944,2.98378,3.02713,3.07734,3.11583,3.15218,3.18597,3.24567,3.32997,3.37133,3.43145,3.48078,3.58406,3.62819,3.69145,3.75031,3.83368,3.93684,4.0166,4.08787,4.22264,4.36854,4.48847,4.6253,4.81891,5.01085,5.24816,5.67166,6.22953,8.68355],"taker_3d":[1.00852,1.02232,1.02895,1.03185,1.03538,1.03731,1.03932,1.04178,1.04423,1.04631,1.0482,1.05011,1.05123,1.05216,1.05323,1.05411,1.05497,1.05632,1.05793,1.05944,1.06072,1.06226,1.06359,1.06472,1.06593,1.06704,1.06809,1.0695,1.07052,1.07183,1.07263,1.0736,1.07445,1.07525,1.07591,1.0768,1.0778,1.0789,1.07971,1.08058,1.08196,1.08304,1.08434,1.08543,1.08673,1.08817,1.08906,1.0901,1.09098,1.09226,1.0937,1.09447,1.09637,1.09724,1.09886,1.09986,1.10075,1.10156,1.10242,1.10369,1.1048,1.10568,1.10645,1.10735,1.10803,1.1089,1.11013,1.11137,1.11242,1.11402,1.1149,1.11638,1.11783,1.11981,1.12097,1.12207,1.12356,1.12522,1.12667,1.12751,1.12956,1.1321,1.13397,1.13617,1.13803,1.14117,1.14229,1.14521,1.14785,1.15046,1.1537,1.15848,1.16201,1.1674,1.17315,1.17803,1.18583,1.20219,1.23009,1.27638,1.56062],"taker_1d":[0.96341,1.00063,1.00881,1.01497,1.02096,1.02386,1.0264,1.03049,1.03366,1.03569,1.03843,1.03998,1.04128,1.04302,1.04535,1.04681,1.04778,1.04915,1.05081,1.05203,1.05318,1.05452,1.05548,1.05657,1.05788,1.05908,1.06072,1.06157,1.06301,1.06414,1.0659,1.06707,1.06844,1.06967,1.0709,1.07223,1.07354,1.07496,1.07571,1.07653,1.0778,1.07945,1.0803,1.08157,1.08261,1.08387,1.08502,1.08635,1.0874,1.08853,1.09039,1.09125,1.09219,1.09395,1.09545,1.09665,1.09767,1.09901,1.10043,1.10189,1.10305,1.10435,1.10559,1.10724,1.10882,1.11014,1.11191,1.11376,1.11538,1.11665,1.11806,1.1192,1.12097,1.12278,1.12432,1.1264,1.12781,1.12992,1.13113,1.13385,1.13614,1.13804,1.14133,1.1452,1.14761,1.15151,1.15482,1.15778,1.1608,1.1643,1.16815,1.17348,1.17971,1.18609,1.19147,1.20354,1.20969,1.22352,1.24824,1.2909,2.52321],"vol":[0.013283,0.015054,0.017469,0.018614,0.019192,0.01943,0.019574,0.019793,0.019942,0.020337,0.020528,0.02076,0.020825,0.020983,0.021002,0.021099,0.021162,0.021382,0.021525,0.021626,0.021726,0.021988,0.022184,0.022544,0.022723,0.022831,0.023084,0.023314,0.023515,0.023558,0.023685,0.023979,0.024066,0.024167,0.024568,0.02477,0.024879,0.025365,0.025622,0.026046,0.026341,0.026659,0.026797,0.027047,0.02737,0.027677,0.028059,0.028346,0.02847,0.028636,0.028884,0.029217,0.02956,0.029688,0.030016,0.030212,0.030407,0.030645,0.030865,0.031011,0.031449,0.031682,0.031986,0.032503,0.032664,0.032864,0.033098,0.033493,0.033786,0.033851,0.034056,0.034458,0.034713,0.035091,0.035317,0.03565,0.035997,0.036255,0.036774,0.036871,0.037204,0.037381,0.037658,0.037886,0.038094,0.03826,0.038606,0.038819,0.039387,0.039659,0.040142,0.040473,0.040941,0.041609,0.042734,0.043511,0.044431,0.048128,0.051603,0.053392,0.054021]}},"validation":{"months":52,"starts":4846,"pairs":8,"since":"2022-01","edge_pp":1.8,"edge_lo":0.4,"edge_hi":3.3,"months_better":32,"range_worst10_fixed":-23.2,"range_worst10_k3":-6.7,"range_win_fixed":56.3,"range_win_k3":71.3,"lowvol_mean":-4.2,"profiles":{"agresivo":{"k":1.5,"median":2.7,"win":68.1,"worst10":-15.4,"dd":7.4},"equilibrado":{"k":2.0,"median":2.2,"win":69.7,"worst10":-11.5,"dd":5.7},"prudente":{"k":3.0,"median":1.6,"win":70.7,"worst10":-6.6,"dd":4.1},"fijo10":{"median":2.2,"win":55.1,"worst10":-24.1,"dd":16.4}}},"track":{"1000PEPE":{"better":22,"months":36,"edge":2.5},"1000SHIB":{"better":24,"months":42,"edge":2.1},"AAVE":{"better":28,"months":42,"edge":3.1},"ADA":{"better":23,"months":42,"edge":0.9},"ATOM":{"better":18,"months":42,"edge":-0.5},"AVAX":{"better":23,"months":43,"edge":0.9},"BCH":{"better":22,"months":42,"edge":0.5},"BNB":{"better":19,"months":42,"edge":-0.9},"BTC":{"better":30,"months":58,"edge":2.2},"DOGE":{"better":21,"months":42,"edge":1.0},"DOT":{"better":17,"months":42,"edge":-0.6},"ETC":{"better":26,"months":42,"edge":0.6},"ETH":{"better":23,"months":42,"edge":0.0},"FIL":{"better":21,"months":42,"edge":1.6},"LINK":{"better":32,"months":42,"edge":2.8},"LTC":{"better":23,"months":42,"edge":0.3},"NEAR":{"better":19,"months":42,"edge":1.7},"SAND":{"better":15,"months":42,"edge":1.0},"SOL":{"better":23,"months":43,"edge":1.1},"SUI":{"better":20,"months":35,"edge":-0.3},"TRX":{"better":26,"months":42,"edge":1.4},"UNI":{"better":20,"months":42,"edge":0.9},"XRP":{"better":30,"months":42,"edge":2.2}},"only":"SOL"}</script>
+<script id="affiliates" type="application/json">{"pionex": "https://www.pionex.com/{lang}/signUp?r=0jw3MvqQjFQ"}</script>
+<main>
+  <header>
+    <div><a class="home" href="/oraculo/">← Todos los pares</a> <a class="home" href="/en/oracle/sol/" hreflang="en" lang="en" style="margin-left:1rem">EN</a></div>
+    <p class="eyebrow">Oráculo de grids · SOL/USDT</p>
+    <h1>Grid bot de SOL: qué rango poner hoy</h1>
+    <p class="dek read">Rango, número de grids y dirección (long, short o neutral) para un grid de futuros de Solana a 30 días, calculados ahora mismo con los datos de Binance. Gratis con tu cuenta de Pionex.</p>
+    <p class="meta">📢 BTC y ETH cada mañana en <a href="https://t.me/gridreplay" target="_blank" rel="noopener" onclick="grEvent('telegram')">nuestro canal de Telegram</a>.</p>
+    <p class="meta" id="status">Calculando con datos de Binance…</p>
+  </header>
+
+  <section aria-label="Sugerencias por par">
+    <div style="display:grid;gap:0.6rem">
+      <div class="profiles" role="group" aria-label="Perfil de rango">
+        <button type="button" data-profile="agresivo">Agresivo</button>
+        <button type="button" data-profile="equilibrado" aria-pressed="true">Equilibrado</button>
+        <button type="button" data-profile="prudente">Prudente</button>
+      </div>
+      <p class="profile-note" id="profile-note"></p>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section aria-labelledby="h-pair">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <h2 id="h-pair">SOL en grid: lo que dicen los datos</h2>
+      <p>588 grids neutrales de 30 días simulados en SOL/USDT desde diciembre de 2021, con 2x y el rango del perfil prudente (3 veces la volatilidad esperada). Comisiones y financiación incluidas.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Bots con beneficio</span><b>68 %</b><p>de los grids neutrales de SOL acabaron en positivo.</p></div>
+      <div class="kpi"><span class="src">Resultado típico</span><b>+2,0 %</b><p>mediana a 30 días. La media es −1,4 %: unos pocos bots malos pesan mucho.</p></div>
+      <div class="kpi"><span class="src">10 % peor</span><b>−11,4 %</b><p>o menos en el peor 10 % de los bots, cuando el precio se escapó del rango.</p></div>
+      <div class="kpi"><span class="src">Liquidaciones</span><b>0,9 %</b><p>de los bots con 2x se liquidaron.</p></div>
+    </div>
+    <div class="read" style="display:grid;gap:1.1rem">
+    <h3 style="font-size:1.25rem">¿Sirve la dirección del oráculo en este par?</h3>
+    <p>En SOL, seguir la dirección del oráculo (long, short o neutral) superó a lanzar siempre un grid neutral en <b>23 de 43 meses</b>, con una ventaja media de <b>+1,1 puntos</b> por bot. Es una ventaja modesta: aquí lo que más protege es el rango.</p>
+    <h3 style="font-size:1.25rem">Cómo lanzar el grid de SOL en Pionex</h3>
+    <ol class="steps">
+      <li>Abre la tarjeta de arriba y elige perfil: equilibrado si dudas; prudente si no vas a mirar el bot en semanas.</li>
+      <li>Pulsa «Ajustes para copiar en Pionex» y copia dirección, precios, grids y apalancamiento.</li>
+      <li>En Pionex: Bots → Grid de futuros → configuración manual. Pega cada valor y elige cuánto invertir.</li>
+      <li>Revisa la tarjeta cada pocos días: si la dirección cambia o el precio sale del rango, plantéate cerrar y relanzar.</li>
+    </ol>
+    <h3 style="font-size:1.25rem">Preguntas frecuentes</h3>
+      <div><h3 style="font-size:1.15rem">¿Qué rango poner a un grid bot de SOL?</h3><p style="color:var(--ink-2)">El oráculo usa un múltiplo de la volatilidad esperada de SOL a 30 días: hoy, el de la tarjeta de arriba. Un rango más estrecho gana más mientras el precio se queda dentro, pero pierde mucho más cuando se escapa; en SOL, el 10 % peor de los grids neutrales perdió −11,4 % o más.</p></div>
+      <div><h3 style="font-size:1.15rem">¿Grid long, short o neutral en SOL?</h3><p style="color:var(--ink-2)">Depende del posicionamiento de los grandes traders de Binance en SOL frente a su propia historia; la tarjeta lo calcula en directo. Si no hay sesgo claro, neutral.</p></div>
+      <div><h3 style="font-size:1.15rem">¿Cuántos grids poner en SOL?</h3><p style="color:var(--ink-2)">Los suficientes para que entre nivel y nivel haya la mitad de un movimiento diario típico. Más grids no significa más beneficio: las comisiones se comen los niveles demasiado juntos.</p></div>
+    <p class="note">Resultados simulados sobre datos históricos: no garantizan resultados futuros. Información general, igual para todos; no es asesoramiento financiero.</p>
+    <h3 style="font-size:1.1rem">Otros pares</h3>
+    <nav class="pairs-list" aria-label="Otros pares"><a href="/oraculo/btc/">BTC</a> <a href="/oraculo/eth/">ETH</a> <a href="/oraculo/xrp/">XRP</a> <a href="/oraculo/doge/">DOGE</a> <a href="/oraculo/bnb/">BNB</a> <a href="/oraculo/ada/">ADA</a> <a href="/oraculo/link/">LINK</a> <a href="/oraculo/avax/">AVAX</a> <a href="/oraculo/trx/">TRX</a> <a href="/oraculo/dot/">DOT</a> <a href="/oraculo/ltc/">LTC</a> <a href="/oraculo/bch/">BCH</a> <a href="/oraculo/shib/">SHIB</a> <a href="/oraculo/sui/">SUI</a> <a href="/oraculo/pepe/">PEPE</a> <a href="/oraculo/near/">NEAR</a> <a href="/oraculo/uni/">UNI</a> <a href="/oraculo/aave/">AAVE</a> <a href="/oraculo/atom/">ATOM</a> <a href="/oraculo/etc/">ETC</a> <a href="/oraculo/fil/">FIL</a> <a href="/oraculo/sand/">SAND</a></nav>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-how" class="read">
+    <p class="eyebrow">Cómo funciona</p>
+    <h2 id="h-how">Tres reglas, cada una comprobada con datos</h2>
+    <ul class="plain">
+      <li><b>Dirección.</b> Cuando los grandes traders de Binance están muy cargados en largo, el precio tiende a caer en las semanas siguientes, y al revés; las compras agresivas apuntan en el sentido contrario. El oráculo combina cuatro medidas de ese posicionamiento frente a la historia del par. En el conjunto de pares gana a lanzar siempre neutral, pero no en todos por igual: cada tarjeta muestra su historial en ese par, y en algunos (como ETH) apenas aporta.</li>
+      <li><b>Rango.</b> Un múltiplo de la volatilidad esperada a 30 días (1,5, 2 o 3 veces según el perfil), con niveles separados la mitad de un movimiento diario típico. Cuanto más ancho, menos gana el grid pero mucho menos pierde cuando el mercado se va.</li>
+      <li><b>Volatilidad muy baja.</b> Si el par está en el 20 % más tranquilo de su último año, se avisa: en esos momentos los grids neutrales perdieron de media.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-proof">
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Validación</p>
+      <h2 id="h-proof">Lo que habría pasado siguiendo al oráculo</h2>
+      <p>Recalibrado cada mes solo con lo anterior, como funciona de verdad, en <span id="v-starts"></span> bots simulados de 30 días en <span id="v-pairs"></span> pares desde <span id="v-since"></span>. <a href="/validacion/#oraculo">Ver la validación completa</a>.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="src">Dirección</span><b id="v-edge"></b><p id="v-edge-p"></p></div>
+      <div class="kpi"><span class="src">Meses mejores</span><b id="v-months"></b><p>meses en los que seguir la dirección del oráculo superó a lanzar siempre neutral. No acierta siempre.</p></div>
+      <div class="kpi"><span class="src">Rango</span><b id="v-worst"></b><p id="v-worst-p"></p></div>
+      <div class="kpi"><span class="src">Bots con beneficio</span><b id="v-win"></b><p id="v-win-p"></p></div>
+    </div>
+    <p class="note read">Es una ventaja media a lo largo de muchos meses, no una predicción segura: hay meses e incluso años en los que el oráculo lo hace peor que un grid neutral. Es información general, igual para todos, que no tiene en cuenta tu situación ni es asesoramiento financiero. Invertir en criptoactivos conlleva riesgos, incluida la pérdida de todo el capital.</p>
+  </section>
+
+  <section id="pro" class="cta read" aria-labelledby="h-pro">
+    <p class="eyebrow">Todos los pares · gratis</p>
+    <h2 id="h-pro">Desbloquea el oráculo completo con tu cuenta de Pionex</h2>
+    <p><b>Todos los pares</b> del oráculo (hoy, <span id="pro-count"></span> más, también altcoins como PEPE, SUI o AAVE), con rango, grids y dirección, sin pagar nada. A cambio, te registras en Pionex con nuestro enlace: Pionex nos paga una parte de sus comisiones, sin coste para ti.</p>
+    <ol class="steps">
+      <li>Crea tu cuenta en Pionex con este enlace: <a class="btn" id="unlock-aff" href="#" target="_blank" rel="sponsored noopener">Registrarme en Pionex</a></li>
+      <li>Copia tu UID: en Pionex, pulsa tu foto de perfil (arriba a la derecha). Es el número que aparece debajo de tu nombre.</li>
+      <li>Pégalo aquí y listo:</li>
+    </ol>
+    <form id="unlock-form" novalidate>
+      <input name="uid" inputmode="numeric" autocomplete="off" required placeholder="UID de Pionex (p. ej. 12345678)" aria-label="UID de Pionex">
+      <input name="email" type="email" autocomplete="email" placeholder="Email (opcional)" aria-label="Email (opcional)">
+      <label class="consent"><input type="checkbox" name="consent" required> <span>Acepto que GridReplay guarde mi UID de Pionex (y mi email, si lo pongo) para comprobar que me registré con su enlace y, con el email, enviarme novedades, según la <a href="/privacidad/">política de privacidad</a>.</span></label>
+      <div style="display:none"><input name="website" tabindex="-1" autocomplete="off"></div>
+      <button class="btn" type="submit">Desbloquear todos los pares</button>
+      <p class="meta" id="unlock-msg" aria-live="polite"></p>
+    </form>
+    <p class="meta">El acceso es inmediato. Cada pocos días comprobamos que el UID aparece entre nuestros invitados de Pionex; si no aparece, el acceso se retira. No pedimos claves API ni acceso a tu cuenta.</p>
+    <details class="already">
+      <summary>¿Ya tenías cuenta en Pionex o usas otro exchange? GridReplay Pro, 2,99 € al mes</summary>
+      <p>Pionex solo reconoce el enlace al crear una cuenta nueva. Si ya tienes cuenta o usas otro exchange, <b>GridReplay Pro</b> te dará todos los pares por <b>2,99 € al mes</b>, y además las alertas por Telegram o email que estamos preparando. Aún no cobramos nada: apúntate y te avisaremos cuando abra, con el primer mes gratis.</p>
+      <form id="pro-form" novalidate>
+        <input name="email" type="email" autocomplete="email" required placeholder="tu@email.com" aria-label="Email">
+        <select name="exchange" required aria-label="¿Dónde usas tus grid bots?">
+          <option value="" selected disabled>¿Dónde usas tus grid bots?</option>
+          <option value="pionex">Pionex</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="kucoin">KuCoin</option>
+          <option value="okx">OKX</option><option value="bitget">Bitget</option><option value="gate">Gate.io</option><option value="mexc">MEXC</option><option value="bingx">BingX</option>
+          <option value="otro">Otro exchange</option><option value="ninguno">Todavía no uso grid bots</option>
+        </select>
+        <input name="exchange_other" type="text" maxlength="40" autocomplete="off" hidden placeholder="¿En qué exchange?" aria-label="¿En qué exchange?">
+        <label class="consent"><input type="checkbox" name="consent" required> <span>Acepto que GridReplay guarde mi email para avisarme de Pro y de las novedades, según la <a href="/privacidad/">política de privacidad</a>. Puedo darme de baja cuando quiera.</span></label>
+        <div style="display:none"><input name="website" tabindex="-1" autocomplete="off"></div>
+        <button class="btn" type="submit">Avísame cuando abra Pro</button>
+        <p class="meta" id="pro-msg" aria-live="polite"></p>
+      </form>
+    </details>
+  </section>
+
+  <footer>
+    <p>Datos en directo de Binance (futuros perpetuos USDT). Referencias históricas actualizadas el <span id="v-updated"></span>. GridReplay es independiente y no pertenece a Binance ni a Pionex.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const ES = document.documentElement.lang !== "en";
+  const L = ES ? "es-ES" : "en-US";
+  const P = ES ? " %" : "%";
+  const O = JSON.parse(document.getElementById("oracle").textContent);
+  // Página de un solo par (/oraculo/sol/): misma lógica, solo con ese par.
+  const NLOCK = O.locked.length;
+  if (O.only) { O.pairs = O.pairs.filter((b) => b === O.only); O.locked = O.locked.filter((b) => b === O.only); }
+  let AFF = {};
+  try { AFF = JSON.parse(document.getElementById("affiliates").textContent); } catch { AFF = {}; }
+  const $ = (id) => document.getElementById(id);
+  const num = (v, d = 1, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const price = (v) => v.toLocaleString(L, { maximumSignificantDigits: v >= 100 ? 6 : 5 });
+  const T = ES ? {
+    dir: { long: "Long", short: "Short", neutral: "Neutral" },
+    why: { long: "Posicionamiento favorable a subidas", short: "Posicionamiento favorable a bajadas", neutral: "Sin sesgo claro: grid neutral" },
+    range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal de hoy (0–100): short hasta 33, long desde 67",
+    low: "Volatilidad muy baja para este par: en estos momentos los grids neutrales perdieron de media. Mejor esperar o usar un grid direccional.",
+    sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
+    pset: "Ajustes para copiar en Pionex", psetHow: "En Pionex: Bots → Grid de futuros → configuración manual. Toca cada valor para copiarlo.",
+    pDir: "Dirección", pLo: "Precio inferior", pHi: "Precio superior", pGrids: "Número de grids", pMode: "Modo", pModeV: "Aritmético", pLev: "Apalancamiento",
+    pAll: "Copiar todo", pCopied: "Copiado ✓", pAllOk: "Ajustes copiados. Pégalos donde quieras o compártelos.", pFail: "No se pudo copiar: selecciona el valor a mano.",
+    pTitle: "Grid de futuros", pFrom: "Rango, dirección y grids de hoy: gridreplay.com/oraculo/",
+    affNote: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
+    status: (t) => `Calculado a las ${t} con datos en directo de Binance. Se recalcula al recargar la página.`,
+    fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
+    edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
+    lockedTxt: "Rango, grids y dirección de este par, gratis con tu cuenta de Pionex.", unlock: "Desbloquear gratis",
+    badUid: "Escribe tu UID de Pionex: solo números, como aparece debajo de tu nombre.", unlockErr: "No se ha podido desbloquear. Inténtalo de nuevo en unos minutos.",
+    revoked: "Ese UID no aparece entre los registrados con nuestro enlace de Pionex, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.",
+    unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
+    statusAll: "Todos los pares desbloqueados.",
+    trackShort: (t) => `Dirección: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
+    track: (t) => `Dirección en este par: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
+    perToken: (b) => `Precio por token, como en Pionex. En Binance futuros cotiza como 1000${b} (× 1.000).`,
+    trackTip: "Orientativa: la dirección no acierta siempre; el rango es lo que más protege.", rangeLabel: "Rango sugerido", gridsU: "grids", levU: "apalanc.",
+    badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
+    proOk: "¡Apuntado! Te avisaremos cuando abra Pro, con el primer mes gratis.", proErr: "No se ha podido enviar. Inténtalo de nuevo en unos minutos.",
+    worstP: (f) => `resultado del 10 % de bots peores con el rango equilibrado del oráculo, frente a ${f} con un rango fijo de ±10 %.`,
+    winP: (f) => `de los bots neutrales con el rango del oráculo acabaron en beneficio, frente al ${f} con ±10 %.`,
+    profile: (s, f) => `Con este perfil, en 4.846 grids neutrales de 30 días (2021–2026): resultado típico ${s.median}, ${s.win} acabaron en beneficio y el 10 % peor perdió ${s.worst10}. Con un rango fijo de ±10 %: típico ${f.median}, ${f.win} en beneficio y el 10 % peor ${f.worst10}.`,
+  } : {
+    dir: { long: "Long", short: "Short", neutral: "Neutral" },
+    why: { long: "Positioning favours upside", short: "Positioning favours downside", neutral: "No clear bias: neutral grid" },
+    range: "Range", grids: "Grids", lev: "Tested with", signal: "Today's signal (0–100): short up to 33, long from 67",
+    low: "Very low volatility for this pair: at such times neutral grids lost money on average. Better to wait or use a directional grid.",
+    sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
+    pset: "Settings to copy into Pionex", psetHow: "On Pionex: Bots → Futures Grid → manual setup. Tap each value to copy it.",
+    pDir: "Direction", pLo: "Lower price", pHi: "Upper price", pGrids: "Number of grids", pMode: "Mode", pModeV: "Arithmetic", pLev: "Leverage",
+    pAll: "Copy all", pCopied: "Copied ✓", pAllOk: "Settings copied. Paste them anywhere or share them.", pFail: "Couldn’t copy: select the value by hand.",
+    pTitle: "Futures Grid", pFrom: "Today’s range, direction and grids: gridreplay.com/en/oracle/",
+    affNote: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
+    status: (t) => `Calculated at ${t} from live Binance data. Recalculated when you reload the page.`,
+    fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
+    edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
+    lockedTxt: "Range, grids and direction for this pair, free with your Pionex account.", unlock: "Unlock for free",
+    badUid: "Enter your Pionex UID: digits only, as shown under your name.", unlockErr: "Couldn’t unlock. Please try again in a few minutes.",
+    revoked: "That UID isn’t among the accounts registered through our Pionex link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.",
+    unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
+    statusAll: "Every pair unlocked.",
+    trackShort: (t) => `Direction: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
+    track: (t) => `Direction on this pair: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
+    perToken: (b) => `Price per token, as on Pionex. On Binance futures it trades as 1000${b} (× 1,000).`,
+    trackTip: "A guide: the direction isn’t always right; the range is what protects you most.", rangeLabel: "Suggested range", gridsU: "grids", levU: "leverage",
+    badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
+    proOk: "You’re on the list! We’ll let you know when Pro opens, with the first month free.", proErr: "Couldn’t send. Please try again in a few minutes.",
+    worstP: (f) => `result of the worst 10% of bots with the oracle’s balanced range, versus ${f} with a fixed ±10% range.`,
+    winP: (f) => `of neutral bots with the oracle’s range ended in profit, versus ${f} with ±10%.`,
+    profile: (s, f) => `With this profile, across 4,846 neutral 30-day grids (2021–2026): typical result ${s.median}, ${s.win} ended in profit and the worst 10% lost ${s.worst10}. With a fixed ±10% range: typical ${f.median}, ${f.win} in profit and the worst 10% ${f.worst10}.`,
+  };
+
+  // Validación (precalculada en make_oracle.py).
+  const V = O.validation;
+  $("v-starts").textContent = V.starts.toLocaleString(L, { useGrouping: "always" });
+  $("v-pairs").textContent = V.pairs;
+  $("v-since").textContent = V.since;
+  $("v-edge").textContent = num(V.edge_pp, 1, true) + (ES ? " pp" : " pp");
+  $("v-edge-p").textContent = T.edgeP(num(V.edge_lo, 1, true), num(V.edge_hi, 1, true));
+  $("v-months").textContent = `${V.months_better} / ${V.months}`;
+  $("v-worst").textContent = num(V.profiles.equilibrado.worst10) + P;
+  $("v-worst-p").textContent = T.worstP(num(V.profiles.fijo10.worst10) + P);
+  $("v-win").textContent = num(V.profiles.equilibrado.win, 0) + P;
+  $("v-win-p").textContent = T.winP(num(V.profiles.fijo10.win, 0) + P);
+  document.querySelectorAll("#v-updated").forEach(e => { e.textContent = O.updated; });
+
+  // Percentil de x en una lista de 101 cuantiles (interpolado).
+  function pct(x, q) {
+    if (x <= q[0]) return 0;
+    if (x >= q[q.length - 1]) return 1;
+    let i = 0;
+    while (q[i + 1] < x) i++;
+    const span = q[i + 1] - q[i];
+    return (i + (span > 0 ? (x - q[i]) / span : 0)) / (q.length - 1);
+  }
+  const F = "https://fapi.binance.com";
+  const get = async (path) => { const r = await fetch(F + path); if (!r.ok) throw new Error(r.status); return r.json(); };
+
+  async function oracle(base) {
+    const s = base + "USDT", ref = O.refs[s];
+    const [pos, acc, kl, t1] = await Promise.all([
+      get(`/futures/data/topLongShortPositionRatio?symbol=${s}&period=5m&limit=1`),
+      get(`/futures/data/topLongShortAccountRatio?symbol=${s}&period=5m&limit=1`),
+      get(`/fapi/v1/klines?symbol=${s}&interval=1h&limit=338`),
+      get(`/futures/data/takerlongshortRatio?symbol=${s}&period=5m&limit=500`),
+    ]);
+    const t2 = await get(`/futures/data/takerlongshortRatio?symbol=${s}&period=5m&limit=364&endTime=${t1[0].timestamp - 1}`);
+    const taker = [...t2, ...t1].map(x => +x.buySellRatio);
+    const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+    const closes = kl.slice(0, -1).map(k => +k[4]);  // sin la vela en curso
+    const rets = closes.slice(1).map((c, i) => Math.log(c / closes[i])).slice(-336);
+    const mu = mean(rets);
+    const vol = Math.sqrt(rets.reduce((a, r) => a + (r - mu) ** 2, 0) / (rets.length - 1)) * Math.sqrt(24);
+    const last = +kl[kl.length - 1][4];
+    const sig = ((1 - pct(+pos[0].longShortRatio, ref.ls_top)) + (1 - pct(+acc[0].longShortRatio, ref.ls_top_acc))
+      + pct(mean(taker), ref.taker_3d) + pct(mean(taker.slice(-288)), ref.taker_1d)) / 4;
+    const dir = sig >= 2 / 3 ? "long" : sig <= 1 / 3 ? "short" : "neutral";
+    return { base, price: last, dir, sig, vol, low: pct(vol, ref.vol) < 0.2 };
+  }
+
+  // Perfil de rango: ±k·σ de 30 días; niveles separados ~0,5σ diaria (scripts/oracle_range.py).
+  let profile = "equilibrado";
+  function sized(o) {
+    const k = V.profiles[profile].k;
+    const half = Math.min(Math.max(k * o.vol * Math.sqrt(30), 0.02), 0.7);
+    const grids = Math.round(Math.min(Math.max(2 * half / (0.5 * o.vol), 8), 200));
+    return { ...o, half, grids };
+  }
+  function profileNote() {
+    const s = V.profiles[profile], f = V.profiles.fijo10, fmt = (x) => ({ median: num(x.median, 1, true) + P, win: num(x.win, 0) + P, worst10: num(x.worst10) + P });
+    $("profile-note").textContent = T.profile(fmt(s), fmt(f));
+  }
+  // Binance agrupa las monedas de precio diminuto en contratos de 1.000 (1000PEPE, 1000SHIB);
+  // Pionex y la mayoría de exchanges las muestran por token. La tarjeta enseña el precio por token.
+  const unit = (base) => /^1000[A-Z]/.test(base) ? { name: base.slice(4), k: 1000 } : { name: base, k: 1 };
+  // En el oráculo general, el nombre del par lleva a su página propia.
+  const pairName = (base) => { const n = unit(base).name; return O.only ? `${n}/USDT` : `<a href="${ES ? "/oraculo/" : "/en/oracle/"}${n.toLowerCase()}/">${n}/USDT</a>`; };
+  function card(o) {
+    o = sized(o);
+    const u = unit(o.base);
+    const lo = o.price * (1 - o.half), hi = o.price * (1 + o.half);
+    const el = document.createElement("article"); el.className = "card is-" + o.dir;
+    const rp = (v) => v.toLocaleString(L, { maximumSignificantDigits: 5 });
+    const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
+    const affUrl = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
+    el.innerHTML = `
+      <div class="card-head"><b>${pairName(o.base)}</b><span>${price(o.price / u.k)}</span></div>
+      <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
+      <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 2px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
+      <div class="rng">
+        <span class="rng-label">${T.rangeLabel}</span>
+        <span class="rng-val"><span>${rp(lo / u.k)}</span><span><i>–</i>${rp(hi / u.k)}</span></span>
+        <span class="rng-meta"><span><b>±${num(o.half * 100, 1)}${P}</b></span><span><b>${o.grids}</b> ${T.gridsU}</span><span><b>2x</b> ${T.levU}</span></span>
+        ${u.k > 1 ? `<span class="rng-note">${T.perToken(u.name)}</span>` : ""}
+      </div>
+      ${o.low ? `<p class="warn">${T.low}</p>` : ""}
+      ${trackHtml(o.base, T.track)}
+      ${psetHtml(o, u, lo, hi)}
+      <div class="card-foot">
+        <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff("Pionex")}</a>` : ""}</div>
+        ${affUrl ? `<p class="aff-note">${T.affNote}</p>` : ""}
+      </div>`;
+    el.querySelector("[data-aff]")?.addEventListener("click", () => grEvent("aff_pionex"));
+    wirePset(el);
+    return el;
+  }
+
+  // Valor tal cual se escribe en Pionex: punto decimal, sin separador de miles ni notación científica.
+  const plain = (v) => v.toLocaleString("en-US", { maximumSignificantDigits: 5, useGrouping: false });
+  function psetHtml(o, u, lo, hi) {
+    const rows = [[T.pDir, T.dir[o.dir]], [T.pLo, plain(lo / u.k)], [T.pHi, plain(hi / u.k)], [T.pGrids, String(o.grids)], [T.pMode, T.pModeV], [T.pLev, "2x"]];
+    const all = [`Pionex · ${T.pTitle} · ${u.name}/USDT`, ...rows.map(([k, v]) => `${k}: ${v}`), T.pFrom].join("\n");
+    return `<details class="pset"><summary>${T.pset}</summary><div class="pset-body">
+      <p class="pset-how">${T.psetHow}</p>
+      ${rows.map(([k, v]) => `<button type="button" class="pset-row" data-copy="${v}"><span>${k}</span><b>${v}</b></button>`).join("")}
+      <button type="button" class="pset-all" data-copy-all="${all.replace(/"/g, "&quot;")}">${T.pAll}</button>
+      <p class="pset-msg" aria-live="polite"></p></div></details>`;
+  }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch { /* sin permiso: método antiguo */ }
+    const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch { ok = false; }
+    ta.remove(); return ok;
+  }
+  function wirePset(el) {
+    const msg = el.querySelector(".pset-msg");
+    let counted = false;
+    el.querySelector(".pset").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-copy], [data-copy-all]");
+      if (!b) return;
+      const all = b.hasAttribute("data-copy-all");
+      const ok = await copyText(all ? b.dataset.copyAll : b.dataset.copy);
+      msg.textContent = ok ? (all ? T.pAllOk : T.pCopied) : T.pFail;
+      if (ok && !all) { b.classList.add("done"); }
+      if (ok && !counted) { counted = true; grEvent("copy_settings"); }
+    });
+  }
+
+  function trackHtml(base, fmt) {
+    const t = O.track?.[base];
+    if (!t) return "";
+    return `<div class="track" title="${T.trackTip}"><div class="track-bar"><i style="width:${(100 * t.better / t.months).toFixed(0)}%"></i></div><p style="margin:0">${fmt(t)}</p></div>`;
+  }
+
+  // Pares de Pro: tarjeta bloqueada sin datos (sus referencias no están en la página).
+  function locked(base) {
+    const el = document.createElement("article"); el.className = "card locked";
+    el.innerHTML = `
+      <div class="card-head"><b>${pairName(base)}</b><span class="pro-tag">Gratis</span></div>
+      <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
+      ${trackHtml(base, T.trackShort)}
+      <div class="card-foot lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
+    el.querySelector(".lock a").addEventListener("click", () => grEvent("pro_click"));
+    return el;
+  }
+  // Acceso con la cuenta de Pionex: la clave se guarda en este navegador (o llega en ?k=,
+  // el enlace personal para otros dispositivos) y con ella /api/pro da las referencias del resto.
+  const KEY = "gr_access";
+  let token = null;
+  try { token = localStorage.getItem(KEY); } catch { token = null; }
+  const qk = new URLSearchParams(location.search).get("k");
+  if (qk && /^[0-9a-f]{32}$/.test(qk)) {
+    token = qk;
+    try { localStorage.setItem(KEY, qk); } catch { /* sin almacenamiento: vale para esta visita */ }
+    history.replaceState(null, "", location.pathname + location.hash);
+  }
+  const forget = () => { token = null; try { localStorage.removeItem(KEY); } catch { /* nada */ } };
+  async function loadPro() {
+    if (!token) return false;
+    try {
+      const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token);
+      if (r.status === 401 || r.status === 403) {
+        forget();
+        if (r.status === 403) $("unlock-msg").textContent = T.revoked;
+        return false;
+      }
+      if (!r.ok) return false;
+      Object.assign(O.refs, (await r.json()).refs);
+      return true;
+    } catch { return false; }
+  }
+  function showUnlocked() {
+    const link = location.origin + location.pathname + "?k=" + token;
+    $("pro").querySelectorAll(".steps, #unlock-form, #unlock-form + .meta").forEach(e => { e.hidden = true; });
+    const p = document.createElement("p"); p.className = "note"; p.innerHTML = T.unlocked(link);
+    $("h-pro").after(p);
+  }
+  const affUnlock = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
+  if (affUnlock) $("unlock-aff").href = affUnlock; else $("unlock-aff").closest("li").hidden = true;
+  $("unlock-aff").addEventListener("click", () => grEvent("unlock_aff"));
+  $("unlock-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target, msg = $("unlock-msg"), uid = f.uid.value.replace(/\s+/g, ""), email = f.email.value.trim();
+    if (!/^\d{5,15}$/.test(uid)) return void (msg.textContent = T.badUid);
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return void (msg.textContent = T.badEmail);
+    if (!f.consent.checked) return void (msg.textContent = T.needConsent);
+    try {
+      const r = await fetch("https://gridreplay.pages.dev/api/unlock", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ uid, email, consent: true, source: location.pathname, website: f.website.value }) });
+      if (r.status === 403) return void (msg.textContent = T.revoked);
+      if (!r.ok) throw new Error(r.status);
+      const d = await r.json();
+      if (!d.token) throw new Error("token");
+      try { localStorage.setItem(KEY, d.token); sessionStorage.setItem("gr_unlocked", "1"); } catch { /* sin almacenamiento */ }
+      grEvent("unlock");
+      location.href = location.pathname + "?k=" + d.token;
+    } catch { msg.textContent = T.unlockErr; }
+  });
+
+  $("pro-count").textContent = NLOCK;
+  $("pro-form").exchange.addEventListener("change", (e) => { e.target.form.exchange_other.hidden = e.target.value !== "otro"; });
+  $("pro-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const f = e.target, msg = $("pro-msg");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) return void (msg.textContent = T.badEmail);
+    if (!f.exchange.value) return void (msg.textContent = T.pickExchange);
+    if (f.exchange.value === "otro" && !f.exchange_other.value.trim()) return void (msg.textContent = T.typeExchange);
+    if (!f.consent.checked) return void (msg.textContent = T.needConsent);
+    try {
+      const r = await fetch("https://gridreplay.pages.dev/api/waitlist", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: f.email.value.trim(), exchange: f.exchange.value, exchange_other: f.exchange.value === "otro" ? f.exchange_other.value.trim() : "", wants: ["pro"], consent: true, source: location.pathname, website: f.website.value }) });
+      if (!r.ok) throw new Error(r.status);
+      grEvent("pro_signup"); f.reset(); msg.textContent = T.proOk;
+    } catch { msg.textContent = T.proErr; }
+  });
+
+  (async function run() {
+    const box = $("cards");
+    const all = await loadPro();
+    if (all) { showUnlocked(); grEvent("unlock_view"); }
+    const results = await Promise.allSettled((all ? [...O.pairs, ...O.locked] : O.pairs).map(oracle));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    // Sin datos que mostrar: falla Binance (en la página de un par bloqueado no hay nada que calcular).
+    if (!ok.length && (all || !O.locked.length)) { $("status").textContent = T.fail; return; }
+    // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
+    const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); if (!all) O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
+    document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
+      profile = b.dataset.profile;
+      document.querySelectorAll("[data-profile]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      render();
+    }));
+    render();
+    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" })) + (all ? " " + T.statusAll : "");
+    try { if (all && sessionStorage.getItem("gr_unlocked")) { sessionStorage.removeItem("gr_unlocked"); box.scrollIntoView(); } } catch { /* nada */ }
+    grEvent("oracle_view");
+  })();
+})();
+</script>
+</body>
+</html>

@@ -133,6 +133,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .card.is-neutral { border-top-color: var(--ink-3); }
 .card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
 .card-head b { font: 700 1.25rem/1 var(--font-display); }
+.card-head b a { color: inherit; text-decoration: none; }
+.card-head b a:hover { text-decoration: underline; }
+.pairs-list { display: flex; flex-wrap: wrap; gap: 0.4rem 0.9rem; font: 400 0.92rem/1.5 var(--font-data); }
 .card-head span { font: 400 0.9rem/1 var(--font-data); color: var(--ink-3); }
 .dir { display: inline-flex; align-items: center; gap: 0.5rem; font: 600 1.05rem/1 var(--font-body); }
 .dir i { font-style: normal; font: 600 0.78rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; padding: 0.35rem 0.6rem; border-radius: 999px; border: 1px solid currentColor; }
@@ -307,6 +310,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   const L = ES ? "es-ES" : "en-US";
   const P = ES ? " %" : "%";
   const O = JSON.parse(document.getElementById("oracle").textContent);
+  // Página de un solo par (/oraculo/sol/): misma lógica, solo con ese par.
+  const NLOCK = O.locked.length;
+  if (O.only) { O.pairs = O.pairs.filter((b) => b === O.only); O.locked = O.locked.filter((b) => b === O.only); }
   let AFF = {};
   try { AFF = JSON.parse(document.getElementById("affiliates").textContent); } catch { AFF = {}; }
   const $ = (id) => document.getElementById(id);
@@ -433,6 +439,8 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   // Binance agrupa las monedas de precio diminuto en contratos de 1.000 (1000PEPE, 1000SHIB);
   // Pionex y la mayoría de exchanges las muestran por token. La tarjeta enseña el precio por token.
   const unit = (base) => /^1000[A-Z]/.test(base) ? { name: base.slice(4), k: 1000 } : { name: base, k: 1 };
+  // En el oráculo general, el nombre del par lleva a su página propia.
+  const pairName = (base) => { const n = unit(base).name; return O.only ? `${n}/USDT` : `<a href="${ES ? "/oraculo/" : "/en/oracle/"}${n.toLowerCase()}/">${n}/USDT</a>`; };
   function card(o) {
     o = sized(o);
     const u = unit(o.base);
@@ -442,7 +450,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
     const affUrl = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
     el.innerHTML = `
-      <div class="card-head"><b>${u.name}/USDT</b><span>${price(o.price / u.k)}</span></div>
+      <div class="card-head"><b>${pairName(o.base)}</b><span>${price(o.price / u.k)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
       <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 2px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
       <div class="rng">
@@ -505,7 +513,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   function locked(base) {
     const el = document.createElement("article"); el.className = "card locked";
     el.innerHTML = `
-      <div class="card-head"><b>${unit(base).name}/USDT</b><span class="pro-tag">Free</span></div>
+      <div class="card-head"><b>${pairName(base)}</b><span class="pro-tag">Free</span></div>
       <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
       ${trackHtml(base, T.trackShort)}
       <div class="card-foot lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
@@ -566,7 +574,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     } catch { msg.textContent = T.unlockErr; }
   });
 
-  $("pro-count").textContent = O.locked.length;
+  $("pro-count").textContent = NLOCK;
   $("pro-form").exchange.addEventListener("change", (e) => { e.target.form.exchange_other.hidden = e.target.value !== "otro"; });
   $("pro-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -589,7 +597,8 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     if (all) { showUnlocked(); grEvent("unlock_view"); }
     const results = await Promise.allSettled((all ? [...O.pairs, ...O.locked] : O.pairs).map(oracle));
     const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
-    if (!ok.length) { $("status").textContent = T.fail; return; }
+    // Sin datos que mostrar: falla Binance (en la página de un par bloqueado no hay nada que calcular).
+    if (!ok.length && (all || !O.locked.length)) { $("status").textContent = T.fail; return; }
     // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
     const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); if (!all) O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
     document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
