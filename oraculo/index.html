@@ -152,9 +152,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .rng { background: var(--band); border-radius: 6px; padding: 0.7rem 0.8rem; display: grid; gap: 0.3rem; }
 .rng-label { font: 500 0.7rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
 .rng-val { font: 500 1.2rem/1.2 var(--font-data); font-variant-numeric: tabular-nums; color: var(--ink); letter-spacing: -0.01em; }
-.rng-val span { color: var(--ink-3); padding: 0 0.15em; }
+.rng-val { display: flex; flex-wrap: wrap; column-gap: 0.3em; }
+.rng-val i { font-style: normal; color: var(--ink-3); margin-right: 0.3em; }
 .rng-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.9rem; font: 400 0.82rem/1.3 var(--font-data); color: var(--ink-2); }
 .rng-meta b { font-weight: 500; color: var(--ink); }
+.rng-note { font-size: 0.75rem; line-height: 1.35; color: var(--ink-3); }
 /* Historial de la dirección en el par: barra de meses mejores + texto corto */
 .track { display: grid; gap: 0.35rem; margin: 0; font-size: 0.82rem; line-height: 1.4; color: var(--ink-3); }
 .track b { color: var(--ink-2); font-weight: 600; }
@@ -314,6 +316,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     statusAll: "Todos los pares desbloqueados.",
     trackShort: (t) => `Dirección: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
     track: (t) => `Dirección en este par: mejor que neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
+    perToken: (b) => `Precio por token, como en Pionex. En Binance futuros cotiza como 1000${b} (× 1.000).`,
     trackTip: "Orientativa: la dirección no acierta siempre; el rango es lo que más protege.", rangeLabel: "Rango sugerido", gridsU: "grids", levU: "apalanc.",
     badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
     proOk: "¡Apuntado! Te avisaremos cuando abra Pro, con el primer mes gratis.", proErr: "No se ha podido enviar. Inténtalo de nuevo en unos minutos.",
@@ -337,6 +340,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     statusAll: "Every pair unlocked.",
     trackShort: (t) => `Direction: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
     track: (t) => `Direction on this pair: beat neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
+    perToken: (b) => `Price per token, as on Pionex. On Binance futures it trades as 1000${b} (× 1,000).`,
     trackTip: "A guide: the direction isn’t always right; the range is what protects you most.", rangeLabel: "Suggested range", gridsU: "grids", levU: "leverage",
     badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
     proOk: "You’re on the list! We’ll let you know when Pro opens, with the first month free.", proErr: "Couldn’t send. Please try again in a few minutes.",
@@ -405,21 +409,26 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const s = V.profiles[profile], f = V.profiles.fijo10, fmt = (x) => ({ median: num(x.median, 1, true) + P, win: num(x.win, 0) + P, worst10: num(x.worst10) + P });
     $("profile-note").textContent = T.profile(fmt(s), fmt(f));
   }
+  // Binance agrupa las monedas de precio diminuto en contratos de 1.000 (1000PEPE, 1000SHIB);
+  // Pionex y la mayoría de exchanges las muestran por token. La tarjeta enseña el precio por token.
+  const unit = (base) => /^1000[A-Z]/.test(base) ? { name: base.slice(4), k: 1000 } : { name: base, k: 1 };
   function card(o) {
     o = sized(o);
+    const u = unit(o.base);
     const lo = o.price * (1 - o.half), hi = o.price * (1 + o.half);
     const el = document.createElement("article"); el.className = "card is-" + o.dir;
     const rp = (v) => v.toLocaleString(L, { maximumSignificantDigits: 5 });
     const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
     const affUrl = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
     el.innerHTML = `
-      <div class="card-head"><b>${o.base}/USDT</b><span>${price(o.price)}</span></div>
+      <div class="card-head"><b>${u.name}/USDT</b><span>${price(o.price / u.k)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
       <div><div class="meter"><i style="left:calc(${(o.sig * 100).toFixed(1)}% - 2px)"></i></div><div class="zones" title="${T.signal}">${["short", "neutral", "long"].map((z) => `<span${z === o.dir ? ' class="on"' : ""}>${z}${z === o.dir ? " · " + Math.round(o.sig * 100) : ""}</span>`).join("")}</div></div>
       <div class="rng">
         <span class="rng-label">${T.rangeLabel}</span>
-        <span class="rng-val">${rp(lo)}<span>–</span>${rp(hi)}</span>
+        <span class="rng-val"><span>${rp(lo / u.k)}</span><span><i>–</i>${rp(hi / u.k)}</span></span>
         <span class="rng-meta"><span><b>±${num(o.half * 100, 1)}${P}</b></span><span><b>${o.grids}</b> ${T.gridsU}</span><span><b>2x</b> ${T.levU}</span></span>
+        ${u.k > 1 ? `<span class="rng-note">${T.perToken(u.name)}</span>` : ""}
       </div>
       ${o.low ? `<p class="warn">${T.low}</p>` : ""}
       ${trackHtml(o.base, T.track)}
@@ -441,7 +450,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   function locked(base) {
     const el = document.createElement("article"); el.className = "card locked";
     el.innerHTML = `
-      <div class="card-head"><b>${base}/USDT</b><span class="pro-tag">Gratis</span></div>
+      <div class="card-head"><b>${unit(base).name}/USDT</b><span class="pro-tag">Gratis</span></div>
       <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
       ${trackHtml(base, T.trackShort)}
       <div class="card-foot lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
