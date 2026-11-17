@@ -127,7 +127,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 </style>
 <style>
 /* Oráculo: una tarjeta por par con dirección, rango y grids, calculados en directo. */
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; align-items: start; }
 .card { background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--rule); border-radius: 8px; padding: 1rem 1.15rem 1.1rem; display: flex; flex-direction: column; gap: 0.8rem; }
 .card.is-long { border-top-color: var(--accent); }
 .card.is-short { border-top-color: var(--s2); }
