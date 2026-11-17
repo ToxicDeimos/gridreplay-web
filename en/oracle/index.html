@@ -327,7 +327,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
     pset: "Ajustes para copiar en Pionex", psetHow: "En Pionex: Bots → Grid de futuros → configuración manual. Toca cada valor para copiarlo.",
     pDir: "Dirección", pLo: "Precio inferior", pHi: "Precio superior", pGrids: "Número de grids", pMode: "Modo", pModeV: "Aritmético", pLev: "Apalancamiento", pSl: "Stop loss", pTp: "Take profit",
-    pStops: "Stop loss y take profit van en <b>Ajustes avanzados</b>, justo fuera del rango y en el lado que va en tu contra. En 3.561 bots simulados así evitaron todas las liquidaciones (eran el 2,5 %) sin empeorar el resultado medio.",
+    pStops: "Stop loss y take profit van en <b>Ajustes avanzados</b>, justo fuera de cada límite del rango: el SL en el lado que va en tu contra y el TP en el otro. En 3.561 bots simulados así evitaron todas las liquidaciones (eran el 2,5 %) sin empeorar el resultado medio.",
     pAll: "Copiar todo", pCopied: "Copiado ✓", pAllOk: "Ajustes copiados. Pégalos donde quieras o compártelos.", pFail: "No se pudo copiar: selecciona el valor a mano.",
     pTitle: "Grid de futuros", pFrom: "Rango, dirección y grids de hoy: gridreplay.com/oraculo/",
     affNote: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
@@ -356,7 +356,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
     pset: "Settings to copy into Pionex", psetHow: "On Pionex: Bots → Futures Grid → manual setup. Tap each value to copy it.",
     pDir: "Direction", pLo: "Lower price", pHi: "Upper price", pGrids: "Number of grids", pMode: "Mode", pModeV: "Arithmetic", pLev: "Leverage", pSl: "Stop loss", pTp: "Take profit",
-    pStops: "Stop loss and take profit go under <b>Advanced settings</b>, just outside the range on the side that goes against you. In 3,561 simulated bots this avoided every liquidation (2.5% before) without hurting the average result.",
+    pStops: "Stop loss and take profit go under <b>Advanced settings</b>, just outside each edge of the range: the SL on the side that goes against you and the TP on the other. In 3,561 simulated bots this avoided every liquidation (2.5% before) without hurting the average result.",
     pAll: "Copy all", pCopied: "Copied ✓", pAllOk: "Settings copied. Paste them anywhere or share them.", pFail: "Couldn’t copy: select the value by hand.",
     pTitle: "Futures Grid", pFrom: "Today’s range, direction and grids: gridreplay.com/en/oracle/",
     affNote: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
@@ -478,10 +478,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   const plain = (v) => v.toLocaleString("en-US", { maximumSignificantDigits: 5, useGrouping: false });
   function psetHtml(o, u, lo, hi) {
     const rows = [[T.pDir, T.dir[o.dir]], [T.pLo, plain(lo / u.k)], [T.pHi, plain(hi / u.k)], [T.pGrids, String(o.grids)], [T.pMode, T.pModeV], [T.pLev, "2x"]];
-    // Stop justo fuera del rango en el lado que pierde (scripts/oracle_stops.py).
+    // SL y TP justo fuera del rango (scripts/oracle_stops.py, variante b0).
     const sl = plain(lo * 0.999 / u.k), slS = plain(hi * 1.001 / u.k);
-    if (o.dir === "long") rows.push([T.pSl, sl]);
-    else if (o.dir === "short") rows.push([T.pSl, slS]);
+    if (o.dir === "short") rows.push([T.pSl, slS], [T.pTp, sl]);
     else rows.push([T.pSl, sl], [T.pTp, slS]);
     const all = [`Pionex · ${T.pTitle} · ${u.name}/USDT`, ...rows.map(([k, v]) => `${k}: ${v}`), T.pFrom].join("\n");
     return `<details class="pset"><summary>${T.pset}</summary><div class="pset-body">
