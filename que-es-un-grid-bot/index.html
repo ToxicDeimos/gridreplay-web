@@ -115,7 +115,7 @@ footer p { color: var(--ink-3); }
     <div><a class="home" href="/">← GridReplay</a> <a class="home" href="/en/what-is-a-grid-bot/" hreflang="en" lang="en" style="margin-left:1rem">EN</a></div>
     <p class="eyebrow">Guía · 6 minutos</p>
     <h1>Qué es un grid bot y cuándo funciona</h1>
-    <p class="dek">Un grid bot compra y vende solo, a precios fijados de antemano, mientras el precio sube y baja. Gana cuando el mercado se mueve de lado y pierde cuando se va en una dirección. Aquí tienes cómo funciona, qué decides tú y un ejemplo real con 100 bots de Bitcoin del último año.</p>
+    <p class="dek">Un grid bot compra y vende solo, a precios fijados de antemano, mientras el precio sube y baja. Gana cuando el mercado se mueve de lado o va en la dirección que elegiste, y pierde cuando se escapa con fuerza en contra. Aquí tienes cómo funciona, qué decides tú y un ejemplo real con 100 bots de Bitcoin del último año.</p>
   </header>
 
   <section class="wide" aria-labelledby="h-idea">
@@ -157,8 +157,8 @@ footer p { color: var(--ink-3); }
     <h2 id="h-gana">Dónde se gana y dónde se pierde</h2>
     <p>El resultado de un grid bot tiene dos partes: el <strong>beneficio de los ciclos</strong>, que siempre suma, y lo que vale la <strong>posición</strong> que el bot tiene abierta en cada momento, que puede restar mucho más.</p>
     <div class="two">
-      <div class="box good"><h3>Funciona bien</h3><p>Cuando el precio va y viene dentro del rango durante días. Cada vaivén es un ciclo cobrado, y al final el precio no está muy lejos de donde empezó.</p></div>
-      <div class="box bad"><h3>Funciona mal</h3><p>Cuando el precio se va en una dirección y no vuelve. Si cae por debajo del rango, te quedas con monedas compradas más caras. Si sube por encima, el bot ya lo vendió todo y te pierdes la subida.</p></div>
+      <div class="box good"><h3>Funciona bien</h3><p>Cuando el precio va y viene dentro del rango durante días: cada vaivén es un ciclo cobrado. Y cuando la tendencia va a favor del bot: un grid long en una subida, o uno short en una bajada, gana con los ciclos y además con el movimiento.</p></div>
+      <div class="box bad"><h3>Funciona mal</h3><p>Cuando el precio se va en contra del bot y no vuelve. Si cae por debajo del rango, te quedas con monedas compradas más caras (salvo en un short). Si sube por encima, depende: en spot o en long no pierdes, porque ya vendiste con beneficio, aunque ganas menos que si hubieras mantenido la moneda; un grid neutral o short de futuros, en cambio, ha ido vendiendo en la subida y pierde.</p></div>
     </div>
     <p>Por eso un grid bot <strong>no es dinero fácil</strong>. Los ciclos dan un goteo constante; una tendencia fuerte en contra se lo puede llevar de una vez. Y en una subida fuerte, simplemente comprar y esperar suele ganar más que el bot.</p>
   </section>
