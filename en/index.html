@@ -89,7 +89,8 @@ section { display: grid; gap: 1.2rem; min-width: 0; }
 .top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.2rem; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
 .brand { display: inline-flex; align-items: center; gap: 0.55rem; font: 800 1.15rem/1 var(--font-display); font-stretch: 85%; color: var(--ink); text-decoration: none; }
 .brand svg { width: 22px; height: 22px; }
-.top nav { display: flex; gap: 1.2rem; font-size: 0.92rem; }
+.top nav { display: flex; flex-wrap: wrap; gap: 0.35rem 1.2rem; font-size: 0.92rem; }
+.top nav a { white-space: nowrap; }
 .top nav a { color: var(--ink-2); text-decoration: none; }
 .top nav a:hover { color: var(--ink); text-decoration: underline; }
 
