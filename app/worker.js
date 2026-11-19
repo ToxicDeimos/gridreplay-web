@@ -5,8 +5,8 @@
 
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
-const MODULES = ["__init__", "data", "fees", "pionex", "robust", "sim", "validate", "web"];
-const VERSION = "aa5f71e35e";
+const MODULES = ["__init__", "data", "fees", "pionex", "renta", "robust", "sim", "validate", "web"];
+const VERSION = "2be25567f5";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");
@@ -85,6 +85,15 @@ async def run(export):
         return json.dumps({"error": "not_export"})
     return json.dumps({"rows": rows, "share": shareable(rows)})
 
+async def renta(export):
+    import zipfile
+    from gridreplay.renta import report_web
+    try:
+        out = await report_web(export.to_bytes(), get, lambda d: js_progress(json.dumps(d)))
+    except (KeyError, zipfile.BadZipFile):
+        return json.dumps({"error": "not_export"})
+    return json.dumps(out)
+
 async def robust(params):
     out = await robustness(json.loads(params), get, lambda d: js_progress(json.dumps(d)))
     return json.dumps(out)
@@ -109,7 +118,10 @@ self.onmessage = async ({ data }) => {
     files = 0;
     bytes = 0;
     let out;
-    if (data.type === "robust") {
+    if (data.type === "renta") {
+      post({ type: "stage", stage: "reading" });
+      out = JSON.parse(await py.globals.get("renta")(new Uint8Array(data.file)));
+    } else if (data.type === "robust") {
       post({ type: "stage", stage: "prices" });
       out = JSON.parse(await py.globals.get("robust")(JSON.stringify(data.params)));
     } else {

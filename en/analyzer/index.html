@@ -277,7 +277,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   let worker = null, rows = [], share = [], fileBytes = null, engineReady = false;
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=aa5f71e35e");
+    worker = new Worker("/app/worker.js?v=2be25567f5");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }

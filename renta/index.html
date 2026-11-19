@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google-site-verification" content="AtF5jlWl0IyXddtyIiht3d3NyY_9vhS0nkqbmeJzfaI">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<link rel="canonical" href="https://gridreplay.com/renta/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GridReplay">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Renta de tus bots de Pionex">
+<meta property="og:description" content="Sube el historial de Pionex y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, futuros, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
+<meta property="og:url" content="https://gridreplay.com/renta/">
+<meta property="og:image" content="https://gridreplay.com/og-es.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gridreplay.com/og-es.png">
+<title>Renta de tus bots de Pionex</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Sube el historial de Pionex y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, futuros, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: columna de lectura (~68ch) con figuras y tablas que se ensanchan hasta 960px. Misma base que la página de validación. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink-2: #48505d; --ink-3: #737c89; --rule: #dde1e7;
+  --accent: #0d6a65; --band: #e9eef5; --s1: #2a78d6; --s2: #eb6834;
+  --font-display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --read: 68ch; --wide: 960px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+    --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1115; --surface: #151a20; --ink: #edf0f3; --ink-2: #b3bbc6; --ink-3: #8a93a0;
+  --rule: #29303a; --accent: #52b8af; --band: #1a2431; --s1: #3987e5; --s2: #d95926; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 4rem;
+}
+main { display: grid; gap: 3.5rem; max-width: var(--wide); margin: 0 auto; }
+.read { max-width: var(--read); }
+section { display: grid; gap: 1.1rem; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h1 { font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 850; font-stretch: 78%; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 800; font-stretch: 82%; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.eyebrow { font: 500 0.78rem/1.2 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.dek { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); }
+.meta { font: 400 0.82rem/1.5 var(--font-data); color: var(--ink-3); }
+header { display: grid; gap: 1.2rem; padding-top: 3.5rem; }
+.home { font: 500 0.8rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: none; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.kpi { border-top: 3px solid var(--ink); padding-top: 0.8rem; display: grid; gap: 0.45rem; align-content: start; }
+.kpi b { font: 600 2.1rem/1 var(--font-data); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.kpi p { font-size: 0.95rem; color: var(--ink-2); line-height: 1.5; }
+.kpi .src { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.1rem 0.8rem; display: grid; gap: 0.7rem; position: relative; min-width: 0; }
+figure svg { width: 100%; height: auto; display: block; overflow: visible; }
+figcaption { font-size: 0.88rem; color: var(--ink-3); line-height: 1.5; }
+.fig-title { font: 600 1rem/1.3 var(--font-body); }
+.lbl { fill: var(--ink-3); font: 400 11px var(--font-data); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 400 0.78rem/1.45 var(--font-data); padding: 0.45rem 0.6rem; border-radius: 4px; white-space: nowrap; z-index: 2; }
+.table-wrap { overflow-x: auto; min-width: 0; max-height: 34rem; overflow-y: auto; border-bottom: 1px solid var(--rule); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { padding: 0.45rem 0.7rem; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { position: sticky; top: 0; background: var(--bg); font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); border-bottom-color: var(--ink-3); }
+td { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+tr.out td { color: var(--ink-3); }
+.pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
+.pill.ok { border-color: var(--accent); color: var(--accent); }
+ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
+.cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
+.cta p { color: var(--ink-2); }
+.btn { justify-self: start; display: inline-flex; background: var(--accent); color: var(--surface); font: 600 1rem/1 var(--font-body); padding: 0.85rem 1.25rem; border-radius: 6px; text-decoration: none; }
+footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; gap: 0.6rem; font-size: 0.88rem; color: var(--ink-3); }
+</style>
+<style>
+/* Analizador: pasos numerados, zona para soltar el archivo, progreso y resultados. Generado por make_pages.py. */
+.promises { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.promises li { font: 500 0.8rem/1 var(--font-data); padding: 0.45rem 0.7rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; }
+.vote { display: grid; gap: 0.6rem; background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; font-size: 0.95rem; color: var(--ink-2); }
+.vote div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.vote button { font: 500 0.85rem/1 var(--font-body); padding: 0.5rem 0.8rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
+.vote button:disabled { opacity: .5; cursor: default; }
+ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; color: var(--ink-2); }
+ol.steps b { color: var(--ink); font-weight: 600; }
+.drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
+.drop b { font: 600 1.1rem/1.3 var(--font-body); }
+.drop span { font-size: 0.92rem; color: var(--ink-3); }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.status { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.2rem; }
+.status p { color: var(--ink-2); }
+.bar { height: 6px; background: var(--band); border-radius: 3px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.status.err { border-color: var(--s2); }
+.status.err p:first-child { color: var(--s2); font-weight: 600; }
+.pos { color: var(--accent); }
+.neg { color: var(--s2); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: center; }
+button.btn { border: 0; cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button.btn:disabled { opacity: .55; cursor: default; }
+details summary { cursor: pointer; color: var(--accent); font-size: 0.92rem; }
+details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); border-radius: 6px; padding: 0.8rem; overflow-x: auto; max-height: 16rem; }
+</style>
+<style>
+/* Renta: pestañas por ejercicio, tabla por moneda y avisos. */
+.years { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.years button { font: 500 0.9rem/1 var(--font-data); padding: 0.55rem 0.9rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.years button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.kpi.big { border-top-color: var(--accent); }
+.warn { font-size: 0.92rem; color: var(--ink-2); border-left: 3px solid var(--s2); padding: 0.6rem 0.9rem; background: var(--surface); border-radius: 0 6px 6px 0; display: grid; gap: 0.4rem; }
+.warn ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
+.box-label { font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+form.reserve { display: grid; gap: 0.8rem; }
+form.reserve input[type=email] { font: 400 1rem/1.3 var(--font-body); padding: 0.75rem 0.9rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); color: var(--ink); max-width: 26rem; width: 100%; }
+form.reserve .consent { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.88rem; color: var(--ink-2); }
+form.reserve .consent input { margin-top: 0.25rem; }
+.price { font: 600 2rem/1 var(--font-data); }
+.price s { font-size: 1.1rem; color: var(--ink-3); font-weight: 400; margin-right: 0.4rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><a class="home" href="/">← GridReplay</a></div>
+    <p class="eyebrow">Beta gratuita · Pionex · IRPF España</p>
+    <h1>Tu Renta de los bots de Pionex, en dos minutos</h1>
+    <p class="dek read">Sube el historial de Pionex y obtén el borrador para la declaración: ganancias y pérdidas de cada moneda por FIFO en euros, el resultado de los futuros, el staking y si tienes que presentar el Modelo 721. Miles de operaciones de grid, sin límite.</p>
+    <ul class="promises">
+      <li>Tu archivo no sale de tu navegador</li>
+      <li>Sin registro</li>
+      <li>Sin claves API</li>
+      <li>Operaciones ilimitadas</li>
+    </ul>
+  </header>
+
+  <section aria-labelledby="h-1" class="read">
+    <p class="eyebrow">Paso 1</p>
+    <h2 id="h-1">Descarga tu historial de Pionex</h2>
+    <ol class="steps">
+      <li>Entra en <b>pionex.com</b> desde el ordenador e inicia sesión.</li>
+      <li>Pulsa tu avatar (arriba a la derecha) → <b>Panel principal</b> → <b>Historial de transacciones</b>.</li>
+      <li>Elige <b>desde tu primera operación en Pionex hasta hoy</b>. El FIFO necesita todas tus compras anteriores, no solo las del año que declaras.</li>
+      <li>Pionex te avisa por email cuando el archivo está listo (mira también en spam). Descarga el <b>.zip</b> y no lo abras ni lo modifiques.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="h-2" class="read">
+    <p class="eyebrow">Paso 2</p>
+    <h2 id="h-2">Suelta aquí el .zip</h2>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept=".zip,application/zip">
+      <b>Arrastra el archivo o pulsa para elegirlo</b>
+      <span>pionex_txn_….zip · se calcula en este dispositivo</span>
+    </label>
+    <div class="status" id="status" hidden aria-live="polite">
+      <p id="st-main"></p>
+      <div class="bar"><i id="st-bar"></i></div>
+      <p class="meta" id="st-sub"></p>
+    </div>
+    <p class="meta">La primera vez el navegador descarga el motor de cálculo (unos 15 MB) y los precios horarios de Binance de tus monedas y del euro. Puede tardar uno o dos minutos; no cierres la pestaña.</p>
+  </section>
+
+  <section aria-labelledby="h-res" id="results" hidden>
+    <div class="read" style="display:grid;gap:1.1rem">
+      <p class="eyebrow">Resultado</p>
+      <h2 id="h-res">Borrador de tu Renta</h2>
+      <div class="years" id="years" role="group" aria-label="Ejercicio"></div>
+      <p class="note" id="partial" hidden>Este ejercicio aún no ha terminado: las cifras son hasta la fecha de tu export y el saldo es el de ese día, no el del 31 de diciembre.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi big"><span class="src">Base del ahorro estimada</span><b id="k-base">—</b><p>Suma de todo lo de abajo. Si es negativa, la pérdida se puede compensar con ganancias de los 4 años siguientes.</p></div>
+      <div class="kpi"><span class="src">Monedas virtuales</span><b id="k-crypto">—</b><p id="k-crypto-p"></p></div>
+      <div class="kpi"><span class="src">Futuros y funding</span><b id="k-fut">—</b><p id="k-fut-p"></p></div>
+      <div class="kpi"><span class="src">Staking</span><b id="k-stk">—</b><p>Rendimiento del capital mobiliario, a su valor en euros al cobrarlo.</p></div>
+      <div class="kpi"><span class="src">Modelo 721</span><b id="k-721">—</b><p id="k-721-p"></p></div>
+    </div>
+
+    <div class="read" style="display:grid;gap:0.8rem">
+      <h3>Monedas virtuales, una a una</h3>
+      <p class="meta">En la Renta se declaran por moneda: valor de transmisión y valor de adquisición. USDT y USDC también cuentan: su resultado es la variación del euro frente al dólar entre que los compraste y los usaste.</p>
+    </div>
+    <div class="table-wrap">
+      <table id="t-coins">
+        <thead><tr><th>Moneda</th><th>Transmisiones</th><th>Valor de transmisión</th><th>Valor de adquisición</th><th>Resultado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="read" id="others" hidden style="display:grid;gap:0.5rem">
+      <h3>Otros movimientos a revisar</h3>
+      <p class="meta">Bonos y compensaciones de Pionex (por ejemplo, el fondo de seguro). Normalmente son ganancias patrimoniales que no vienen de una venta; confírmalo con tu asesor.</p>
+      <ul class="plain" id="others-list"></ul>
+    </div>
+    <div class="warn read" id="warns" hidden>
+      <b>Revisa esto antes de presentar</b>
+      <ul id="warn-list"></ul>
+    </div>
+    <div class="row-actions">
+      <button class="btn" id="csv" type="button">Descargar el detalle para tu gestor (CSV)</button>
+      <button class="btn ghost" id="again" type="button">Calcular otro archivo</button>
+    </div>
+    <div class="row-actions" id="useful">
+      <span>¿Te ha sido útil?</span>
+      <button class="btn ghost" type="button" data-useful="yes">Sí</button>
+      <button class="btn ghost" type="button" data-useful="no">No</button>
+      <span class="meta" id="useful-msg" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-res2" class="read">
+    <div class="cta">
+      <p class="eyebrow">Renta 2026 · se presenta en abril–junio de 2027</p>
+      <h2 id="h-res2">Reserva el informe completo</h2>
+      <p>Ahora es gratis mientras lo probamos. Para la Renta 2026 el informe completo (todas tus monedas, futuros, staking, Modelo 721 y el CSV para tu gestor) costará <b>29 € por ejercicio</b>, con operaciones ilimitadas. Quien lo reserve ahora tendrá precio de lanzamiento.</p>
+      <p class="price"><s>29 €</s>19 €</p>
+      <form class="reserve" id="reserve" data-endpoint="https://gridreplay.pages.dev/api/waitlist" novalidate>
+        <input type="email" name="email" autocomplete="email" required placeholder="tu@email.com" aria-label="Email">
+        <label class="consent"><input type="checkbox" name="consent" required><span>Acepto que GridReplay guarde mi email para avisarme cuando el informe de la Renta 2026 esté listo, según la <a href="/privacidad/">política de privacidad</a>. No se cobra nada ahora.</span></label>
+        <div hidden aria-hidden="true"><input name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <div><button class="btn" type="submit">Reservar sin pagar</button></div>
+        <p class="meta" id="reserve-msg" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-how" class="read">
+    <p class="eyebrow">Cómo se calcula</p>
+    <h2 id="h-how">El criterio, sin letra pequeña</h2>
+    <ul class="plain">
+      <li><b>Cada compra o venta spot es una permuta</b>: entregas una moneda y recibes otra, las dos valoradas en euros en ese momento (precio horario de Binance y cambio EUR/USDT).</li>
+      <li><b>FIFO por moneda</b>: lo primero que compraste es lo primero que vendes, como exige el artículo 37.2 de la Ley del IRPF para valores homogéneos. Las comisiones restan.</li>
+      <li><b>Futuros</b>: el resultado de cada posición cerrada, con sus comisiones, más el funding cobrado o pagado.</li>
+      <li><b>Depósitos</b> desde fuera de Pionex: se toma como coste su valor al depositar. Si lo compraste antes en otro sitio, tu coste real puede ser otro. <b>Retiradas</b>: no tributan.</li>
+      <li><b>Modelo 721</b>: obligatorio si a 31 de diciembre tenías más de 50.000 € en cripto en exchanges extranjeros (Pionex lo es). Aquí solo se cuenta lo que hay en Pionex.</li>
+      <li>Hacienda no tiene una guía específica para bots: es un borrador para ti o tu gestor, no asesoramiento fiscal.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="h-priv" class="read">
+    <p class="eyebrow">Privacidad</p>
+    <h2 id="h-priv">Qué pasa con tu archivo</h2>
+    <ul class="plain">
+      <li>Se lee y se calcula dentro de tu navegador. No se sube a GridReplay ni a ningún otro sitio, y desaparece al cerrar la pestaña.</li>
+      <li>Tu navegador descarga el motor (Pyodide) desde esta web y los precios públicos desde Binance: Binance ve tu IP, no tu historial.</li>
+      <li>Solo contamos, de forma anónima, que alguien ha usado la herramienta. Más detalles en la <a href="/privacidad/">política de privacidad</a>.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>GridReplay es independiente y no pertenece a Pionex, Binance ni ningún otro exchange. Este informe es un borrador orientativo y no sustituye al asesoramiento de un profesional fiscal.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const eur = (v, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: "always" }) + " €";
+  const cls = (v) => (v > 0.005 ? "pos" : v < -0.005 ? "neg" : "");
+  const T = {
+    engine: "Cargando el motor de cálculo…", reading: "Leyendo tu historial…", prices: "Descargando precios de Binance…",
+    coin: (d, t, s) => `Precios de ${s.replace(/USDT$/, "")} (${d} de ${t})`, dl: (f, mb) => `${f} descargas · ${mb} MB`,
+    errTitle: "No se ha podido calcular", notExport: "No parece un export de Pionex. Sube el .zip tal como lo descargaste.",
+    retry: "Revisa tu conexión y vuelve a intentarlo. Si sigue fallando, escríbenos a contact@gridreplay.com.",
+  };
+  let worker = null, data = null, year = null, engineReady = false;
+
+  function startWorker() {
+    if (worker) return worker;
+    worker = new Worker("/app/worker.js?v=2be25567f5");
+    worker.onmessage = ({ data: m }) => {
+      if (m.type === "stage" && m.stage === "ready") engineReady = true;
+      else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
+      else if (m.type === "download") { $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString("es-ES", { maximumFractionDigits: 1 })); if ($("st-main").textContent === T.reading) $("st-main").textContent = T.prices; }
+      else if (m.type === "progress") say(T.coin(m.done, m.total, m.symbol), 0.05 + 0.9 * m.done / m.total);
+      else if (m.type === "done") show(m);
+      else if (m.type === "error" && m.code === "warmup") return;
+      else if (m.type === "error") { if (!m.code) grEvent("renta_crash"); fail(m.code === "not_export" || m.code === "empty" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
+    };
+    worker.onerror = (e) => { grEvent("renta_crash"); fail(`${T.retry} (${e.message})`); };
+    return worker;
+  }
+  new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { startWorker().postMessage({ type: "warmup" }); ob.disconnect(); } }).observe($("drop"));
+
+  function say(main, frac, sub) {
+    const st = $("status"); st.hidden = false; st.classList.remove("err");
+    $("st-main").textContent = main;
+    if (frac != null) $("st-bar").style.width = `${Math.round(frac * 100)}%`;
+    if (sub != null) $("st-sub").textContent = sub;
+  }
+  function fail(msg) {
+    const st = $("status"); st.hidden = false; st.classList.add("err");
+    $("st-main").textContent = T.errTitle; $("st-sub").textContent = msg; $("st-bar").style.width = "0";
+    $("drop").hidden = false;
+  }
+  async function run(file) {
+    if (!file) return;
+    $("results").hidden = true; $("drop").hidden = true;
+    say(engineReady ? T.reading : T.engine, 0.01, "");
+    const buf = await file.arrayBuffer();
+    grEvent("renta_run");
+    startWorker().postMessage({ type: "renta", file: buf }, [buf]);
+  }
+
+  function show(m) {
+    grEvent("renta_done");
+    data = m;
+    $("status").hidden = true;
+    const years = Object.keys(m.years).sort();
+    // Por defecto, el último ejercicio cerrado (el que toca declarar).
+    year = [...years].reverse().find(y => !m.years[y].partial) || years[years.length - 1];
+    const yb = $("years"); yb.textContent = "";
+    for (const y of years) {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = `Renta ${y}${m.years[y].partial ? " (en curso)" : ""}`;
+      b.addEventListener("click", () => { year = y; render(); });
+      b.dataset.year = y; yb.appendChild(b);
+    }
+    render();
+    $("results").hidden = false; $("drop").hidden = false;
+    $("results").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function render() {
+    const r = data.years[year], s = r.summary, mv = s.monedas_virtuales, fut = s.derivados_futuros, h = s.saldo_31_dic;
+    document.querySelectorAll("#years button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.year === year)));
+    $("partial").hidden = !r.partial;
+    const set = (id, v) => { $(id).textContent = eur(v, true); $(id).className = cls(v); };
+    set("k-base", s.base_ahorro_estimada);
+    set("k-crypto", mv.neto);
+    $("k-crypto-p").textContent = `${mv.transmisiones.toLocaleString("es-ES")} transmisiones: ganancias ${eur(mv.ganancias)} y pérdidas ${eur(mv.perdidas)}.`;
+    set("k-fut", fut.neto);
+    $("k-fut-p").textContent = `${fut.movimientos.toLocaleString("es-ES")} posiciones cerradas y pagos de funding. Ganancia o pérdida patrimonial por derivados.`;
+    set("k-stk", s.capital_mobiliario_staking);
+    $("k-721").textContent = h.modelo_721 ? "Sí" : "No";
+    $("k-721").className = h.modelo_721 ? "neg" : "";
+    $("k-721-p").textContent = `${r.partial ? "Saldo en Pionex hoy" : "Saldo en Pionex a 31/12"}: ${eur(h.total_eur)}. ${h.modelo_721 ? "Supera 50.000 €: tienes que presentarlo (del 1 de enero al 31 de marzo)." : "No llega a 50.000 €, salvo que tengas más cripto en otros exchanges extranjeros."}`;
+
+    const tb = document.querySelector("#t-coins tbody"); tb.textContent = "";
+    for (const [coin, c] of Object.entries(mv.por_moneda)) {
+      const tr = document.createElement("tr");
+      for (const [text, k] of [[coin], [c.operaciones.toLocaleString("es-ES")], [eur(c.transmision)], [eur(c.adquisicion)], [eur(c.resultado, true), cls(c.resultado)]]) {
+        const td = document.createElement("td"); td.textContent = text; if (k) td.className = k; tr.appendChild(td);
+      }
+      tb.appendChild(tr);
+    }
+    const oth = Object.entries(s.otros_a_revisar);
+    $("others").hidden = !oth.length;
+    $("others-list").textContent = "";
+    for (const [k, v] of oth) { const li = document.createElement("li"); li.textContent = `${k}: ${eur(v, true)}`; $("others-list").appendChild(li); }
+
+    const warns = [...data.warnings.filter(w => w.startsWith(year))];
+    for (const [coin, q] of Object.entries(s.ventas_sin_coste_conocido)) warns.push(`Se vendieron ${q.toLocaleString("es-ES", { maximumFractionDigits: 6 })} ${coin} sin una compra anterior en el historial: cuentan con coste 0. Si los compraste fuera de Pionex o antes del periodo exportado, tu resultado real es mejor.`);
+    $("warns").hidden = !warns.length;
+    $("warn-list").textContent = "";
+    for (const w of warns) { const li = document.createElement("li"); li.textContent = w; $("warn-list").appendChild(li); }
+  }
+
+  document.querySelectorAll("[data-useful]").forEach(b => b.addEventListener("click", () => {
+    grEvent("useful_" + b.dataset.useful);
+    document.querySelectorAll("[data-useful]").forEach(x => { x.disabled = true; });
+    $("useful-msg").textContent = b.dataset.useful === "yes" ? "¡Gracias!" : "Gracias. Si nos cuentas qué falta en contact@gridreplay.com, lo tendremos en cuenta.";
+  }));
+
+  $("file").addEventListener("change", (e) => run(e.target.files[0]));
+  const drop = $("drop");
+  ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => drop.addEventListener(t, () => drop.classList.remove("over")));
+  drop.addEventListener("drop", (e) => { e.preventDefault(); run(e.dataTransfer.files[0]); });
+  $("again").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
+
+  $("csv").addEventListener("click", () => {
+    grEvent("renta_csv");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + data.years[year].csv], { type: "text/csv" }));
+    a.download = `renta-${year}-pionex.csv`; a.click(); URL.revokeObjectURL(a.href);
+  });
+
+  // Reserva: se guarda en la lista de espera con wants=renta.
+  const form = $("reserve"), msg = $("reserve-msg");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return void (msg.textContent = "Escribe un email válido, por ejemplo nombre@gmail.com.");
+    if (!form.consent.checked) return void (msg.textContent = "Para reservar tienes que aceptar la política de privacidad.");
+    grEvent("renta_reserve");
+    const endpoint = form.dataset.endpoint;
+    if (!endpoint) return void (msg.textContent = "Vista previa: el formulario todavía no está conectado, así que no se ha guardado nada.");
+    const btn = form.querySelector("button"); btn.disabled = true;
+    try {
+      const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, exchange: "pionex", exchange_other: "", wants: ["renta"], consent: true, source: location.pathname, website: form.website.value }) });
+      if (!res.ok) throw new Error(res.status);
+      form.reset(); msg.textContent = "Reservado. Te escribiremos cuando el informe de la Renta 2026 esté listo.";
+    } catch { msg.textContent = "No se ha podido enviar. Inténtalo de nuevo en unos minutos."; }
+    finally { btn.disabled = false; }
+  });
+})();
+</script>
+</body>
+</html>
