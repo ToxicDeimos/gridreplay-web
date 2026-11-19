@@ -148,7 +148,6 @@ form.reserve .consent input { margin-top: 0.25rem; }
     <p class="eyebrow">Beta gratuita · Pionex · IRPF España</p>
     <h1>Tu Renta de los bots de Pionex, en dos minutos</h1>
     <p class="dek read">Sube el historial de Pionex y obtén el borrador para la declaración: ganancias y pérdidas de cada moneda por FIFO en euros, el resultado de los futuros, el staking y si tienes que presentar el Modelo 721. Miles de operaciones de grid, sin límite.</p>
-    <p class="warn read" id="not-es" hidden>Esta herramienta calcula el IRPF de España. Si no resides en España, tus reglas fiscales serán otras y este borrador no te sirve.</p>
     <ul class="promises">
       <li>Tu archivo no sale de tu navegador</li>
       <li>Sin registro</li>
@@ -417,7 +416,9 @@ form.reserve .consent input { margin-top: 0.25rem; }
     finally { btn.disabled = false; }
   });
 })();
-grGeo().then((g) => { if (g.country && g.country !== "ES") document.getElementById("not-es").hidden = false; });
+// Herramienta solo para residentes en España: desde otro país (conocido) se vuelve a la portada.
+// Los buscadores rastrean desde EE. UU.: se les deja ver la página para que siga indexada.
+if (!/bot|crawl|spider|slurp/i.test(navigator.userAgent)) grGeo().then((g) => { if (g.country && g.country !== "ES") location.replace("/"); });
 </script>
 </body>
 </html>
