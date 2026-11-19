@@ -7,6 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=fetch("https://gridreplay.pages.dev/api/geo").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
 <link rel="canonical" href="https://gridreplay.com/simulador/">
 <link rel="alternate" hreflang="es" href="https://gridreplay.com/simulador/">
 <link rel="alternate" hreflang="en" href="https://gridreplay.com/en/simulator/">
@@ -404,14 +405,20 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
   const EXCH = { pionex: "Pionex", binance: "Binance", bybit: "Bybit", kucoin: "KuCoin" };
   function affiliate(example) {
     const url = (AFF[params.exchange] || "").replace("{lang}", ES ? "es" : "en"), name = EXCH[params.exchange];
-    $("aff").hidden = example || !url;
+    $("aff").hidden = true;
     if (example || !url) return;
+    // Los enlaces actuales son de las webs globales (sin licencia MiCA): en el EEE no se muestran.
+    grGeo().then((g) => { if (!g.eu) showAff(url, name); });
+  }
+  function showAff(url, name) {
+    $("aff").hidden = false;
     $("aff-btn").href = url;
     $("aff-btn").textContent = T.affBtn(name);
     $("aff-text").textContent = params.unit === "price"
       ? T.affPrice(name, fmtP(+params.lower), fmtP(+params.upper), params.grids, params.leverage)
       : T.affPct(name, params.below, params.above, params.grids, params.leverage);
   }
+  grGeo();
   $("aff-btn").addEventListener("click", () => grEvent("aff_" + params.exchange));
 
   // ¿Útil? Una respuesta por resultado, contada de forma anónima.

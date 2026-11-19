@@ -7,6 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=fetch("https://gridreplay.pages.dev/api/geo").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
 <link rel="canonical" href="https://gridreplay.com/en/oracle/">
 <link rel="alternate" hreflang="es" href="https://gridreplay.com/oraculo/">
 <link rel="alternate" hreflang="en" href="https://gridreplay.com/en/oracle/">
@@ -262,10 +263,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <p class="note read">It’s an average edge over many months, not a sure prediction: there are months and even years in which the oracle does worse than a neutral grid. It is general information, the same for everyone, that doesn’t consider your situation and isn’t financial advice. Investing in crypto-assets carries risks, including losing all your capital.</p>
   </section>
 
-  <section id="pro" class="cta read" aria-labelledby="h-pro">
+  <section id="pro" class="cta read" aria-labelledby="h-pro" hidden>
     <p class="eyebrow">Every pair · free</p>
     <h2 id="h-pro">Unlock the full oracle with your Pionex account</h2>
-    <p><b>Every pair</b> in the oracle (today, <span id="pro-count"></span> more, including altcoins like PEPE, SUI or AAVE), with range, grids and direction, without paying anything. In return, you sign up to Pionex through our link: Pionex pays us part of its fees, at no cost to you.</p>
+    <p id="pro-intro"><b>Every pair</b> in the oracle (today, <span id="pro-count"></span> more, including altcoins like PEPE, SUI or AAVE), with range, grids and direction, without paying anything. In return, you sign up to Pionex through our link: Pionex pays us part of its fees, at no cost to you.</p>
     <ol class="steps">
       <li>Create your Pionex account through this link: <a class="btn" id="unlock-aff" href="#" target="_blank" rel="sponsored noopener">Sign up to Pionex</a></li>
       <li>Copy your UID: on Pionex, tap your profile picture (top right). It’s the number under your name.</li>
@@ -316,6 +317,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   if (O.only) { O.pairs = O.pairs.filter((b) => b === O.only); O.locked = O.locked.filter((b) => b === O.only); }
   let AFF = {};
   try { AFF = JSON.parse(document.getElementById("affiliates").textContent); } catch { AFF = {}; }
+  let GEO = { eu: true };
   const $ = (id) => document.getElementById(id);
   const num = (v, d = 1, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d });
   const price = (v) => v.toLocaleString(L, { maximumSignificantDigits: v >= 100 ? 6 : 5 });
@@ -335,6 +337,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
     edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
     lockedTxt: "Rango, grids y dirección de este par, gratis con tu cuenta de Pionex.", unlock: "Desbloquear gratis",
+    lockedTxtEU: "Rango, grids y dirección de este par, con GridReplay Pro.", unlockEU: "Ver cómo",
+    proTitleEU: "Todos los pares del oráculo",
+    proIntroEU: "Fuera de la UE, todos los pares se desbloquean gratis abriendo una cuenta en Pionex. <b>Desde la UE no te lo ofrecemos</b>: Pionex no tiene licencia MiCA, y desde el 1 de julio de 2026 solo pueden operar en la UE los exchanges autorizados. Estamos preparando la misma opción con exchanges con licencia MiCA (Bybit EU y OKX). Mientras, apúntate a GridReplay Pro y te avisamos.",
     badUid: "Escribe tu UID de Pionex: solo números, como aparece debajo de tu nombre.", unlockErr: "No se ha podido desbloquear. Inténtalo de nuevo en unos minutos.",
     revoked: "Ese UID no aparece entre los registrados con nuestro enlace de Pionex, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.",
     unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
@@ -364,6 +369,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
     edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
     lockedTxt: "Range, grids and direction for this pair, free with your Pionex account.", unlock: "Unlock for free",
+    lockedTxtEU: "Range, grids and direction for this pair, with GridReplay Pro.", unlockEU: "See how",
+    proTitleEU: "Every pair in the oracle",
+    proIntroEU: "Outside the EU, every pair unlocks for free by opening a Pionex account. <b>We don’t offer that from the EU</b>: Pionex has no MiCA licence, and since 1 July 2026 only authorised exchanges may operate in the EU. We’re preparing the same option with MiCA-licensed exchanges (Bybit EU and OKX). Meanwhile, join GridReplay Pro and we’ll let you know.",
     badUid: "Enter your Pionex UID: digits only, as shown under your name.", unlockErr: "Couldn’t unlock. Please try again in a few minutes.",
     revoked: "That UID isn’t among the accounts registered through our Pionex link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.",
     unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
@@ -451,7 +459,8 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const el = document.createElement("article"); el.className = "card is-" + o.dir;
     const rp = (v) => v.toLocaleString(L, { maximumSignificantDigits: 5 });
     const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
-    const affUrl = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
+    // Pionex no tiene licencia MiCA: en el EEE no se enlaza (GEO viene de /api/geo).
+    const affUrl = GEO.eu ? "" : (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
     el.innerHTML = `
       <div class="card-head"><b>${pairName(o.base)}</b><span>${price(o.price / u.k)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
@@ -524,7 +533,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <div class="card-head"><b>${pairName(base)}</b><span class="pro-tag">Free</span></div>
       <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
       ${trackHtml(base, T.trackShort)}
-      <div class="card-foot lock"><p class="meta">${T.lockedTxt}</p><a class="btn" href="#pro">${T.unlock}</a></div>`;
+      <div class="card-foot lock"><p class="meta">${GEO.eu ? T.lockedTxtEU : T.lockedTxt}</p><a class="btn" href="#pro">${GEO.eu ? T.unlockEU : T.unlock}</a></div>`;
     el.querySelector(".lock a").addEventListener("click", () => grEvent("pro_click"));
     return el;
   }
@@ -601,7 +610,15 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 
   (async function run() {
     const box = $("cards");
-    const all = await loadPro();
+    const [all, geo] = await Promise.all([loadPro(), grGeo()]);
+    GEO = geo;
+    if (GEO.eu && !all) {
+      $("h-pro").textContent = T.proTitleEU;
+      $("pro-intro").innerHTML = T.proIntroEU;
+      $("pro").querySelectorAll(".steps, #unlock-form, #unlock-form + .meta").forEach(e => { e.hidden = true; });
+      $("pro").querySelector("details.already").open = true;
+    }
+    $("pro").hidden = false;
     if (all) { showUnlocked(); grEvent("unlock_view"); }
     const results = await Promise.allSettled((all ? [...O.pairs, ...O.locked] : O.pairs).map(oracle));
     const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
