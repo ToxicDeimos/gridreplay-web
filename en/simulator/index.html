@@ -402,13 +402,18 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
   // Enlace de afiliado al exchange elegido (affiliates.json); sin enlace no se muestra nada.
   let AFF = {};
   try { AFF = JSON.parse($("affiliates").textContent); } catch { AFF = {}; }
-  const EXCH = { pionex: "Pionex", binance: "Binance", bybit: "Bybit", kucoin: "KuCoin" };
+  const EXCH = { pionex: "Pionex", binance: "Binance", bybit: "Bybit", kucoin: "KuCoin", okx: "OKX" };
+  const link = (id) => (AFF[id] || "").replace("{lang}", ES ? "es" : "en");
+  let affId = "";
   function affiliate(example) {
-    const url = (AFF[params.exchange] || "").replace("{lang}", ES ? "es" : "en"), name = EXCH[params.exchange];
     $("aff").hidden = true;
-    if (example || !url) return;
-    // Los enlaces actuales son de las webs globales (sin licencia MiCA): en el EEE no se muestran.
-    grGeo().then((g) => { if (!g.eu) showAff(url, name); });
+    if (example) return;
+    // Los enlaces de las webs globales (sin licencia MiCA) no se muestran en el EEE: allí, OKX,
+    // que tiene licencia MiCA y MiFID y grid de futuros como el que se simula.
+    grGeo().then((g) => {
+      const id = g.eu ? "okx" : params.exchange;
+      if (link(id)) { affId = id; showAff(link(id), EXCH[id]); }
+    });
   }
   function showAff(url, name) {
     $("aff").hidden = false;
@@ -419,7 +424,7 @@ form.sim .hint { font: 400 0.85rem/1.45 var(--font-body); color: var(--ink-3); t
       : T.affPct(name, params.below, params.above, params.grids, params.leverage);
   }
   grGeo();
-  $("aff-btn").addEventListener("click", () => grEvent("aff_" + params.exchange));
+  $("aff-btn").addEventListener("click", () => grEvent("aff_" + affId));
 
   // ¿Útil? Una respuesta por resultado, contada de forma anónima.
   document.querySelectorAll("[data-useful]").forEach(b => b.addEventListener("click", () => {

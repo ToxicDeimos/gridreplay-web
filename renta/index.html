@@ -129,6 +129,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .years button { font: 500 0.9rem/1 var(--font-data); padding: 0.55rem 0.9rem; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); cursor: pointer; }
 .years button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 .kpi.big { border-top-color: var(--accent); }
+[hidden] { display: none !important; }
 .warn { font-size: 0.92rem; color: var(--ink-2); border-left: 3px solid var(--s2); padding: 0.6rem 0.9rem; background: var(--surface); border-radius: 0 6px 6px 0; display: grid; gap: 0.4rem; }
 .warn ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
 .box-label { font: 500 0.72rem/1.3 var(--font-data); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
@@ -147,6 +148,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     <p class="eyebrow">Beta gratuita · Pionex · IRPF España</p>
     <h1>Tu Renta de los bots de Pionex, en dos minutos</h1>
     <p class="dek read">Sube el historial de Pionex y obtén el borrador para la declaración: ganancias y pérdidas de cada moneda por FIFO en euros, el resultado de los futuros, el staking y si tienes que presentar el Modelo 721. Miles de operaciones de grid, sin límite.</p>
+    <p class="warn read" id="not-es" hidden>Esta herramienta calcula el IRPF de España. Si no resides en España, tus reglas fiscales serán otras y este borrador no te sirve.</p>
     <ul class="promises">
       <li>Tu archivo no sale de tu navegador</li>
       <li>Sin registro</li>
@@ -415,6 +417,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     finally { btn.disabled = false; }
   });
 })();
+grGeo().then((g) => { if (g.country && g.country !== "ES") document.getElementById("not-es").hidden = false; });
 </script>
 </body>
 </html>

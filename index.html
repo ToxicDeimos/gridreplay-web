@@ -123,6 +123,7 @@ section { display: grid; gap: 1.2rem; min-width: 0; }
 
 /* Qué hará */
 .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.6rem 2rem; }
+[hidden] { display: none !important; }
 .feature { display: grid; gap: 0.5rem; align-content: start; border-top: 1px solid var(--ink); padding-top: 0.9rem; }
 .feature p { color: var(--ink-2); font-size: 0.98rem; }
 .feature .tag { font: 500 0.72rem/1 var(--font-data); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
@@ -202,7 +203,7 @@ footer a { color: var(--ink-2); }
         <a href="/oraculo/">Oráculo</a>
         <a href="/simulador/">Simulador</a>
         <a href="/analizador/">Analizador</a>
-        <a href="/renta/">Renta</a>
+        <a href="/renta/" data-only-es hidden>Renta</a>
         <a href="/validacion/">Validación</a>
         <a href="/oraculo/#pro">Todos los pares</a>
         <a href="/en/" hreflang="en" lang="en">EN</a>
@@ -260,7 +261,7 @@ footer a { color: var(--ink-2); }
         <a href="/analizador/">Analizar mis bots →</a>
       </div>
     </div>
-    <div class="feature" style="border-top-color:var(--accent);max-width:68ch">
+    <div class="feature" data-only-es hidden style="border-top-color:var(--accent);max-width:68ch">
       <span class="tag">Y para Hacienda · Nuevo, beta gratuita</span>
       <h3>El borrador de tu Renta, con miles de operaciones</h3>
       <p>Con el mismo historial de Pionex: ganancias y pérdidas de cada moneda por FIFO en euros, el resultado de los futuros, el staking y si te toca el Modelo 721. Sin límite de operaciones y sin que el archivo salga de tu navegador.</p>
@@ -344,7 +345,7 @@ footer a { color: var(--ink-2); }
           <li><b>Tenemos enlace de afiliado con Pionex</b>: si abres tu cuenta a través de nuestro botón, nos paga una parte de sus comisiones, sin coste para ti. Por eso cada botón lo indica.</li>
         </ul>
         <p>No significa que sea el mejor exchange para todo el mundo. El simulador funciona con las comisiones de Pionex, Binance, Bybit y KuCoin, el oráculo usa datos de Binance y sus sugerencias sirven en cualquier exchange con grid de futuros. Puedes votar el siguiente exchange en el <a href="/analizador/">analizador</a>.</p>
-        <p><b>Si vives en la Unión Europea:</b> Pionex no tiene licencia MiCA, y desde el 1 de julio de 2026 solo pueden ofrecer servicios en la UE los exchanges autorizados. Por eso, si nos visitas desde la UE, no te mostramos enlaces para abrir cuenta en Pionex. El analizador y el informe de la <a href="/renta/">Renta</a> siguen leyendo su historial para quien ya tenga cuenta.</p>
+        <p><b>Si vives en la Unión Europea:</b> Pionex no tiene licencia MiCA, y desde el 1 de julio de 2026 solo pueden ofrecer servicios en la UE los exchanges autorizados. Por eso, si nos visitas desde la UE, no te mostramos enlaces para abrir cuenta en Pionex: el oráculo te da los ajustes para OKX, que sí tiene licencia MiCA y grid de futuros. El analizador<span data-only-es hidden> y el informe de la <a href="/renta/">Renta</a></span> sigue<span data-only-es hidden>n</span> leyendo el historial de Pionex para quien ya tenga cuenta.</p>
       </details>
       <details>
         <summary>¿Qué exchanges soporta?</summary>
@@ -422,7 +423,7 @@ footer a { color: var(--ink-2); }
       <a href="/oraculo/">Oráculo</a>
       <a href="/simulador/">Simulador</a>
       <a href="/analizador/">Analizador de bots</a>
-      <a href="/renta/">Renta de tus bots</a>
+      <a href="/renta/" data-only-es hidden>Renta de tus bots</a>
       <a href="/validacion/">Validación</a>
       <a href="/que-es-un-grid-bot/">Qué es un grid bot</a>
       <a href="https://t.me/gridreplay" target="_blank" rel="noopener" onclick="grEvent('telegram')">Telegram</a>
@@ -435,6 +436,8 @@ footer a { color: var(--ink-2); }
 </div>
 
 <script>
+// La Renta (IRPF) solo sirve a residentes en España: solo se enlaza a quien visita desde España.
+grGeo().then((g) => { if (g.country === "ES") document.querySelectorAll("[data-only-es]").forEach((e) => { e.hidden = false; }); });
 (function () {
   const D = JSON.parse(document.getElementById("hero-data").textContent);
   const NS = "http://www.w3.org/2000/svg";

@@ -294,7 +294,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     <p id="pro-intro"><b>Todos los pares</b> del oráculo (hoy, <span id="pro-count"></span> más, también altcoins como PEPE, SUI o AAVE), con rango, grids y dirección, sin pagar nada. A cambio, te registras en Pionex con nuestro enlace: Pionex nos paga una parte de sus comisiones, sin coste para ti.</p>
     <ol class="steps">
       <li>Crea tu cuenta en Pionex con este enlace: <a class="btn" id="unlock-aff" href="#" target="_blank" rel="sponsored noopener">Registrarme en Pionex</a></li>
-      <li>Copia tu UID: en Pionex, pulsa tu foto de perfil (arriba a la derecha). Es el número que aparece debajo de tu nombre.</li>
+      <li id="uid-how">Copia tu UID: en Pionex, pulsa tu foto de perfil (arriba a la derecha). Es el número que aparece debajo de tu nombre.</li>
       <li>Pégalo aquí y listo:</li>
     </ol>
     <form id="unlock-form" novalidate>
@@ -343,6 +343,11 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   let AFF = {};
   try { AFF = JSON.parse(document.getElementById("affiliates").textContent); } catch { AFF = {}; }
   let GEO = { eu: true };
+  // Exchange de las tarjetas y del desbloqueo: Pionex fuera del EEE; OKX dentro (licencia MiCA y
+  // MiFID, con grid de futuros long/short/neutral). Bybit EU no tiene futuros, así que no encaja.
+  const EXS = { pionex: { id: "pionex", name: "Pionex" }, okx: { id: "okx", name: "OKX" } };
+  let EX = EXS.okx;
+  const affOf = (ex) => (AFF[ex.id] || "").replace("{lang}", ES ? "es" : "en");
   const $ = (id) => document.getElementById(id);
   const num = (v, d = 1, sign = false) => (v < 0 ? "−" : sign && v > 0 ? "+" : "") + Math.abs(v).toLocaleString(L, { minimumFractionDigits: d, maximumFractionDigits: d });
   const price = (v) => v.toLocaleString(L, { maximumSignificantDigits: v >= 100 ? 6 : 5 });
@@ -352,26 +357,28 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Rango", grids: "Grids", lev: "Probado con", signal: "Señal de hoy (0–100): short hasta 33, long desde 67",
     low: "Volatilidad muy baja para este par: en estos momentos los grids neutrales perdieron de media. Mejor esperar o usar un grid direccional.",
     sim: "Probar en el simulador →", aff: (n) => `Crear en ${n}`,
-    pset: "Ajustes para copiar en Pionex", psetHow: "En Pionex: Bots → Grid de futuros → configuración manual. Toca cada valor para copiarlo.",
+    pset: (n) => `Ajustes para copiar en ${n}`, psetHow: { pionex: "En Pionex: Bots → Grid de futuros → configuración manual. Toca cada valor para copiarlo.", okx: "En OKX: Bots → Grid de futuros → Manual. Toca cada valor para copiarlo." },
     pDir: "Dirección", pLo: "Precio inferior", pHi: "Precio superior", pGrids: "Número de grids", pMode: "Modo", pModeV: "Aritmético", pLev: "Apalancamiento", pSl: "Stop loss", pTp: "Take profit",
     pStops: "Stop loss y take profit van en <b>Ajustes avanzados</b>, justo fuera de cada límite del rango: el SL en el lado que va en tu contra y el TP en el otro. En 3.561 bots simulados así evitaron todas las liquidaciones (eran el 2,5 %) sin empeorar el resultado medio.",
     pAll: "Copiar todo", pCopied: "Copiado ✓", pAllOk: "Ajustes copiados. Pégalos donde quieras o compártelos.", pFail: "No se pudo copiar: selecciona el valor a mano.",
     pTitle: "Grid de futuros", pFrom: "Rango, dirección y grids de hoy: gridreplay.com/oraculo/",
-    affNote: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>',
+    affNote: { pionex: 'Enlace de afiliado, sin coste para ti. La sugerencia sirve en cualquier exchange con grid de futuros. <a href="/#por-que-pionex">¿Por qué Pionex?</a>', okx: 'Enlace de afiliado, sin coste para ti. OKX tiene licencia MiCA y MiFID en la UE y ofrece grid de futuros long, short y neutral. La sugerencia sirve en cualquier exchange con grid de futuros.' },
     status: (t) => `Calculado a las ${t} con datos en directo de Binance. Se recalcula al recargar la página.`,
     fail: "No se han podido leer los datos de Binance ahora mismo. Recarga la página en unos segundos.",
     edgeP: (lo, hi) => `por bot de 30 días frente a lanzar siempre neutral (intervalo de confianza del 95 %: ${lo} a ${hi} puntos).`,
-    lockedTxt: "Rango, grids y dirección de este par, gratis con tu cuenta de Pionex.", unlock: "Desbloquear gratis",
+    lockedTxt: (n) => `Rango, grids y dirección de este par, gratis con tu cuenta de ${n}.`, unlock: "Desbloquear gratis",
     lockedTxtEU: "Rango, grids y dirección de este par, con GridReplay Pro.", unlockEU: "Ver cómo",
     proTitleEU: "Todos los pares del oráculo",
-    proIntroEU: "Fuera de la UE, todos los pares se desbloquean gratis abriendo una cuenta en Pionex. <b>Desde la UE no te lo ofrecemos</b>: Pionex no tiene licencia MiCA, y desde el 1 de julio de 2026 solo pueden operar en la UE los exchanges autorizados. Estamos preparando la misma opción con exchanges con licencia MiCA (Bybit EU y OKX). Mientras, apúntate a GridReplay Pro y te avisamos.",
-    badUid: "Escribe tu UID de Pionex: solo números, como aparece debajo de tu nombre.", unlockErr: "No se ha podido desbloquear. Inténtalo de nuevo en unos minutos.",
-    revoked: "Ese UID no aparece entre los registrados con nuestro enlace de Pionex, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.",
+    uidHowOKX: "Copia tu UID: en OKX, pulsa el icono de perfil (arriba a la izquierda). Es el número que aparece debajo de tu nombre.",
+    okxIntroEU: "En la UE usamos <b>OKX</b>: tiene licencia MiCA y MiFID y ofrece grid de futuros long, short y neutral, como el oráculo. ",
+    proIntroEU: "Fuera de la UE, todos los pares se desbloquean gratis abriendo una cuenta en Pionex. <b>Desde la UE no te lo ofrecemos</b>: Pionex no tiene licencia MiCA, y desde el 1 de julio de 2026 solo pueden operar en la UE los exchanges autorizados. Estamos preparando la misma opción con OKX, que sí tiene licencia MiCA y grid de futuros. Mientras, apúntate a GridReplay Pro y te avisamos.",
+    badUid: (n) => `Escribe tu UID de ${n}: solo números, como aparece debajo de tu nombre.`, unlockErr: "No se ha podido desbloquear. Inténtalo de nuevo en unos minutos.",
+    revoked: (n) => `Ese UID no aparece entre los registrados con nuestro enlace de ${n}, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.`,
     unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
     statusAll: "Todos los pares desbloqueados.",
     trackShort: (t) => `Historial: seguir la señal ganó a ir siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
     track: (t) => `Historial en este par: elegir long, short o neutral según la señal ganó a lanzar siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
-    perToken: (b) => `Precio por token, como en Pionex. En Binance futuros cotiza como 1000${b} (× 1.000).`,
+    perToken: (b) => `Precio por token, como en Pionex y OKX. En Binance futuros cotiza como 1000${b} (× 1.000).`,
     trackTip: "Orientativa: la dirección no acierta siempre; el rango es lo que más protege.", rangeLabel: "Rango sugerido", gridsU: "grids", levU: "apalanc.",
     badEmail: "Escribe un email válido.", pickExchange: "Elige dónde usas tus grid bots.", typeExchange: "Escribe en qué exchange usas tus grid bots.", needConsent: "Tienes que aceptar la política de privacidad.",
     proOk: "¡Apuntado! Te avisaremos cuando abra Pro, con el primer mes gratis.", proErr: "No se ha podido enviar. Inténtalo de nuevo en unos minutos.",
@@ -384,26 +391,28 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     range: "Range", grids: "Grids", lev: "Tested with", signal: "Today's signal (0–100): short up to 33, long from 67",
     low: "Very low volatility for this pair: at such times neutral grids lost money on average. Better to wait or use a directional grid.",
     sim: "Test it in the simulator →", aff: (n) => `Create on ${n}`,
-    pset: "Settings to copy into Pionex", psetHow: "On Pionex: Bots → Futures Grid → manual setup. Tap each value to copy it.",
+    pset: (n) => `Settings to copy into ${n}`, psetHow: { pionex: "On Pionex: Bots → Futures Grid → manual setup. Tap each value to copy it.", okx: "On OKX: Bots → Futures grid → Manual. Tap each value to copy it." },
     pDir: "Direction", pLo: "Lower price", pHi: "Upper price", pGrids: "Number of grids", pMode: "Mode", pModeV: "Arithmetic", pLev: "Leverage", pSl: "Stop loss", pTp: "Take profit",
     pStops: "Stop loss and take profit go under <b>Advanced settings</b>, just outside each edge of the range: the SL on the side that goes against you and the TP on the other. In 3,561 simulated bots this avoided every liquidation (2.5% before) without hurting the average result.",
     pAll: "Copy all", pCopied: "Copied ✓", pAllOk: "Settings copied. Paste them anywhere or share them.", pFail: "Couldn’t copy: select the value by hand.",
     pTitle: "Futures Grid", pFrom: "Today’s range, direction and grids: gridreplay.com/en/oracle/",
-    affNote: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>',
+    affNote: { pionex: 'Affiliate link, at no cost to you. The suggestion works on any exchange with futures grids. <a href="/en/#why-pionex">Why Pionex?</a>', okx: 'Affiliate link, at no cost to you. OKX holds MiCA and MiFID licences in the EU and offers long, short and neutral futures grids. The suggestion works on any exchange with futures grids.' },
     status: (t) => `Calculated at ${t} from live Binance data. Recalculated when you reload the page.`,
     fail: "Couldn’t read Binance data right now. Reload the page in a few seconds.",
     edgeP: (lo, hi) => `per 30-day bot versus always going neutral (95% confidence interval: ${lo} to ${hi} points).`,
-    lockedTxt: "Range, grids and direction for this pair, free with your Pionex account.", unlock: "Unlock for free",
+    lockedTxt: (n) => `Range, grids and direction for this pair, free with your ${n} account.`, unlock: "Unlock for free",
     lockedTxtEU: "Range, grids and direction for this pair, with GridReplay Pro.", unlockEU: "See how",
     proTitleEU: "Every pair in the oracle",
-    proIntroEU: "Outside the EU, every pair unlocks for free by opening a Pionex account. <b>We don’t offer that from the EU</b>: Pionex has no MiCA licence, and since 1 July 2026 only authorised exchanges may operate in the EU. We’re preparing the same option with MiCA-licensed exchanges (Bybit EU and OKX). Meanwhile, join GridReplay Pro and we’ll let you know.",
-    badUid: "Enter your Pionex UID: digits only, as shown under your name.", unlockErr: "Couldn’t unlock. Please try again in a few minutes.",
-    revoked: "That UID isn’t among the accounts registered through our Pionex link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.",
+    uidHowOKX: "Copy your UID: on OKX, tap the profile icon (top left). It’s the number under your name.",
+    okxIntroEU: "In the EU we use <b>OKX</b>: it holds MiCA and MiFID licences and offers long, short and neutral futures grids, just like the oracle. ",
+    proIntroEU: "Outside the EU, every pair unlocks for free by opening a Pionex account. <b>We don’t offer that from the EU</b>: Pionex has no MiCA licence, and since 1 July 2026 only authorised exchanges may operate in the EU. We’re preparing the same option with OKX, which is MiCA-licensed and has futures grids. Meanwhile, join GridReplay Pro and we’ll let you know.",
+    badUid: (n) => `Enter your ${n} UID: digits only, as shown under your name.`, unlockErr: "Couldn’t unlock. Please try again in a few minutes.",
+    revoked: (n) => `That UID isn’t among the accounts registered through our ${n} link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.`,
     unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
     statusAll: "Every pair unlocked.",
     trackShort: (t) => `Track record: following the signal beat always-neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
     track: (t) => `Track record on this pair: picking long, short or neutral from the signal beat always launching neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
-    perToken: (b) => `Price per token, as on Pionex. On Binance futures it trades as 1000${b} (× 1,000).`,
+    perToken: (b) => `Price per token, as on Pionex and OKX. On Binance futures it trades as 1000${b} (× 1,000).`,
     trackTip: "A guide: the direction isn’t always right; the range is what protects you most.", rangeLabel: "Suggested range", gridsU: "grids", levU: "leverage",
     badEmail: "Enter a valid email.", pickExchange: "Choose where you run your grid bots.", typeExchange: "Type which exchange you run your grid bots on.", needConsent: "You need to accept the privacy policy.",
     proOk: "You’re on the list! We’ll let you know when Pro opens, with the first month free.", proErr: "Couldn’t send. Please try again in a few minutes.",
@@ -484,8 +493,8 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const el = document.createElement("article"); el.className = "card is-" + o.dir;
     const rp = (v) => v.toLocaleString(L, { maximumSignificantDigits: 5 });
     const sim = `${ES ? "/simulador/" : "/en/simulator/"}?symbol=${o.base}&direction=${o.dir}&lower=${+lo.toPrecision(5)}&upper=${+hi.toPrecision(5)}&grids=${o.grids}&leverage=2&days=30`;
-    // Pionex no tiene licencia MiCA: en el EEE no se enlaza (GEO viene de /api/geo).
-    const affUrl = GEO.eu ? "" : (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
+    // Pionex no tiene licencia MiCA: en el EEE se enlaza OKX (GEO viene de /api/geo).
+    const affUrl = affOf(EX);
     el.innerHTML = `
       <div class="card-head"><b>${pairName(o.base)}</b><span>${price(o.price / u.k)}</span></div>
       <div class="dir ${o.dir}"><i>${T.dir[o.dir]}</i><span style="color:var(--ink-2);font-weight:400;font-size:.9rem">${T.why[o.dir]}</span></div>
@@ -500,10 +509,10 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       ${trackHtml(o.base, T.track)}
       ${psetHtml(o, u, lo, hi)}
       <div class="card-foot">
-        <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff("Pionex")}</a>` : ""}</div>
-        ${affUrl ? `<p class="aff-note">${T.affNote}</p>` : ""}
+        <div class="card-actions"><a href="${sim}">${T.sim}</a>${affUrl ? `<a class="btn" href="${affUrl}" target="_blank" rel="sponsored noopener" data-aff>${T.aff(EX.name)}</a>` : ""}</div>
+        ${affUrl ? `<p class="aff-note">${T.affNote[EX.id]}</p>` : ""}
       </div>`;
-    el.querySelector("[data-aff]")?.addEventListener("click", () => grEvent("aff_pionex"));
+    el.querySelector("[data-aff]")?.addEventListener("click", () => grEvent("aff_" + EX.id));
     wirePset(el);
     return el;
   }
@@ -516,9 +525,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const sl = plain(lo * 0.999 / u.k), slS = plain(hi * 1.001 / u.k);
     if (o.dir === "short") rows.push([T.pSl, slS], [T.pTp, sl]);
     else rows.push([T.pSl, sl], [T.pTp, slS]);
-    const all = [`Pionex · ${T.pTitle} · ${u.name}/USDT`, ...rows.map(([k, v]) => `${k}: ${v}`), T.pFrom].join("\n");
-    return `<details class="pset"><summary>${T.pset}</summary><div class="pset-body">
-      <p class="pset-how">${T.psetHow}</p>
+    const all = [`${EX.name} · ${T.pTitle} · ${u.name}/USDT`, ...rows.map(([k, v]) => `${k}: ${v}`), T.pFrom].join("\n");
+    return `<details class="pset"><summary>${T.pset(EX.name)}</summary><div class="pset-body">
+      <p class="pset-how">${T.psetHow[EX.id]}</p>
       ${rows.map(([k, v]) => `<button type="button" class="pset-row" data-copy="${v}"><span>${k}</span><b>${v}</b></button>`).join("")}
       <p class="pset-how">${T.pStops}</p>
       <button type="button" class="pset-all" data-copy-all="${all.replace(/"/g, "&quot;")}">${T.pAll}</button>
@@ -558,7 +567,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <div class="card-head"><b>${pairName(base)}</b><span class="pro-tag">Gratis</span></div>
       <div class="ghost" aria-hidden="true"><span style="width:55%"></span><span style="width:90%"></span><div class="rng"></div></div>
       ${trackHtml(base, T.trackShort)}
-      <div class="card-foot lock"><p class="meta">${GEO.eu ? T.lockedTxtEU : T.lockedTxt}</p><a class="btn" href="#pro">${GEO.eu ? T.unlockEU : T.unlock}</a></div>`;
+      <div class="card-foot lock"><p class="meta">${affOf(EX) ? T.lockedTxt(EX.name) : T.lockedTxtEU}</p><a class="btn" href="#pro">${affOf(EX) ? T.unlock : T.unlockEU}</a></div>`;
     el.querySelector(".lock a").addEventListener("click", () => grEvent("pro_click"));
     return el;
   }
@@ -580,7 +589,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token);
       if (r.status === 401 || r.status === 403) {
         forget();
-        if (r.status === 403) $("unlock-msg").textContent = T.revoked;
+        if (r.status === 403) $("unlock-msg").textContent = T.revoked(EX.name);
         return false;
       }
       if (!r.ok) return false;
@@ -594,19 +603,17 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     const p = document.createElement("p"); p.className = "note"; p.innerHTML = T.unlocked(link);
     $("h-pro").after(p);
   }
-  const affUnlock = (AFF.pionex || "").replace("{lang}", ES ? "es" : "en");
-  if (affUnlock) $("unlock-aff").href = affUnlock; else $("unlock-aff").closest("li").hidden = true;
-  $("unlock-aff").addEventListener("click", () => grEvent("unlock_aff"));
+  $("unlock-aff").addEventListener("click", () => grEvent("unlock_aff_" + EX.id));
   $("unlock-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const f = e.target, msg = $("unlock-msg"), uid = f.uid.value.replace(/\s+/g, ""), email = f.email.value.trim();
-    if (!/^\d{5,15}$/.test(uid)) return void (msg.textContent = T.badUid);
+    if (!/^\d{5,20}$/.test(uid)) return void (msg.textContent = T.badUid(EX.name));
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return void (msg.textContent = T.badEmail);
     if (!f.consent.checked) return void (msg.textContent = T.needConsent);
     try {
       const r = await fetch("https://gridreplay.pages.dev/api/unlock", { method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ uid, email, consent: true, source: location.pathname, website: f.website.value }) });
-      if (r.status === 403) return void (msg.textContent = T.revoked);
+        body: JSON.stringify({ uid, exchange: EX.id, email, consent: true, source: location.pathname, website: f.website.value }) });
+      if (r.status === 403) return void (msg.textContent = T.revoked(EX.name));
       if (!r.ok) throw new Error(r.status);
       const d = await r.json();
       if (!d.token) throw new Error("token");
@@ -633,11 +640,28 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     } catch { msg.textContent = T.proErr; }
   });
 
+  function swapName(root, from, to) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let n; (n = w.nextNode());) if (n.nodeValue.includes(from) && !n.parentElement.closest("select")) n.nodeValue = n.nodeValue.replaceAll(from, to);
+    root.querySelectorAll("[placeholder], [aria-label]").forEach((e) => {
+      for (const a of ["placeholder", "aria-label"]) { const v = e.getAttribute(a); if (v?.includes(from)) e.setAttribute(a, v.replaceAll(from, to)); }
+    });
+  }
+
   (async function run() {
     const box = $("cards");
     const [all, geo] = await Promise.all([loadPro(), grGeo()]);
     GEO = geo;
-    if (GEO.eu && !all) {
+    EX = GEO.eu ? EXS.okx : EXS.pionex;
+    const affUnlock = affOf(EX);
+    if (EX.id !== "pionex" && affUnlock) {
+      // Los textos fijos hablan de Pionex: en el EEE se cambian por OKX (y su forma de ver el UID).
+      [$("dek"), $("pro")].forEach((root) => swapName(root, "Pionex", EX.name));
+      $("uid-how").textContent = T.uidHowOKX;
+      $("pro-intro").insertAdjacentHTML("afterbegin", T.okxIntroEU);
+    }
+    if (affUnlock) $("unlock-aff").href = affUnlock;
+    else if (!all) {
       $("h-pro").textContent = T.proTitleEU;
       $("pro-intro").innerHTML = T.proIntroEU;
       $("pro").querySelectorAll(".steps, #unlock-form, #unlock-form + .meta").forEach(e => { e.hidden = true; });
