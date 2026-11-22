@@ -190,6 +190,14 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 .profiles button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--band); }
 .profile-note { font-size: 0.9rem; color: var(--ink-2); }
 .card.locked { position: relative; overflow: hidden; }
+.card.skel { gap: 0.7rem; min-height: 15rem; }
+.card.skel span { display: block; height: 0.8rem; border-radius: 4px; background: linear-gradient(90deg, var(--band) 0%, var(--rule) 50%, var(--band) 100%); background-size: 200% 100%; animation: shimmer 1.3s ease-in-out infinite; }
+.card.skel span.tall { height: 5rem; }
+.card.checking .lock { opacity: 0.55; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+#status.loading::before { content: ""; display: inline-block; width: 0.8em; height: 0.8em; margin-right: 0.5em; vertical-align: -0.1em; border: 2px solid var(--rule); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .card.skel span, #status.loading::before { animation: none; } }
 .card.locked .ghost { filter: blur(4px); user-select: none; pointer-events: none; display: grid; gap: 0.55rem; }
 .card.locked .ghost span { display: block; height: 0.75rem; border-radius: 4px; background: var(--band); }
 .card.locked .ghost .rng { height: 4.6rem; }
@@ -376,6 +384,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: (n) => `Ese UID no aparece entre los registrados con nuestro enlace de ${n}, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.`,
     unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
     statusAll: "Todos los pares desbloqueados.",
+    checking: "Comprobando tu acceso al resto de pares…",
     proDown: "No hemos podido comprobar tu acceso ahora mismo (a veces los operadores españoles bloquean Cloudflare, por ejemplo durante el fútbol). Mientras, ves BTC y ETH; recarga más tarde para el resto.",
     trackShort: (t) => `Historial: seguir la señal ganó a ir siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
     track: (t) => `Historial en este par: elegir long, short o neutral según la señal ganó a lanzar siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
@@ -411,6 +420,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: (n) => `That UID isn’t among the accounts registered through our ${n} link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.`,
     unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
     statusAll: "Every pair unlocked.",
+    checking: "Checking your access to the other pairs…",
     proDown: "We couldn’t check your access right now (our server may be unreachable from your network). Meanwhile you see BTC and ETH; reload later for the rest.",
     trackShort: (t) => `Track record: following the signal beat always-neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
     track: (t) => `Track record on this pair: picking long, short or neutral from the signal beat always launching neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
@@ -655,8 +665,14 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 
   (async function run() {
     const box = $("cards");
-    const [all, geo] = await Promise.all([loadPro(), grGeo()]);
-    GEO = geo;
+    // Esqueletos animados mientras llegan los datos (uno por tarjeta que se va a ver).
+    const skel = (n) => { box.textContent = ""; for (let i = 0; i < n; i++) box.insertAdjacentHTML("beforeend", `<article class="card skel" aria-hidden="true"><span style="width:45%"></span><span style="width:80%"></span><span class="tall"></span><span style="width:65%"></span></article>`); };
+    skel(O.pairs.length + O.locked.length);
+    $("status").classList.add("loading");
+    // Los pares gratis no esperan a la API de acceso (puede tardar o estar bloqueada).
+    const proP = loadPro();
+    const freeP = Promise.allSettled(O.pairs.map(oracle));
+    GEO = await grGeo();
     EX = GEO.eu ? EXS.okx : EXS.pionex;
     const affUnlock = affOf(EX);
     if (EX.id !== "pionex" && affUnlock) {
@@ -666,7 +682,38 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       $("pro-intro").insertAdjacentHTML("afterbegin", T.okxIntroEU);
     }
     if (affUnlock) $("unlock-aff").href = affUnlock;
-    else if (!all) {
+    const done = (r) => r.filter(x => x.status === "fulfilled").map(x => x.value);
+    let ok = done(await freeP), all = false, checking = !!token;
+    // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
+    const render = () => {
+      box.textContent = "";
+      ok.forEach(o => box.appendChild(card(o)));
+      if (!all) O.locked.forEach(b => { const el = locked(b); if (checking) el.classList.add("checking"); box.appendChild(el); });
+      profileNote();
+    };
+    document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
+      profile = b.dataset.profile;
+      document.querySelectorAll("[data-profile]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      render();
+    }));
+    const time = () => T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" }));
+    if (ok.length || O.locked.length) {
+      render();
+      $("status").textContent = checking ? T.checking : time();
+    }
+    if (checking) {
+      all = await proP;
+      checking = false;
+      if (all) {
+        skel(0); render();
+        O.locked.forEach(() => box.insertAdjacentHTML("beforeend", `<article class="card skel" aria-hidden="true"><span style="width:45%"></span><span style="width:80%"></span><span class="tall"></span><span style="width:65%"></span></article>`));
+        ok = [...ok, ...done(await Promise.allSettled(O.locked.map(oracle)))];
+      }
+    }
+    $("status").classList.remove("loading");
+    // Sin datos que mostrar: falla Binance (en la página de un par bloqueado no hay nada que calcular).
+    if (!ok.length && (all || !O.locked.length)) { box.textContent = ""; $("status").textContent = T.fail; return; }
+    if (!affUnlock && !all) {
       $("h-pro").textContent = T.proTitleEU;
       $("pro-intro").innerHTML = T.proIntroEU;
       $("pro").querySelectorAll(".steps, #unlock-form, #unlock-form + .meta").forEach(e => { e.hidden = true; });
@@ -674,19 +721,8 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     }
     $("pro").hidden = false;
     if (all) { showUnlocked(); grEvent("unlock_view"); }
-    const results = await Promise.allSettled((all ? [...O.pairs, ...O.locked] : O.pairs).map(oracle));
-    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
-    // Sin datos que mostrar: falla Binance (en la página de un par bloqueado no hay nada que calcular).
-    if (!ok.length && (all || !O.locked.length)) { $("status").textContent = T.fail; return; }
-    // Orden fijo (BTC, ETH…): que cada par esté siempre en el mismo sitio.
-    const render = () => { box.textContent = ""; ok.forEach(o => box.appendChild(card(o))); if (!all) O.locked.forEach(b => box.appendChild(locked(b))); profileNote(); };
-    document.querySelectorAll("[data-profile]").forEach(b => b.addEventListener("click", () => {
-      profile = b.dataset.profile;
-      document.querySelectorAll("[data-profile]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-      render();
-    }));
     render();
-    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" })) + (all ? " " + T.statusAll : proDown ? " " + T.proDown : "");
+    $("status").textContent = time() + (all ? " " + T.statusAll : proDown ? " " + T.proDown : "");
     try { if (all && sessionStorage.getItem("gr_unlocked")) { sessionStorage.removeItem("gr_unlocked"); box.scrollIntoView(); } } catch { /* nada */ }
     grEvent("oracle_view");
   })();
