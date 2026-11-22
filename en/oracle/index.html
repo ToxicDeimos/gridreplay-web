@@ -6,8 +6,9 @@
 <meta name="google-site-verification" content="AtF5jlWl0IyXddtyIiht3d3NyY_9vhS0nkqbmeJzfaI">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
-<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=fetch("https://gridreplay.pages.dev/api/geo",window.AbortSignal&&AbortSignal.timeout?{signal:AbortSignal.timeout(5000)}:{}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
+<script>window.grEvent=function(n){try{navigator.sendBeacon("https://api.gridreplay.com/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
+<script>window.grApi=["https://api.gridreplay.com", "https://gridreplay.pages.dev"];window.grFetch=function(p,o){var b=window.grApi,i=0;function t(){var c=Object.assign({},o||{});delete c.signal;if(window.AbortSignal&&AbortSignal.timeout)c.signal=AbortSignal.timeout(5000);return fetch(b[i]+p,c).catch(function(e){if(++i<b.length)return t();throw e})}return t()}</script>
+<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=grFetch("/api/geo").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
 <link rel="canonical" href="https://gridreplay.com/en/oracle/">
 <link rel="alternate" hreflang="es" href="https://gridreplay.com/oraculo/">
 <link rel="alternate" hreflang="en" href="https://gridreplay.com/en/oracle/">
@@ -574,9 +575,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   async function loadPro() {
     if (!token) return false;
     try {
-      // Sin respuesta en 8 s (p. ej. bloqueo de Cloudflare por el fútbol en España): se sigue
-      // con los pares gratis y se conserva la clave.
-      const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token, AbortSignal.timeout ? { signal: AbortSignal.timeout(8000) } : {});
+      // grFetch prueba api.gridreplay.com y luego gridreplay.pages.dev (5 s cada una); si ninguna
+      // responde (bloqueos de Cloudflare por el fútbol en España), se sigue con los pares gratis.
+      const r = await grFetch("/api/pro?k=" + token);
       if (r.status === 401 || r.status === 403) {
         forget();
         if (r.status === 403) $("unlock-msg").textContent = T.revoked(EX.name);
@@ -601,7 +602,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return void (msg.textContent = T.badEmail);
     if (!f.consent.checked) return void (msg.textContent = T.needConsent);
     try {
-      const r = await fetch("https://gridreplay.pages.dev/api/unlock", { method: "POST", headers: { "content-type": "application/json" },
+      const r = await grFetch("/api/unlock", { method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ uid, exchange: EX.id, email, consent: true, source: location.pathname, website: f.website.value }) });
       if (r.status === 403) return void (msg.textContent = T.revoked(EX.name));
       if (!r.ok) throw new Error(r.status);
@@ -623,7 +624,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     if (f.exchange.value === "otro" && !f.exchange_other.value.trim()) return void (msg.textContent = T.typeExchange);
     if (!f.consent.checked) return void (msg.textContent = T.needConsent);
     try {
-      const r = await fetch("https://gridreplay.pages.dev/api/waitlist", { method: "POST", headers: { "content-type": "application/json" },
+      const r = await grFetch("/api/waitlist", { method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ email: f.email.value.trim(), exchange: f.exchange.value, exchange_other: f.exchange.value === "otro" ? f.exchange_other.value.trim() : "", wants: ["pro"], consent: true, source: location.pathname, website: f.website.value }) });
       if (!r.ok) throw new Error(r.status);
       grEvent("pro_signup"); f.reset(); msg.textContent = T.proOk;
