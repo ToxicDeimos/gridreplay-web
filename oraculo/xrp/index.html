@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 4h14M1 8h14M1 12h14' stroke='%232a78d6' stroke-width='1.5'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <script>window.grEvent=function(n){try{navigator.sendBeacon("https://gridreplay.pages.dev/api/event",JSON.stringify({name:n,path:location.pathname}))}catch(e){}};grEvent("view")</script>
-<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=fetch("https://gridreplay.pages.dev/api/geo").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
+<script>window.grGeo=function(){if(window._grGeo)return window._grGeo;try{var c=sessionStorage.getItem("gr_geo");if(c)return window._grGeo=Promise.resolve(JSON.parse(c))}catch(e){}return window._grGeo=fetch("https://gridreplay.pages.dev/api/geo",window.AbortSignal&&AbortSignal.timeout?{signal:AbortSignal.timeout(5000)}:{}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){try{sessionStorage.setItem("gr_geo",JSON.stringify(d))}catch(e){}return d}).catch(function(){return{country:null,eu:true}})}</script>
 <link rel="canonical" href="https://gridreplay.com/oraculo/xrp/">
 <link rel="alternate" hreflang="es" href="https://gridreplay.com/oraculo/xrp/">
 <link rel="alternate" hreflang="en" href="https://gridreplay.com/en/oracle/xrp/">
@@ -376,6 +376,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: (n) => `Ese UID no aparece entre los registrados con nuestro enlace de ${n}, así que no podemos dar acceso. Si crees que es un error, escribe a contact@gridreplay.com.`,
     unlocked: (u) => `Tienes todos los pares desbloqueados en este navegador. Para abrirlos en otro dispositivo, guarda este enlace (es personal): <a href="${u}">${u}</a>`,
     statusAll: "Todos los pares desbloqueados.",
+    proDown: "No hemos podido comprobar tu acceso ahora mismo (a veces los operadores españoles bloquean Cloudflare, por ejemplo durante el fútbol). Mientras, ves BTC y ETH; recarga más tarde para el resto.",
     trackShort: (t) => `Historial: seguir la señal ganó a ir siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
     track: (t) => `Historial en este par: elegir long, short o neutral según la señal ganó a lanzar siempre neutral en <b>${t.better} de ${t.months} meses</b> (${num(t.edge, 1, true)} pp por bot)`,
     perToken: (b) => `Precio por token, como en Pionex y OKX. En Binance futuros cotiza como 1000${b} (× 1.000).`,
@@ -410,6 +411,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     revoked: (n) => `That UID isn’t among the accounts registered through our ${n} link, so we can’t give access. If you think this is a mistake, write to contact@gridreplay.com.`,
     unlocked: (u) => `Every pair is unlocked in this browser. To open them on another device, keep this link (it’s personal): <a href="${u}">${u}</a>`,
     statusAll: "Every pair unlocked.",
+    proDown: "We couldn’t check your access right now (our server may be unreachable from your network). Meanwhile you see BTC and ETH; reload later for the rest.",
     trackShort: (t) => `Track record: following the signal beat always-neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
     track: (t) => `Track record on this pair: picking long, short or neutral from the signal beat always launching neutral in <b>${t.better} of ${t.months} months</b> (${num(t.edge, 1, true)} pp per bot)`,
     perToken: (b) => `Price per token, as on Pionex and OKX. On Binance futures it trades as 1000${b} (× 1,000).`,
@@ -582,20 +584,23 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     try { localStorage.setItem(KEY, qk); } catch { /* sin almacenamiento: vale para esta visita */ }
     history.replaceState(null, "", location.pathname + location.hash);
   }
+  let proDown = false;
   const forget = () => { token = null; try { localStorage.removeItem(KEY); } catch { /* nada */ } };
   async function loadPro() {
     if (!token) return false;
     try {
-      const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token);
+      // Sin respuesta en 8 s (p. ej. bloqueo de Cloudflare por el fútbol en España): se sigue
+      // con los pares gratis y se conserva la clave.
+      const r = await fetch("https://gridreplay.pages.dev/api/pro?k=" + token, AbortSignal.timeout ? { signal: AbortSignal.timeout(8000) } : {});
       if (r.status === 401 || r.status === 403) {
         forget();
         if (r.status === 403) $("unlock-msg").textContent = T.revoked(EX.name);
         return false;
       }
-      if (!r.ok) return false;
+      if (!r.ok) { proDown = true; return false; }
       Object.assign(O.refs, (await r.json()).refs);
       return true;
-    } catch { return false; }
+    } catch { proDown = true; return false; }
   }
   function showUnlocked() {
     const link = location.origin + location.pathname + "?k=" + token;
@@ -681,7 +686,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       render();
     }));
     render();
-    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" })) + (all ? " " + T.statusAll : "");
+    $("status").textContent = T.status(new Date().toLocaleTimeString(L, { hour: "2-digit", minute: "2-digit" })) + (all ? " " + T.statusAll : proDown ? " " + T.proDown : "");
     try { if (all && sessionStorage.getItem("gr_unlocked")) { sessionStorage.removeItem("gr_unlocked"); box.scrollIntoView(); } } catch { /* nada */ }
     grEvent("oracle_view");
   })();
