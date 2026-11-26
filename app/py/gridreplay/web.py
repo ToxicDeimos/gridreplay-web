@@ -381,6 +381,25 @@ async def analyze(export: bytes, get: Get, progress: Progress | None = None) -> 
     return rows
 
 
+def excluded(export: bytes) -> dict:
+    """Futuros del export que el analizador no reconstruye (bots con menos de 20 órdenes
+    límite, operaciones manuales). Sin ellos el resultado del analizador sale mejor que el
+    real: se enseñan aparte y en el total real de la cuenta."""
+    trades, positions = load_export(export)
+    ids = {b.bot_id for b in detect_bots(trades, positions)}
+    out = positions[~positions["tax_id"].isin(ids)]
+    if out.empty:
+        return {"groups": 0, "positions": 0, "net": 0.0, "fees": 0.0, "funding": 0.0}
+    net = out["pnl"] + out["fee"] + out["funding_fee"]
+    return {
+        "groups": int(out["tax_id"].nunique()),
+        "positions": int(len(out)),
+        "net": round(float(net.sum()), 2),
+        "fees": round(float(-out["fee"].sum()), 2),
+        "funding": round(float(out["funding_fee"].sum()), 2),
+    }
+
+
 def shareable(rows: list[dict]) -> list[dict]:
     """Versión anonimizada para la página de validación: sin importes en USDT,
     sin identificadores y sin fechas exactas (solo el año)."""

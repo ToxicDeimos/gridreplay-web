@@ -6,7 +6,7 @@
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
 const MODULES = ["__init__", "data", "fees", "pionex", "renta", "robust", "sim", "validate", "web"];
-const VERSION = "513d057412";
+const VERSION = "ddb7052711";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");
@@ -68,7 +68,7 @@ async function boot() {
 import sys, types, json
 sys.path.insert(0, "/app")
 sys.modules.setdefault("requests", types.ModuleType("requests"))
-from gridreplay.web import analyze, robustness, shareable
+from gridreplay.web import analyze, excluded, robustness, shareable
 
 async def get(url):
     try:
@@ -83,7 +83,11 @@ async def run(export):
         rows = await analyze(export.to_bytes(), get, lambda d: js_progress(json.dumps(d)))
     except (KeyError, zipfile.BadZipFile):
         return json.dumps({"error": "not_export"})
-    return json.dumps({"rows": rows, "share": shareable(rows)})
+    try:
+        other = excluded(export.to_bytes())
+    except Exception:
+        other = None
+    return json.dumps({"rows": rows, "share": shareable(rows), "excluded": other})
 
 async def renta(names, bufs, tz):
     import zipfile
