@@ -110,6 +110,11 @@ footer { border-top: 1px solid var(--rule); padding-top: 1.4rem; display: grid; 
 .vote div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .vote button { font: 500 0.85rem/1 var(--font-body); padding: 0.5rem 0.8rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--surface); color: var(--accent); cursor: pointer; }
 .vote button:disabled { opacity: .5; cursor: default; }
+.vote button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+.vote .other { display: grid; gap: 0.7rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; margin-top: 0.3rem; }
+.vote .other b { color: var(--ink); }
+.vote .other ol { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.3rem; }
+.vote .drop { min-height: 6.5rem; }
 ol.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.5rem; color: var(--ink-2); }
 ol.steps b { color: var(--ink); font-weight: 600; }
 .drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
@@ -154,6 +159,17 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       <p>Are your bots on another exchange? Vote for it and we’ll add exchanges by demand. Meanwhile, the <a href="/en/simulator/">simulator</a> works for any exchange.</p>
       <div><button type="button" data-want="binance">Binance</button><button type="button" data-want="bybit">Bybit</button><button type="button" data-want="okx">OKX</button><button type="button" data-want="bitget">Bitget</button><button type="button" data-want="kucoin">KuCoin</button><button type="button" data-want="otro">Other</button></div>
       <p class="meta" id="vote-msg" aria-live="polite"></p>
+      <div class="other" id="other" hidden>
+        <b id="other-title"></b>
+        <p>The analyzer can’t read this exchange yet. You can help us add it sooner: upload your history here and the site will read only its <b>structure</b> (columns and movement types). Nothing is analyzed or sent until you decide.</p>
+        <ol id="other-steps"></ol>
+        <label class="drop" id="other-drop">
+          <input type="file" id="other-file" accept=".zip,.csv,application/zip,text/csv" multiple>
+          <b>Drag the file here or click to choose it</b>
+          <span>CSV or .zip · read on this device</span>
+        </label>
+        <p class="meta" id="other-msg" aria-live="polite"></p>
+      </div>
     </div>
   </section>
 
@@ -324,15 +340,29 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
 
   // Estructura del archivo (sin datos) para el botón opcional: solo si no es un export de Pionex.
   let structure = null;
-  function askStructure(list) {
+  // El recuadro de envío se coloca bajo quien lo pide: el paso 2 o la subida de otro exchange.
+  const fmtHome = $("fmt").previousElementSibling;
+  let fmtAt = null, fmtLabel = "";
+  function askStructure(list, at = null, label = "") {
+    fmtAt = at; fmtLabel = label;
     structure = null; $("fmt").hidden = true; $("fmt-msg").textContent = ""; $("fmt-send").disabled = false;
     Promise.all([...list].map(async (f) => ({ name: f.name, buf: await f.arrayBuffer() })))
       .then((files) => startWorker().postMessage({ type: "structure", files }, files.map((f) => f.buf)));
   }
   function gotStructure(s) {
-    if (!s || s.exchange === "pionex" || !s.files.length) return;
+    if (fmtAt) $("other-msg").textContent = "";
+    if (!s || !s.files.length) {
+      if (fmtAt) $("other-msg").textContent = ES ? "No encontramos ningún CSV en ese archivo. Sube el CSV o el .zip tal como lo descargaste." : "We found no CSV in that file. Upload the CSV or .zip exactly as downloaded.";
+      return;
+    }
+    if (s.exchange === "pionex") {
+      if (fmtAt) $("other-msg").textContent = ES ? "Esto es un historial de Pionex: súbelo en el paso 2 para analizarlo." : "This is a Pionex history: upload it in step 2 to analyze it.";
+      return;
+    }
     structure = s; $("fmt-pre").textContent = JSON.stringify(s, null, 2);
-    if (s.exchange === "okx") $("fmt-ex").value = "okx";
+    $("fmt-ex").value = s.exchange === "okx" ? "okx" : (fmtLabel || "");
+    (fmtAt || fmtHome).after($("fmt"));
+    if (fmtAt) fmtAt.appendChild($("fmt"));
     $("fmt").hidden = false; grEvent("format_offer");
   }
   $("fmt-send").addEventListener("click", async () => {
@@ -403,11 +433,32 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   }));
 
   // Votos de exchange: cuentan de forma anónima para decidir cuál añadir después.
+  // Al elegir un exchange se cuenta el voto (una vez por exchange) y se abre la subida de su
+  // historial para el envío opcional de la estructura (abajo, en el mismo recuadro).
+  const EXN = { binance: "Binance", bybit: "Bybit", okx: "OKX", bitget: "Bitget", kucoin: "KuCoin", otro: ES ? "tu exchange" : "your exchange" };
+  const STEPS = {
+    okx: ES ? ["Entra en <b>okx.com</b> desde el ordenador → <b>Activos</b> → <b>Centro de órdenes</b>.", "En <b>Historial de trading</b>, pulsa <b>Descargar</b>, elige todo el periodo y <b>Exportar</b>. Haz lo mismo en <b>Historial de fondos</b>.", "Sube aquí los dos archivos sin abrirlos."]
+            : ["Go to <b>okx.com</b> on a computer → <b>Assets</b> → <b>Order center</b>.", "In <b>Trading history</b>, click <b>Download</b>, choose the whole period and <b>Export</b>. Do the same in <b>Funding history</b>.", "Upload both files here without opening them."],
+    any: (n) => ES ? [`Entra en la web de ${n} desde el ordenador y busca el historial de órdenes o de operaciones de tus bots.`, "Descárgalo en CSV (o .zip) con todo el periodo.", "Súbelo aquí sin abrirlo."]
+                   : [`Go to the ${n} website on a computer and find the order or trade history of your bots.`, "Download it as CSV (or .zip) for the whole period.", "Upload it here without opening it."],
+  };
+  const voted = new Set();
+  let wantEx = "";
   document.querySelectorAll("[data-want]").forEach(b => b.addEventListener("click", () => {
-    grEvent("want_" + b.dataset.want);
-    document.querySelectorAll("[data-want]").forEach(x => { x.disabled = true; });
-    $("vote-msg").textContent = ES ? "¡Anotado! Si quieres que sea de los primeros en llegar, envíanos un export de ejemplo a contact@gridreplay.com." : "Noted! If you want it to be among the first, send us a sample export at contact@gridreplay.com.";
+    wantEx = b.dataset.want;
+    if (!voted.has(wantEx)) { voted.add(wantEx); grEvent("want_" + wantEx); }
+    document.querySelectorAll("[data-want]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    $("vote-msg").textContent = ES ? "¡Anotado tu voto!" : "Vote noted!";
+    $("other-title").textContent = ES ? `Ayúdanos a añadir ${EXN[wantEx]}` : `Help us add ${EXN[wantEx]}`;
+    $("other-steps").innerHTML = (wantEx === "okx" ? STEPS.okx : STEPS.any(EXN[wantEx])).map(x => `<li>${x}</li>`).join("");
+    $("other-msg").textContent = ""; $("other").hidden = false;
   }));
+  const otherDrop = $("other-drop");
+  const otherFiles = (list) => { if (!list || !list.length) return; $("other-msg").textContent = ES ? "Leyendo la estructura…" : "Reading the structure…"; askStructure(list, $("other"), wantEx); };
+  $("other-file").addEventListener("change", (e) => otherFiles(e.target.files));
+  ["dragenter", "dragover"].forEach(t => otherDrop.addEventListener(t, (e) => { e.preventDefault(); otherDrop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => otherDrop.addEventListener(t, () => otherDrop.classList.remove("over")));
+  otherDrop.addEventListener("drop", (e) => { e.preventDefault(); otherFiles(e.dataTransfer.files); });
 
   // Cuántos bots han compartido ya otros usuarios (para la invitación de arriba).
   grFetch("/api/share").then(r => r.ok ? r.json() : null).then(d => {
