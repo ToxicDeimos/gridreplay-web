@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import time
 import zipfile
 from collections import defaultdict, deque
@@ -216,10 +217,17 @@ def _okx_frame(raw: bytes) -> tuple[str, pd.DataFrame] | None:
     return None
 
 
+PIONEX_FILES = {"raw-trading-details", "convert", "dust-collector", "deposit-withdraw", "staking",
+                "position_futures", "others"}
+
+
 def detect(files: dict[str, bytes]) -> str:
+    """'okx', 'pionex' o 'unknown' (otro exchange o archivo que no reconocemos)."""
     if any(_okx_frame(raw) for raw in files.values()):
         return "okx"
-    return "pionex"
+    if any(Path(n).stem in PIONEX_FILES for n in files):
+        return "pionex"
+    return "unknown"
 
 
 def load_okx(files: dict[str, bytes], tz: str = "UTC") -> dict[str, pd.DataFrame]:
@@ -297,6 +305,61 @@ def events_from_okx(ok: dict[str, pd.DataFrame]) -> list[Event]:
         raise OKXUnsupported("okx_no_trading")
     ev.sort(key=lambda e: e.ts)
     return ev
+
+
+# ---------------------------------------------------------------- estructura (opcional)
+#
+# Para aprender formatos que no conocemos (OKX, otros exchanges), el usuario puede enviar
+# voluntariamente SOLO la estructura de su archivo: nombres de columnas, valores de las
+# columnas de tipo (sin cifras) y la forma de la fecha con los dígitos cambiados por 9.
+# Nunca importes, fechas reales, monedas ni identificadores.
+
+_TYPE_COL = re.compile(r"type|side|action|tag|categor|kind|status|state|direction|tipo|bill", re.I)
+_TIME_COL = re.compile(r"time|date|fecha", re.I)
+_SAFE_VALUE = re.compile(r"^[A-Za-z][A-Za-z /_&().'-]{0,39}$")  # sin dígitos ni @
+
+
+def _mask(text: str, limit: int = 120) -> str:
+    text = re.sub(r"[^\s,;]*@[^\s,;]*", "[email]", str(text))  # sin @: el servidor las rechaza
+    return re.sub(r"\d", "9", text)[:limit]
+
+
+def _size_bucket(n: int) -> str:
+    return "0" if n == 0 else "<10" if n < 10 else "<100" if n < 100 else "<1000" if n < 1000 else "1000+"
+
+
+def file_structure(files: dict[str, bytes]) -> dict:
+    csvs = read_files(files)
+    out = {"v": 1, "exchange": detect(csvs) if csvs else "unknown",
+           "others": sorted({_mask(Path(n).suffix.lower(), 10) for n in files
+                             if not n.lower().endswith((".csv", ".zip"))})[:10],
+           "files": []}
+    for name, raw in list(csvs.items())[:12]:
+        lines = raw.decode("utf-8-sig", errors="replace").splitlines()
+        head = next((i for i, l in enumerate(lines[:15])
+                     if l.count(",") >= 2 and sum(c.isalpha() for c in l) > sum(c.isdigit() for c in l)), 0)
+        info = {"name": _mask(Path(name).name, 80), "before_header": [_mask(l) for l in lines[:head][:5]]}
+        try:
+            df = pd.read_csv(io.StringIO("\n".join(lines[head:])), dtype=str, nrows=200_000)
+        except Exception:  # noqa: BLE001 — CSV ilegible: se manda solo lo anterior
+            out["files"].append({**info, "error": "unreadable"})
+            continue
+        cols = [str(c).strip().lstrip("﻿") for c in df.columns][:80]
+        df.columns = cols + list(df.columns[len(cols):])
+        info["columns"] = [_mask(c, 60) for c in cols]
+        info["rows"] = _size_bucket(len(df))
+        info["values"] = {}
+        for c in cols:
+            if _TYPE_COL.search(c):
+                vals = df[c].dropna().astype(str).str.strip().unique()
+                safe = sorted(v for v in vals if _SAFE_VALUE.match(v))[:30]
+                if safe:
+                    info["values"][_mask(c, 60)] = safe
+        tcol = next((c for c in cols if _TIME_COL.search(c)), None)
+        if tcol is not None and df[tcol].notna().any():
+            info["time_shape"] = _mask(df[tcol].dropna().iloc[0], 40)
+        out["files"].append(info)
+    return out
 
 
 def load_events(files: dict[str, bytes], tz: str = "UTC") -> tuple[str, list[Event]]:

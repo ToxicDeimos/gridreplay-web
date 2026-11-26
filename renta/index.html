@@ -88,6 +88,11 @@ tr.out td { color: var(--ink-3); }
 .pill { font: 500 0.72rem/1 var(--font-data); padding: 0.2rem 0.45rem; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-3); }
 .pill.ok { border-color: var(--accent); color: var(--accent); }
 ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: var(--ink-2); }
+.fmt { display: grid; gap: 0.6rem; font-size: 0.92rem; color: var(--ink-2); border: 1px dashed var(--accent); border-radius: 6px; padding: 0.9rem 1rem; background: var(--surface); }
+.fmt b { color: var(--ink); }
+.fmt select { font: 400 0.95rem/1.3 var(--font-body); padding: 0.4rem 0.5rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); margin-left: 0.4rem; }
+.fmt pre { font: 400 0.75rem/1.4 var(--font-data); background: var(--band); padding: 0.6rem; border-radius: 4px; max-height: 16rem; overflow: auto; white-space: pre-wrap; margin: 0.4rem 0 0; }
+.fmt summary { cursor: pointer; color: var(--accent); }
 .note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
 .cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
 .cta p { color: var(--ink-2); }
@@ -204,6 +209,15 @@ form.reserve .consent input { margin-top: 0.25rem; }
       <div class="bar"><i id="st-bar"></i></div>
       <p class="meta" id="st-sub"></p>
     </div>
+    <div class="fmt" id="fmt" hidden>
+      <b>¿Nos ayudas a leer este archivo?</b>
+      <p>Si quieres, envíanos solo su <b>estructura</b>: los nombres de las columnas, los tipos de movimiento y la forma de la fecha (con los números cambiados por 9). Nada de importes, fechas, monedas ni identificadores. Con eso aprendemos a leer OKX y otros exchanges.</p>
+      <label>¿De qué exchange es?<select id="fmt-ex">
+        <option value="">—</option><option value="okx">OKX</option><option value="binance">Binance</option><option value="bybit">Bybit</option><option value="bitget">Bitget</option><option value="kucoin">KuCoin</option><option value="gate">Gate</option><option value="mexc">MEXC</option><option value="bingx">BingX</option><option value="pionex">Pionex</option><option value="otro">Otro</option>
+      </select></label>
+      <details><summary>Ver exactamente lo que se envía</summary><pre id="fmt-pre"></pre></details>
+      <div><button class="btn ghost" type="button" id="fmt-send">Enviar solo la estructura</button> <span class="meta" id="fmt-msg" aria-live="polite"></span></div>
+    </div>
     <p class="meta">La primera vez el navegador descarga el motor de cálculo (unos 15 MB) y los precios horarios de Binance de tus monedas y del euro. Puede tardar uno o dos minutos; no cierres la pestaña.</p>
   </section>
 
@@ -288,6 +302,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     <ul class="plain">
       <li>Se lee y se calcula dentro de tu navegador. No se sube a GridReplay ni a ningún otro sitio, y desaparece al cerrar la pestaña.</li>
       <li>Tu navegador descarga el motor (Pyodide) desde esta web y los precios públicos desde Binance: Binance ve tu IP, no tu historial.</li>
+      <li>Si el archivo es de un formato que todavía no sabemos leer, puedes enviarnos <b>solo su estructura</b> (columnas, tipos de movimiento y la forma de la fecha, sin importes, fechas, monedas ni identificadores). Es opcional y ves exactamente lo que se envía antes de pulsar.</li>
       <li>Solo contamos, de forma anónima, que alguien ha usado la herramienta. Más detalles en la <a href="/privacidad/">política de privacidad</a>.</li>
     </ul>
   </section>
@@ -318,12 +333,13 @@ form.reserve .consent input { margin-top: 0.25rem; }
 
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=6f957a5fe4");
+    worker = new Worker("/app/worker.js?v=457715d242");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
       else if (m.type === "download") { $("st-sub").textContent = T.dl(m.files, m.mb.toLocaleString("es-ES", { maximumFractionDigits: 1 })); if ($("st-main").textContent === T.reading) $("st-main").textContent = T.prices; }
       else if (m.type === "progress") say(T.coin(m.done, m.total, m.symbol), 0.05 + 0.9 * m.done / m.total);
+      else if (m.type === "structure") gotStructure(m.structure);
       else if (m.type === "done") show(m);
       else if (m.type === "error" && m.code === "warmup") return;
       else if (m.type === "error") { if (!m.code) grEvent("renta_crash"); fail(T[m.code] ? T[m.code](m.detail || "") : m.code === "not_export" || m.code === "empty" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
@@ -344,9 +360,34 @@ form.reserve .consent input { margin-top: 0.25rem; }
     $("st-main").textContent = T.errTitle; $("st-sub").textContent = msg; $("st-bar").style.width = "0";
     $("drop").hidden = false;
   }
+
+  // Estructura del archivo (sin datos) para el botón opcional: solo si no es un export de Pionex.
+  let structure = null;
+  function askStructure(list) {
+    structure = null; $("fmt").hidden = true; $("fmt-msg").textContent = ""; $("fmt-send").disabled = false;
+    Promise.all([...list].map(async (f) => ({ name: f.name, buf: await f.arrayBuffer() })))
+      .then((files) => startWorker().postMessage({ type: "structure", files }, files.map((f) => f.buf)));
+  }
+  function gotStructure(s) {
+    if (!s || s.exchange === "pionex" || !s.files.length) return;
+    structure = s; $("fmt-pre").textContent = JSON.stringify(s, null, 2);
+    if (s.exchange === "okx") $("fmt-ex").value = "okx";
+    $("fmt").hidden = false; grEvent("format_offer");
+  }
+  $("fmt-send").addEventListener("click", async () => {
+    if (!structure) return;
+    $("fmt-send").disabled = true;
+    try {
+      const r = await grFetch("/api/format", { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ source: location.pathname, label: $("fmt-ex").value, structure }) });
+      if (!r.ok) throw new Error(r.status);
+      grEvent("format_sent"); $("fmt-msg").textContent = "¡Gracias! Nos ayuda mucho.";
+    } catch { $("fmt-send").disabled = false; $("fmt-msg").textContent = "No se ha podido enviar. Inténtalo de nuevo en unos minutos."; }
+  });
   async function run(list) {
     const picked = [...(list || [])];
     if (!picked.length) return;
+    askStructure(picked);
     $("results").hidden = true; $("drop").hidden = true;
     say(engineReady ? T.reading : T.engine, 0.01, "");
     const files = await Promise.all(picked.map(async (f) => ({ name: f.name, buf: await f.arrayBuffer() })));

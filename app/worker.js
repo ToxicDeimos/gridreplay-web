@@ -6,7 +6,7 @@
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
 const MODULES = ["__init__", "data", "fees", "pionex", "renta", "robust", "sim", "validate", "web"];
-const VERSION = "6f957a5fe4";
+const VERSION = "457715d242";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");
@@ -95,6 +95,14 @@ async def renta(names, bufs, tz):
         return json.dumps({"error": "not_export"})
     return json.dumps(out)
 
+def structure(names, bufs):
+    from gridreplay.renta import file_structure
+    files = {n: b.to_bytes() for n, b in zip(json.loads(names), bufs)}
+    try:
+        return json.dumps(file_structure(files))
+    except Exception:
+        return json.dumps(None)
+
 async def robust(params):
     out = await robustness(json.loads(params), get, lambda d: js_progress(json.dumps(d)))
     return json.dumps(out)
@@ -119,6 +127,13 @@ self.onmessage = async ({ data }) => {
     files = 0;
     bytes = 0;
     let out;
+    if (data.type === "structure") {
+      // Estructura del archivo (sin datos) para el botón opcional «Enviar la estructura».
+      const files = data.files;
+      const s = JSON.parse(py.globals.get("structure")(
+        JSON.stringify(files.map((f) => f.name)), files.map((f) => new Uint8Array(f.buf))));
+      return post({ type: "structure", structure: s });
+    }
     if (data.type === "renta") {
       post({ type: "stage", stage: "reading" });
       // data.files: [{name, buf}] (OKX: varios CSV/zip; Pionex: un zip). data.file: formato anterior.

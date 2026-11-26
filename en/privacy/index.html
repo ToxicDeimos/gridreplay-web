@@ -68,7 +68,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
 <main>
   <a class="back" href="/en/">← GridReplay</a> <a class="back" href="/privacidad/" hreflang="es" lang="es" style="margin-left:1rem">ES</a>
   <h1>Privacy policy</h1>
-  <p class="meta">Last updated: November 15, 2026</p>
+  <p class="meta">Last updated: November 26, 2026</p>
 
   <section>
     <h2>Who is responsible for your data</h2>
@@ -99,6 +99,7 @@ a { color: var(--accent); text-underline-offset: 3px; }
     <h2>The bot analyzer</h2>
     <p>The history you load into the <a href="/en/analyzer/">analyzer</a> is processed inside your browser: it isn’t uploaded to GridReplay or any server, and we never see it. To run the calculation, your browser downloads the engine from this website and public prices from Binance; as with any website, Binance receives your IP address, but not your history. The <a href="/en/simulator/">simulator</a> and the <a href="/en/oracle/">oracle</a> work the same way: what you test or look up is calculated in your browser from public Binance data and never reaches us.</p>
     <p>If you press “Share anonymous results”, we store only what is shown to you before sending: for each bot, the pair, direction, year, duration, number of grids and orders, and the match percentages. We don’t store amounts, exact dates, email or IP, so this data can’t identify you. We use it to extend the <a href="/en/validation/">validation page</a> and improve the simulator, and keep it for as long as GridReplay exists. Because we can’t tell which results are yours, we can’t delete them on request.</p>
+    <p>If you upload a file to the analyzer that we can’t read yet (for example, from OKX or another exchange) and press “Send the structure only”, we store only what you see under “See exactly what is sent”: the column names, the movement types (such as “Spot” or “Deposit”) and the shape of the date with every digit replaced by 9, plus the exchange if you choose it. We don’t store amounts, dates, coins, IDs, email or IP, and the server rejects anything containing digits other than 9. We use it only to teach the website to read those files, and keep it for as long as GridReplay exists.</p>
   </section>
 
   <section>
