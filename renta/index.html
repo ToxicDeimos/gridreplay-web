@@ -357,7 +357,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
 
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=457715d242");
+    worker = new Worker("/app/worker.js?v=513d057412");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }

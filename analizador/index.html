@@ -96,6 +96,9 @@ ul.plain { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.4rem; color: v
 .fmt select { font: 400 0.95rem/1.3 var(--font-body); padding: 0.4rem 0.5rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); margin-left: 0.4rem; }
 .fmt pre { font: 400 0.75rem/1.4 var(--font-data); background: var(--band); padding: 0.6rem; border-radius: 4px; max-height: 16rem; overflow: auto; white-space: pre-wrap; margin: 0.4rem 0 0; }
 .fmt summary { cursor: pointer; color: var(--accent); }
+.ocmp { display: grid; gap: 0.6rem; border-left: 3px solid var(--accent); padding: 0.4rem 0 0.4rem 1rem; }
+.ocmp h3 { font-size: 1.35rem; }
+.ocmp #ocmp-main { font-size: 1.05rem; color: var(--ink); }
 .note { font-size: 0.92rem; color: var(--ink-2); background: var(--band); border-radius: 6px; padding: 0.9rem 1rem; }
 .cta { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.3rem 1.4rem; display: grid; gap: 0.8rem; }
 .cta p { color: var(--ink-2); }
@@ -224,11 +227,17 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     </div>
     <div class="table-wrap">
       <table id="t-bots">
-        <thead><tr><th>Par</th><th>Tipo</th><th>Inicio</th><th>Días</th><th>Grids</th><th>Órdenes</th><th>Neto real</th><th>Comisiones</th><th>Funding</th><th>Neto simulado</th><th>Coincidencia</th><th>Estado</th></tr></thead>
+        <thead><tr><th>Par</th><th>Tipo</th><th>Inicio</th><th>Días</th><th>Grids</th><th>Órdenes</th><th>Neto real</th><th>Comisiones</th><th>Funding</th><th>Neto simulado</th><th>Coincidencia</th><th>Estado</th><th>Con el oráculo (30 días)</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
     <p class="meta read">Importes en USDT. Solo grids de futuros con al menos 20 órdenes. «Modificado»: el bot cambió de rango o de inversión en marcha y no se puede simular como un único grid. La simulación usa precios de Binance y Pionex agrega varios mercados, así que pequeñas diferencias son normales.</p>
+    <div class="read ocmp" id="ocmp" hidden>
+      <p class="eyebrow">Comparación</p>
+      <h3>¿Y si hubieras seguido al oráculo?</h3>
+      <p id="ocmp-main"></p>
+      <p class="meta" id="ocmp-note"></p>
+    </div>
     <div class="row-actions" id="useful">
       <span>¿Te ha sido útil?</span>
       <button class="btn ghost" type="button" data-useful="yes">Sí</button>
@@ -287,6 +296,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fees: (pct) => pct == null ? "USDT pagados en comisiones." : `USDT pagados: el ${pct}${P} de tu beneficio bruto.`,
     match: (n) => `de tus órdenes reproducidas por nivel y lado, en ${n} bots comparables.`,
     st: { mod: "modificado", nodata: "sin datos", err: "error", liq: "liquidado", ok: "✓ coincide", off: "desviado" },
+    dirs: { long: "long", short: "short", neutral: "neutral" },
+    ocmpMain: (n, on, rn, better) => `En los <b>${n} bots</b> en los que el oráculo tenía señal ese día, el bot que sugería habría dado <b class="${cls(on)}">${num(on, 2, true)} USDT</b>, frente a tus <b class="${cls(rn)}">${num(rn, 2, true)} USDT</b>. Fue mejor en ${better} de ${n}.`,
+    ocmpNote: (days, big) => `Cómo se calcula: para cada bot, el que sugería el oráculo el día que lo lanzaste (la dirección de ese día, calculada sin ver el futuro; el rango del perfil equilibrado; 2x, y stop loss y take profit justo fuera del rango), con el mismo tamaño de posición y dejado 30 días, que es para lo que está pensado y validado. Ten en cuenta que ese dinero queda ocupado 30 días, mientras que tus bots duraron de media ${days} días, y que un solo bot puede pesar mucho en el total: la mayor diferencia es ${big}. Sin señal del oráculo quedan los bots anteriores a 2023 (2021 en BTC), los de octubre de 2026 en adelante y los de pares que no cubre. * Aún no han pasado los 30 días.`,
     thanksYes: "¡Gracias!", thanksNo: "Gracias. Si nos cuentas qué echas en falta en contact@gridreplay.com, lo tendremos en cuenta.",
     shared: "¡Gracias! Tus resultados se sumarán a la página de validación.", shareErr: "No se ha podido enviar. Inténtalo de nuevo más tarde.",
   } : {
@@ -299,6 +311,9 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
     fees: (pct) => pct == null ? "USDT paid in fees." : `USDT paid: ${pct}${P} of your gross profit.`,
     match: (n) => `of your orders reproduced by level and side, across ${n} comparable bots.`,
     st: { mod: "modified", nodata: "no data", err: "error", liq: "liquidated", ok: "✓ matches", off: "deviates" },
+    dirs: { long: "long", short: "short", neutral: "neutral" },
+    ocmpMain: (n, on, rn, better) => `Across the <b>${n} bots</b> where the oracle had a signal that day, the bot it suggested would have made <b class="${cls(on)}">${num(on, 2, true)} USDT</b>, versus your <b class="${cls(rn)}">${num(rn, 2, true)} USDT</b>. It did better in ${better} of ${n}.`,
+    ocmpNote: (days, big) => `How it’s calculated: for each bot, the one the oracle suggested on the day you launched it (that day’s direction, computed without looking ahead; the balanced profile’s range; 2x, and a stop loss and take profit just outside the range), with the same position size and left for 30 days, which is what it’s designed and validated for. Bear in mind that money stays tied up for 30 days, while your bots lasted ${days} days on average, and that a single bot can weigh a lot in the total: the biggest difference is ${big}. Bots before 2023 (2021 for BTC), from October 2026 onwards and on pairs it doesn’t cover have no oracle signal. * The 30 days aren’t over yet.`,
     thanksYes: "Thank you!", thanksNo: "Thanks. If you tell us what’s missing at contact@gridreplay.com, we’ll take it into account.",
     shared: "Thank you! Your results will be added to the validation page.", shareErr: "Couldn’t send. Please try again later.",
   };
@@ -309,7 +324,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   let worker = null, rows = [], share = [], fileBytes = null, engineReady = false;
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=457715d242");
+    worker = new Worker("/app/worker.js?v=513d057412");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
@@ -416,7 +431,23 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
       for (const [text, c] of cells) { const td = document.createElement("td"); td.textContent = text; if (c) td.className = c; tr.appendChild(td); }
       const td = document.createElement("td"), s = document.createElement("span");
       s.className = "pill" + (!r.modified && r.within ? " ok" : ""); s.textContent = status; td.appendChild(s); tr.appendChild(td);
+      const o = r.oracle, to = document.createElement("td");
+      to.textContent = o ? `${num(o.net, 2, true)} · ${T.dirs[o.direction]}${o.partial ? " *" : ""}` : "—";
+      if (o) to.className = cls(o.net);
+      tr.appendChild(to);
       tb.appendChild(tr);
+    }
+    // ¿Y si hubieras seguido al oráculo? Solo bots comparables (no modificados) con señal ese día.
+    const cmp = rows.filter(r => r.oracle && !r.modified);
+    for (const r of rows) { r.oracle_direction = r.oracle?.direction ?? null; r.oracle_net = r.oracle?.net ?? null; }
+    $("ocmp").hidden = !cmp.length;
+    if (cmp.length) {
+      const on = cmp.reduce((a, r) => a + r.oracle.net, 0), rn = cmp.reduce((a, r) => a + r.real_net, 0);
+      const better = cmp.filter(r => r.oracle.net > r.real_net).length;
+      const big = cmp.reduce((m, r) => Math.abs(r.oracle.net - r.real_net) > Math.abs(m.oracle.net - m.real_net) ? r : m);
+      const bigTxt = `${big.symbol.replace(/USDT$/, "/USDT")} (${big.start.slice(0, 10)}): ${num(big.oracle.net - big.real_net, 2, true)} USDT`;
+      $("ocmp-main").innerHTML = T.ocmpMain(cmp.length, on, rn, better);
+      $("ocmp-note").textContent = T.ocmpNote(num(cmp.reduce((a, r) => a + r.days, 0) / cmp.length, 1), bigTxt);
     }
     $("share-preview").textContent = JSON.stringify(share, null, 1);
     $("share-box").hidden = !share.length;
@@ -473,7 +504,7 @@ details pre { font: 400 0.78rem/1.5 var(--font-data); background: var(--band); b
   $("again").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
 
   $("csv").addEventListener("click", () => {
-    const cols = ["symbol", "direction", "mode", "start", "days", "lower", "upper", "grids", "real_fills", "real_net", "real_gross", "real_fees", "real_funding", "sim_fills", "sim_net", "sim_fees", "sim_funding", "grid_profit", "round_trips", "match", "net_diff", "within", "modified", "liquidated", "error"];
+    const cols = ["symbol", "direction", "mode", "start", "days", "lower", "upper", "grids", "real_fills", "real_net", "real_gross", "real_fees", "real_funding", "sim_fills", "sim_net", "sim_fees", "sim_funding", "grid_profit", "round_trips", "match", "net_diff", "within", "modified", "liquidated", "error", "oracle_direction", "oracle_net"];
     const csv = [cols.join(",")].concat(rows.map(r => cols.map(c => r[c] == null ? "" : JSON.stringify(r[c])).join(","))).join("\n");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));

@@ -6,7 +6,7 @@
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
 const MODULES = ["__init__", "data", "fees", "pionex", "renta", "robust", "sim", "validate", "web"];
-const VERSION = "457715d242";
+const VERSION = "513d057412";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");

@@ -20,8 +20,10 @@ import json
 import zipfile
 from collections.abc import Awaitable, Callable
 from datetime import UTC, date, datetime, timedelta
+from dataclasses import replace
 from urllib.parse import urlencode
 
+import numpy as np
 import pandas as pd
 
 from gridreplay.data import (
@@ -39,7 +41,8 @@ from gridreplay.data import (
 from gridreplay.fees import fees_for
 from gridreplay.pionex import PionexBot, detect_bots, load_export
 from gridreplay.robust import Template, run_windows, summarize
-from gridreplay.validate import compare_bot, sim_window
+from gridreplay.sim import GridConfig, run_grid
+from gridreplay.validate import bot_config, compare_bot, sim_window
 
 Get = Callable[[str], Awaitable[tuple[int, bytes]]]
 Progress = Callable[[dict], None]
@@ -190,6 +193,110 @@ class Loader:
         return df[(df["ts"] >= start) & (df["ts"] < end)].reset_index(drop=True)
 
 
+# ---------------------------------------------------------------- «¿y si hubieras seguido al oráculo?»
+#
+# Para cada bot real se simula el bot que habría sugerido el oráculo ese día, con el mismo
+# par, el mismo arranque y el mismo tamaño de posición (nocional), durante los 30 días para
+# los que está pensado y validado (no la duración del bot real: con bots de 1–2 días el rango
+# del oráculo, ancho, casi no opera y la comparación no diría nada):
+#   * dirección: la que dio el oráculo en el arranque más reciente (cada 3 días) anterior al
+#     bot, calculada sin mirar al futuro (scripts/oracle_history.py → oracle-history.json);
+#   * rango: perfil equilibrado, ±2·vol·√30 con la volatilidad de los 14 días previos;
+#     grids como en la web (site/oracle_template.html → sized);
+#   * 2x de apalancamiento y SL/TP un 0,1 % fuera del rango (lo que recomienda la web).
+# Se cierra a mercado a los 30 días (o antes, si salta un stop o se liquida; o hoy, si aún
+# no han pasado: entonces se marca como en curso).
+
+ORACLE_HISTORY_URL = "/app/oracle-history.json"
+ORACLE_K = 2.0
+ORACLE_LEVERAGE = 2.0
+ORACLE_DAYS = 30
+STOP_BUF = 0.001
+DIRS = {"L": "long", "S": "short", "N": "neutral"}
+
+
+async def load_history(get: Get) -> dict:
+    """Historial del oráculo (vacío si no se puede descargar: el análisis sigue sin él)."""
+    try:
+        status, body = await get(ORACLE_HISTORY_URL)
+        return json.loads(body) if status == 200 else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def oracle_direction(history: dict, symbol: str, ts: pd.Timestamp) -> str | None:
+    """Dirección del oráculo vigente en `ts` (último arranque ≤ ts), o None si no hay dato."""
+    p = history.get("pairs", {}).get(symbol) or history.get("pairs", {}).get("1000" + symbol)
+    if not p:
+        return None
+    step = history.get("step_days", 3)
+    start = pd.Timestamp(p["start"], tz="UTC")
+    k = int(np.floor((ts - start) / pd.Timedelta(days=step)))
+    if k < 0 or k >= len(p["dirs"]):  # cada arranque vale hasta el siguiente (3 días)
+        return None
+    return DIRS.get(p["dirs"][k])
+
+
+def daily_vol(candles: pd.DataFrame) -> float | None:
+    """Volatilidad diaria con las velas horarias de los 14 días previos (como el oráculo)."""
+    if candles.empty:
+        return None
+    h = candles.set_index("ts")["close"].astype(float).resample("1h").last().dropna()
+    lr = np.log(h).diff().dropna().to_numpy()
+    if len(lr) < 24 * 7:
+        return None
+    return float(np.std(lr[-14 * 24:], ddof=1) * np.sqrt(24))
+
+
+def oracle_config(bot: PionexBot, direction: str, vol: float) -> GridConfig:
+    half = min(max(ORACLE_K * vol * 30**0.5, 0.02), 0.7)
+    grids = round(min(max(2 * half / (0.5 * vol), 8), 200))
+    notional = bot_config(bot).investment  # mismo tamaño de posición que el bot real
+    cfg = Template(direction, half, half, grids, ORACLE_LEVERAGE, maker=bot.maker_fee, taker=bot.taker_fee,
+                   investment=notional / ORACLE_LEVERAGE).config(bot.entry_price)
+    lo, hi = cfg.lower * (1 - STOP_BUF), cfg.upper * (1 + STOP_BUF)
+    sl, tp = (hi, lo) if direction == "short" else (lo, hi)
+    return replace(cfg, stop_loss=sl, take_profit=tp, entry_price=bot.entry_price)
+
+
+def oracle_window(bot: PionexBot, now: datetime) -> tuple[pd.Timestamp, pd.Timestamp, pd.Timestamp]:
+    """(inicio de los 14 días previos, arranque, fin de los 30 días o ahora)."""
+    start = sim_window(bot)[0]
+    end = min(start + pd.Timedelta(days=ORACLE_DAYS), pd.Timestamp(now).floor("min"))
+    return start - pd.Timedelta(days=15), start, end
+
+
+def oracle_bot(bot: PionexBot, history: dict, candles: pd.DataFrame, funding: pd.DataFrame,
+               now: datetime) -> dict:
+    """Resultado del bot sugerido por el oráculo, o {'oracle': None, 'oracle_why': motivo}.
+
+    `candles` cubre desde 15 días antes del arranque hasta el final de los 30 días."""
+    direction = oracle_direction(history, bot.binance_symbol, bot.start)
+    if direction is None:
+        return {"oracle": None, "oracle_why": "no_signal"}
+    _, start, end = oracle_window(bot, now)
+    before = candles[candles["ts"] < start]
+    after = candles[(candles["ts"] >= start) & (candles["ts"] < end)].reset_index(drop=True)
+    vol = daily_vol(before)
+    if vol is None or vol <= 0 or after.empty:
+        return {"oracle": None, "oracle_why": "no_data"}
+    cfg = oracle_config(bot, direction, vol)
+    fund = funding[(funding["ts"] >= start) & (funding["ts"] < end)] if not funding.empty else funding
+    res = run_grid(after, cfg, funding=fund, exit_price=float(after["close"].iloc[-1]))
+    return {
+        "oracle": {
+            "direction": direction,
+            "lower": round(cfg.lower, 8),
+            "upper": round(cfg.upper, 8),
+            "grids": cfg.grids,
+            "net": round(res.total_pnl, 2),
+            "stopped": res.stopped,
+            "days": round((end - start) / pd.Timedelta(days=1), 1),
+            "partial": bool(end - start < pd.Timedelta(days=ORACLE_DAYS)),
+        }
+    }
+
+
 def _base_row(bot: PionexBot) -> dict:
     return {
         "bot": bot.bot_id,
@@ -220,12 +327,18 @@ async def analyze(export: bytes, get: Get, progress: Progress | None = None) -> 
     trades, positions = load_export(export)
     bots = detect_bots(trades, positions)
     loader = Loader(get)
+    history = await load_history(get)
 
-    async def prices(bot: PionexBot) -> tuple[pd.DataFrame, pd.DataFrame]:
+    async def prices(bot: PionexBot) -> tuple[pd.DataFrame, ...]:
         start, end = sim_window(bot)
+        o_from, o_start, o_end = oracle_window(bot, loader.now)
+        empty = asyncio.sleep(0, pd.DataFrame())
         return await asyncio.gather(
             loader.candles(bot.binance_symbol, start, end),
             loader.funding(bot.binance_symbol, start, end),
+            # bot del oráculo: 14 días previos (rango) + sus 30 días
+            loader.candles(bot.binance_symbol, o_from, o_end) if history else empty,
+            loader.funding(bot.binance_symbol, o_start, o_end) if history else asyncio.sleep(0, pd.DataFrame()),
         )
 
     # Todas las descargas arrancan ya (el límite de concurrencia lo pone `get`);
@@ -235,7 +348,7 @@ async def analyze(export: bytes, get: Get, progress: Progress | None = None) -> 
     for i, (bot, task) in enumerate(zip(bots, pending, strict=True)):
         row = _base_row(bot)
         try:
-            candles, funding = await task
+            candles, funding, o_candles, o_funding = await task
             v = compare_bot(bot, candles, funding)
         except DataNotAvailable:
             row["error"] = "no_data"
@@ -257,6 +370,11 @@ async def analyze(export: bytes, get: Get, progress: Progress | None = None) -> 
                 ),
                 "within": bool(abs(v.net_diff) <= tolerance),
             }
+            try:
+                row |= (oracle_bot(bot, history, o_candles, o_funding, loader.now) if history
+                        else {"oracle": None, "oracle_why": "no_history"})
+            except (OSError, ValueError) as exc:
+                row |= {"oracle": None, "oracle_why": str(exc)[:120]}
         rows.append(row)
         if progress is not None:
             progress({"done": i + 1, "total": len(bots), "symbol": bot.binance_symbol})
