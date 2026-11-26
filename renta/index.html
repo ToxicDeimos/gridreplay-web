@@ -13,17 +13,17 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="GridReplay">
 <meta property="og:locale" content="es_ES">
-<meta property="og:title" content="Renta de tus bots de Pionex">
-<meta property="og:description" content="Sube el historial de Pionex y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, futuros, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
+<meta property="og:title" content="Renta de tus bots de OKX y Pionex">
+<meta property="og:description" content="Sube el historial de OKX (o de Pionex) y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
 <meta property="og:url" content="https://gridreplay.com/renta/">
 <meta property="og:image" content="https://gridreplay.com/og-es.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://gridreplay.com/og-es.png">
-<title>Renta de tus bots de Pionex</title>
+<title>Renta de tus bots de OKX y Pionex</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Sube el historial de Pionex y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, futuros, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
+<meta name="description" content="Sube el historial de OKX (o de Pionex) y obtén el borrador de tu Renta: FIFO en euros moneda a moneda, staking y Modelo 721. Operaciones ilimitadas y sin subir el archivo: todo ocurre en tu navegador.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -107,6 +107,11 @@ ol.steps b { color: var(--ink); font-weight: 600; }
 .drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
 .drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
 .drop b { font: 600 1.1rem/1.3 var(--font-body); }
+.tz { display: grid; gap: 0.35rem; font: 500 0.9rem/1.3 var(--font-body); color: var(--ink-2); }
+.tz select { font: 400 1rem/1.3 var(--font-body); padding: 0.5rem 0.6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); max-width: 22rem; }
+details.pionex { border-top: 1px solid var(--rule); padding-top: 0.8rem; }
+details.pionex summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+details.pionex .steps { margin-top: 0.8rem; }
 .drop span { font-size: 0.92rem; color: var(--ink-3); }
 .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .status { display: grid; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.2rem; }
@@ -146,9 +151,9 @@ form.reserve .consent input { margin-top: 0.25rem; }
 <main>
   <header>
     <div><a class="home" href="/">← GridReplay</a></div>
-    <p class="eyebrow">Beta gratuita · Pionex · IRPF España</p>
-    <h1>Tu Renta de los bots de Pionex, en dos minutos</h1>
-    <p class="dek read">Sube el historial de Pionex y obtén el borrador para la declaración: ganancias y pérdidas de cada moneda por FIFO en euros, el resultado de los futuros, el staking y si tienes que presentar el Modelo 721. Miles de operaciones de grid, sin límite.</p>
+    <p class="eyebrow">Beta gratuita · OKX y Pionex · IRPF España</p>
+    <h1>Tu Renta de los bots de OKX, en dos minutos</h1>
+    <p class="dek read">Sube el historial de OKX y obtén el borrador para la declaración: ganancias y pérdidas de cada moneda por FIFO en euros, el staking y si tienes que presentar el Modelo 721. Miles de operaciones de grid, sin límite. ¿Usaste Pionex? También lee su historial, con los futuros incluidos.</p>
     <ul class="promises">
       <li>Tu archivo no sale de tu navegador</li>
       <li>Sin registro</li>
@@ -159,22 +164,40 @@ form.reserve .consent input { margin-top: 0.25rem; }
 
   <section aria-labelledby="h-1" class="read">
     <p class="eyebrow">Paso 1</p>
-    <h2 id="h-1">Descarga tu historial de Pionex</h2>
+    <h2 id="h-1">Descarga tu historial de OKX</h2>
     <ol class="steps">
-      <li>Entra en <b>pionex.com</b> desde el ordenador e inicia sesión.</li>
-      <li>Pulsa tu avatar (arriba a la derecha) → <b>Panel principal</b> → <b>Historial de transacciones</b>.</li>
-      <li>Elige <b>desde tu primera operación en Pionex hasta hoy</b>. El FIFO necesita todas tus compras anteriores, no solo las del año que declaras.</li>
-      <li>Pionex te avisa por email cuando el archivo está listo (mira también en spam). Descarga el <b>.zip</b> y no lo abras ni lo modifiques.</li>
+      <li>Entra en <b>okx.com</b> desde el ordenador e inicia sesión.</li>
+      <li>Ve a <b>Activos</b> → <b>Centro de órdenes</b>.</li>
+      <li>En la pestaña <b>Historial de trading</b>, pulsa <b>Descargar</b>, elige <b>desde tu primera operación en OKX hasta hoy</b> y la zona horaria <b>UTC</b>, y pulsa <b>Exportar</b>. El FIFO necesita todas tus compras anteriores, no solo las del año que declaras.</li>
+      <li>Haz lo mismo en la pestaña <b>Historial de fondos</b> (depósitos, retiradas y staking).</li>
+      <li>Descarga los dos archivos cuando estén listos y no los abras ni los modifiques: Excel cambia las fechas y los decimales.</li>
     </ol>
+    <p class="note"><b>La lectura de OKX está en pruebas.</b> De momento lee operaciones spot (también las de los grid bots spot, si OKX las incluye en el historial), depósitos, retiradas y staking. Si tu archivo trae algo que todavía no sabemos leer, como futuros, te lo diremos en vez de darte una cifra equivocada.</p>
+    <details class="pionex">
+      <summary>¿Usaste Pionex? Así se descarga su historial</summary>
+      <ol class="steps">
+        <li>Entra en <b>pionex.com</b> desde el ordenador e inicia sesión.</li>
+        <li>Pulsa tu avatar (arriba a la derecha) → <b>Panel principal</b> → <b>Historial de transacciones</b>.</li>
+        <li>Elige <b>desde tu primera operación en Pionex hasta hoy</b>.</li>
+        <li>Pionex te avisa por email cuando el archivo está listo (mira también en spam). Descarga el <b>.zip</b> y no lo abras ni lo modifiques.</li>
+      </ol>
+    </details>
   </section>
 
   <section aria-labelledby="h-2" class="read">
     <p class="eyebrow">Paso 2</p>
-    <h2 id="h-2">Suelta aquí el .zip</h2>
+    <h2 id="h-2">Suelta aquí tus archivos</h2>
+    <label class="tz">Zona horaria del historial de OKX
+      <select id="tz">
+        <option value="UTC" selected>UTC (la recomendada al exportar)</option>
+        <option value="Madrid">Hora de España (Madrid)</option>
+        <option value="UTC+8">UTC+8 (hora de Hong Kong)</option>
+      </select>
+    </label>
     <label class="drop" id="drop">
-      <input type="file" id="file" accept=".zip,application/zip">
-      <b>Arrastra el archivo o pulsa para elegirlo</b>
-      <span>pionex_txn_….zip · se calcula en este dispositivo</span>
+      <input type="file" id="file" accept=".zip,.csv,application/zip,text/csv" multiple>
+      <b>Arrastra los archivos o pulsa para elegirlos</b>
+      <span>OKX: los dos CSV (o .zip) a la vez · Pionex: el .zip · se calcula en este dispositivo</span>
     </label>
     <div class="status" id="status" hidden aria-live="polite">
       <p id="st-main"></p>
@@ -211,7 +234,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     </div>
     <div class="read" id="others" hidden style="display:grid;gap:0.5rem">
       <h3>Otros movimientos a revisar</h3>
-      <p class="meta">Bonos y compensaciones de Pionex (por ejemplo, el fondo de seguro). Normalmente son ganancias patrimoniales que no vienen de una venta; confírmalo con tu asesor.</p>
+      <p class="meta">Bonos, compensaciones y reembolsos de comisiones del exchange (por ejemplo, el fondo de seguro de Pionex). Normalmente son ganancias patrimoniales que no vienen de una venta; confírmalo con tu asesor.</p>
       <ul class="plain" id="others-list"></ul>
     </div>
     <div class="warn read" id="warns" hidden>
@@ -252,9 +275,9 @@ form.reserve .consent input { margin-top: 0.25rem; }
     <ul class="plain">
       <li><b>Cada compra o venta spot es una permuta</b>: entregas una moneda y recibes otra, las dos valoradas en euros en ese momento (precio horario de Binance y cambio EUR/USDT).</li>
       <li><b>FIFO por moneda</b>: lo primero que compraste es lo primero que vendes, como exige el artículo 37.2 de la Ley del IRPF para valores homogéneos. Las comisiones restan.</li>
-      <li><b>Futuros</b>: el resultado de cada posición cerrada, con sus comisiones, más el funding cobrado o pagado.</li>
-      <li><b>Depósitos</b> desde fuera de Pionex: se toma como coste su valor al depositar. Si lo compraste antes en otro sitio, tu coste real puede ser otro. <b>Retiradas</b>: no tributan.</li>
-      <li><b>Modelo 721</b>: obligatorio si a 31 de diciembre tenías más de 50.000 € en cripto en exchanges extranjeros (Pionex lo es). Aquí solo se cuenta lo que hay en Pionex.</li>
+      <li><b>Futuros</b> (de momento, solo en el historial de Pionex): el resultado de cada posición cerrada, con sus comisiones, más el funding cobrado o pagado.</li>
+      <li><b>Depósitos</b> desde otro exchange o wallet: se toma como coste su valor al depositar. Si lo compraste antes en otro sitio, tu coste real puede ser otro. <b>Retiradas</b>: no tributan.</li>
+      <li><b>Modelo 721</b>: obligatorio si a 31 de diciembre tenías más de 50.000 € en cripto en exchanges extranjeros (OKX y Pionex lo son). Aquí solo se cuenta lo que hay en el exchange del archivo.</li>
       <li>Hacienda no tiene una guía específica para bots: es un borrador para ti o tu gestor, no asesoramiento fiscal.</li>
     </ul>
   </section>
@@ -270,7 +293,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
   </section>
 
   <footer>
-    <p>GridReplay es independiente y no pertenece a Pionex, Binance ni ningún otro exchange. Este informe es un borrador orientativo y no sustituye al asesoramiento de un profesional fiscal.</p>
+    <p>GridReplay es independiente y no pertenece a OKX, Pionex, Binance ni ningún otro exchange. Este informe es un borrador orientativo y no sustituye al asesoramiento de un profesional fiscal.</p>
   </footer>
 </main>
 
@@ -282,14 +305,20 @@ form.reserve .consent input { margin-top: 0.25rem; }
   const T = {
     engine: "Cargando el motor de cálculo…", reading: "Leyendo tu historial…", prices: "Descargando precios de Binance…",
     coin: (d, t, s) => `Precios de ${s.replace(/USDT$/, "")} (${d} de ${t})`, dl: (f, mb) => `${f} descargas · ${mb} MB`,
-    errTitle: "No se ha podido calcular", notExport: "No parece un export de Pionex. Sube el .zip tal como lo descargaste.",
+    errTitle: "No se ha podido calcular", notExport: "No reconocemos el archivo. Sube los CSV de OKX (Historial de trading y de fondos) o el .zip de Pionex tal como los descargaste.",
+    okx_types: (d) => `Tu historial de OKX tiene movimientos que todavía no sabemos leer (${d}). La lectura de OKX está en pruebas: por ahora solo operaciones spot, depósitos, retiradas y staking. Escríbenos a contact@gridreplay.com y los añadimos.`,
+    okx_no_trading: () => "Falta el Historial de trading de OKX: súbelo junto con el Historial de fondos (puedes elegir los dos a la vez).",
+    okx_pairs: (d) => `Hay una operación de OKX en ${d} cuyas dos partes (lo que entra y lo que sale) no cuadran. Escríbenos a contact@gridreplay.com para revisarlo.`,
+    okx_amounts: (d) => `Hay una operación de OKX en ${d} con importes que no entendemos. Escríbenos a contact@gridreplay.com para revisarlo.`,
+    okx_time: (d) => `No entendemos el formato de fecha de tu archivo de OKX («${d}»). Descárgalo de nuevo sin abrirlo con Excel.`,
     retry: "Revisa tu conexión y vuelve a intentarlo. Si sigue fallando, escríbenos a contact@gridreplay.com.",
   };
   let worker = null, data = null, year = null, engineReady = false;
+  const ex = () => (data && data.exchange) || "OKX";
 
   function startWorker() {
     if (worker) return worker;
-    worker = new Worker("/app/worker.js?v=2be25567f5");
+    worker = new Worker("/app/worker.js?v=6f957a5fe4");
     worker.onmessage = ({ data: m }) => {
       if (m.type === "stage" && m.stage === "ready") engineReady = true;
       else if (m.type === "stage" && m.stage === "reading") { engineReady = true; say(T.reading, 0.03, ""); }
@@ -297,7 +326,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
       else if (m.type === "progress") say(T.coin(m.done, m.total, m.symbol), 0.05 + 0.9 * m.done / m.total);
       else if (m.type === "done") show(m);
       else if (m.type === "error" && m.code === "warmup") return;
-      else if (m.type === "error") { if (!m.code) grEvent("renta_crash"); fail(m.code === "not_export" || m.code === "empty" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
+      else if (m.type === "error") { if (!m.code) grEvent("renta_crash"); fail(T[m.code] ? T[m.code](m.detail || "") : m.code === "not_export" || m.code === "empty" ? T.notExport : `${T.retry} (${m.message || m.code})`); }
     };
     worker.onerror = (e) => { grEvent("renta_crash"); fail(`${T.retry} (${e.message})`); };
     return worker;
@@ -315,13 +344,14 @@ form.reserve .consent input { margin-top: 0.25rem; }
     $("st-main").textContent = T.errTitle; $("st-sub").textContent = msg; $("st-bar").style.width = "0";
     $("drop").hidden = false;
   }
-  async function run(file) {
-    if (!file) return;
+  async function run(list) {
+    const picked = [...(list || [])];
+    if (!picked.length) return;
     $("results").hidden = true; $("drop").hidden = true;
     say(engineReady ? T.reading : T.engine, 0.01, "");
-    const buf = await file.arrayBuffer();
+    const files = await Promise.all(picked.map(async (f) => ({ name: f.name, buf: await f.arrayBuffer() })));
     grEvent("renta_run");
-    startWorker().postMessage({ type: "renta", file: buf }, [buf]);
+    startWorker().postMessage({ type: "renta", files, tz: $("tz").value }, files.map((f) => f.buf));
   }
 
   function show(m) {
@@ -355,7 +385,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     set("k-stk", s.capital_mobiliario_staking);
     $("k-721").textContent = h.modelo_721 ? "Sí" : "No";
     $("k-721").className = h.modelo_721 ? "neg" : "";
-    $("k-721-p").textContent = `${r.partial ? "Saldo en Pionex hoy" : "Saldo en Pionex a 31/12"}: ${eur(h.total_eur)}. ${h.modelo_721 ? "Supera 50.000 €: tienes que presentarlo (del 1 de enero al 31 de marzo)." : "No llega a 50.000 €, salvo que tengas más cripto en otros exchanges extranjeros."}`;
+    $("k-721-p").textContent = `${r.partial ? `Saldo en ${ex()} hoy` : `Saldo en ${ex()} a 31/12`}: ${eur(h.total_eur)}. ${h.modelo_721 ? "Supera 50.000 €: tienes que presentarlo (del 1 de enero al 31 de marzo)." : "No llega a 50.000 €, salvo que tengas más cripto en otros exchanges extranjeros."}`;
 
     const tb = document.querySelector("#t-coins tbody"); tb.textContent = "";
     for (const [coin, c] of Object.entries(mv.por_moneda)) {
@@ -371,7 +401,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     for (const [k, v] of oth) { const li = document.createElement("li"); li.textContent = `${k}: ${eur(v, true)}`; $("others-list").appendChild(li); }
 
     const warns = [...data.warnings.filter(w => w.startsWith(year))];
-    for (const [coin, q] of Object.entries(s.ventas_sin_coste_conocido)) warns.push(`Se vendieron ${q.toLocaleString("es-ES", { maximumFractionDigits: 6 })} ${coin} sin una compra anterior en el historial: cuentan con coste 0. Si los compraste fuera de Pionex o antes del periodo exportado, tu resultado real es mejor.`);
+    for (const [coin, q] of Object.entries(s.ventas_sin_coste_conocido)) warns.push(`Se vendieron ${q.toLocaleString("es-ES", { maximumFractionDigits: 6 })} ${coin} sin una compra anterior en el historial: cuentan con coste 0. Si los compraste fuera de ${ex()} o antes del periodo exportado, tu resultado real es mejor.`);
     $("warns").hidden = !warns.length;
     $("warn-list").textContent = "";
     for (const w of warns) { const li = document.createElement("li"); li.textContent = w; $("warn-list").appendChild(li); }
@@ -383,18 +413,18 @@ form.reserve .consent input { margin-top: 0.25rem; }
     $("useful-msg").textContent = b.dataset.useful === "yes" ? "¡Gracias!" : "Gracias. Si nos cuentas qué falta en contact@gridreplay.com, lo tendremos en cuenta.";
   }));
 
-  $("file").addEventListener("change", (e) => run(e.target.files[0]));
+  $("file").addEventListener("change", (e) => run(e.target.files));
   const drop = $("drop");
   ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(t => drop.addEventListener(t, () => drop.classList.remove("over")));
-  drop.addEventListener("drop", (e) => { e.preventDefault(); run(e.dataTransfer.files[0]); });
+  drop.addEventListener("drop", (e) => { e.preventDefault(); run(e.dataTransfer.files); });
   $("again").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
 
   $("csv").addEventListener("click", () => {
     grEvent("renta_csv");
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob(["﻿" + data.years[year].csv], { type: "text/csv" }));
-    a.download = `renta-${year}-pionex.csv`; a.click(); URL.revokeObjectURL(a.href);
+    a.download = `renta-${year}-${ex().toLowerCase()}.csv`; a.click(); URL.revokeObjectURL(a.href);
   });
 
   // Reserva: se guarda en la lista de espera con wants=renta.
@@ -410,7 +440,7 @@ form.reserve .consent input { margin-top: 0.25rem; }
     const btn = form.querySelector("button"); btn.disabled = true;
     try {
       const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, exchange: "pionex", exchange_other: "", wants: ["renta"], consent: true, source: location.pathname, website: form.website.value }) });
+        body: JSON.stringify({ email, exchange: ex().toLowerCase(), exchange_other: "", wants: ["renta"], consent: true, source: location.pathname, website: form.website.value }) });
       if (!res.ok) throw new Error(res.status);
       form.reset(); msg.textContent = "Reservado. Te escribiremos cuando el informe de la Renta 2026 esté listo.";
     } catch { msg.textContent = "No se ha podido enviar. Inténtalo de nuevo en unos minutos."; }

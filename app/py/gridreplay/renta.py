@@ -1,4 +1,4 @@
-"""Informe para la Renta (IRPF, España) a partir del export completo de Pionex.
+"""Informe para la Renta (IRPF, España) a partir del historial de OKX (beta) o de Pionex.
 
 Criterio aplicado (el habitual de las herramientas fiscales cripto; la AEAT no
 tiene una guía específica para bots, así que el usuario debe revisarlo):
@@ -61,6 +61,10 @@ def load_full_export(path: str | Path | bytes) -> dict[str, pd.DataFrame]:
         src = io.BytesIO(path) if isinstance(path, bytes) else Path(path)
         with zipfile.ZipFile(src) as zf:
             files = {n: zf.read(n) for n in zf.namelist() if n.endswith(".csv")}
+    return _frames(files)
+
+
+def _frames(files: dict[str, bytes]) -> dict[str, pd.DataFrame]:
     out = {}
     for name, raw in files.items():
         df = pd.read_csv(io.BytesIO(raw))
@@ -149,6 +153,158 @@ def events_from_export(ex: dict[str, pd.DataFrame]) -> list[Event]:
 
     ev.sort(key=lambda e: e.ts)
     return ev
+
+
+# ---------------------------------------------------------------- OKX (beta)
+#
+# OKX no publica el formato de sus descargas. Las columnas son las que usa BittyTax
+# (src/bittytax/conv/parsers/okx.py), comprobadas en noviembre de 2026; pendiente de
+# confirmar con un export real (sobre todo: zona horaria y si salen los grid bots).
+#   Historial de trading: id, Order id, Time, Trade Type, Instrument, Type, Amount, Unit,
+#     PL, Fee, Position Change, Position Balance, Balance Change, Balance, Unit
+#     → cada operación spot son dos filas (Buy: la moneda que entra; Sell: la que sale)
+#       con el mismo id (o, si no, el mismo Order id).
+#   Historial de fondos: id, [columna vacía], Time, Type, Amount, Before Balance,
+#     After Balance, Fee, Symbol
+# Ante cualquier tipo de movimiento desconocido no se calcula nada (OKXUnsupported):
+# en una herramienta fiscal es mejor no dar cifra que dar una mala.
+
+OKX_TRADING = ["Order id", "Time", "Trade Type", "Instrument", "Type", "Amount", "Unit",
+               "Fee", "Balance Change"]
+OKX_FUNDING = ["Time", "Type", "Amount", "Before Balance", "After Balance", "Fee", "Symbol"]
+OKX_FUNDING_SKIP = {"Stake", "Redeem staking", "Savings subscription", "Savings redemption",
+                    "From unified trading account", "To unified trading account"}
+OKX_TZ = {"UTC": "UTC", "UTC+8": "Asia/Shanghai", "Madrid": "Europe/Madrid"}
+
+
+class OKXUnsupported(ValueError):
+    """El export de OKX trae algo que todavía no sabemos tratar."""
+
+    def __init__(self, code: str, detail: str = "") -> None:
+        super().__init__(f"{code}: {detail}")
+        self.code, self.detail = code, detail
+
+
+def read_files(files: dict[str, bytes]) -> dict[str, bytes]:
+    """Abre los .zip y devuelve {nombre: bytes} de todos los CSV."""
+    out: dict[str, bytes] = {}
+    for name, raw in files.items():
+        if raw[:2] == b"PK":
+            with zipfile.ZipFile(io.BytesIO(raw)) as zf:
+                for n in zf.namelist():
+                    if n.lower().endswith(".csv"):
+                        out[Path(n).name] = zf.read(n)
+        elif name.lower().endswith(".csv"):
+            out[Path(name).name] = raw
+    return out
+
+
+def _okx_frame(raw: bytes) -> tuple[str, pd.DataFrame] | None:
+    """('trading' | 'funding', tabla) si el CSV es de OKX; None si no."""
+    text = raw.decode("utf-8-sig", errors="replace")
+    lines = text.splitlines()
+    for i, line in enumerate(lines[:10]):  # puede haber filas de cuenta/zona horaria antes
+        cells = [c.strip().strip('"').lstrip("﻿") for c in line.split(",")]
+        if not cells or cells[0] != "id":
+            continue
+        df = pd.read_csv(io.StringIO("\n".join(lines[i:])), dtype=str)
+        df.columns = [str(c).strip().lstrip("﻿") for c in df.columns]
+        if all(c in df.columns for c in OKX_TRADING):
+            return "trading", df
+        if all(c in df.columns for c in OKX_FUNDING):
+            return "funding", df
+    return None
+
+
+def detect(files: dict[str, bytes]) -> str:
+    if any(_okx_frame(raw) for raw in files.values()):
+        return "okx"
+    return "pionex"
+
+
+def load_okx(files: dict[str, bytes], tz: str = "UTC") -> dict[str, pd.DataFrame]:
+    zone = OKX_TZ.get(tz, tz)
+    parts: dict[str, list[pd.DataFrame]] = {"trading": [], "funding": []}
+    for raw in files.values():
+        got = _okx_frame(raw)
+        if got:
+            parts[got[0]].append(got[1])
+    out = {}
+    for kind, frames in parts.items():
+        if not frames:
+            continue
+        df = pd.concat(frames, ignore_index=True).drop_duplicates()
+        ts = pd.to_datetime(df["Time"].str.strip(), errors="coerce")
+        if ts.isna().any():
+            raise OKXUnsupported("okx_time", str(df.loc[ts.isna(), "Time"].iloc[0]))
+        df["ts"] = ts.dt.tz_localize(zone).dt.tz_convert("UTC") if ts.dt.tz is None else ts.dt.tz_convert("UTC")
+        out[kind] = df
+    return out
+
+
+def _num(v) -> float:
+    s = str(v).strip().replace(",", "")
+    return 0.0 if s in ("", "nan", "--") else float(s)
+
+
+def events_from_okx(ok: dict[str, pd.DataFrame]) -> list[Event]:
+    ev: list[Event] = []
+    tr = ok.get("trading")
+    if tr is not None:
+        unknown = sorted(set(tr["Trade Type"].str.strip()) - {"Spot", "Transfer"})
+        if unknown:
+            raise OKXUnsupported("okx_types", ", ".join(unknown))
+        spot = tr[tr["Trade Type"].str.strip() == "Spot"].copy()
+        bad = sorted(set(spot["Type"].str.strip()) - {"Buy", "Sell"})
+        if bad:
+            raise OKXUnsupported("okx_types", ", ".join(bad))
+        # El segundo «Unit» (moneda del saldo) lo renombra pandas a «Unit.1»: se usa el primero.
+        spot["key"] = spot["id"].where(spot.groupby("id")["id"].transform("size") == 2,
+                                       "order:" + spot["Order id"])
+        for _, g in spot.groupby("key", sort=False):
+            buy, sell = g[g["Type"].str.strip() == "Buy"], g[g["Type"].str.strip() == "Sell"]
+            if len(buy) != 1 or len(sell) != 1:
+                raise OKXUnsupported("okx_pairs", str(g["Instrument"].iloc[0]))
+            b, s = buy.iloc[0], sell.iloc[0]
+            got = _num(b["Balance Change"]) or _num(b["Amount"]) - abs(_num(b["Fee"]))
+            gave = abs(_num(s["Balance Change"])) or abs(_num(s["Amount"]))
+            if got <= 0 or gave <= 0:
+                raise OKXUnsupported("okx_amounts", str(b["Instrument"]))
+            rcv, snt = norm(b["Unit"]), norm(s["Unit"])
+            val = gave if snt in STABLES else got if rcv in STABLES else None
+            ev.append(Event(min(b["ts"], s["ts"]), "trade", snt, gave, rcv, got, val))
+
+    fu = ok.get("funding")
+    if fu is not None:
+        types = fu["Type"].str.strip()
+        known = {"Deposit", "Withdrawal", "Staking Yield", "Fee rebate"} | OKX_FUNDING_SKIP
+        unknown = sorted(set(types) - known)
+        if unknown:
+            raise OKXUnsupported("okx_types", ", ".join(unknown))
+        for (_, r), t in zip(fu.iterrows(), types, strict=True):
+            coin, amt, fee = norm(r["Symbol"]), abs(_num(r["Amount"])), abs(_num(r["Fee"]))
+            if t == "Deposit":
+                ev.append(Event(r["ts"], "deposit", received=coin, received_qty=amt))
+            elif t == "Withdrawal":
+                ev.append(Event(r["ts"], "withdraw", sent=coin, sent_qty=amt + fee))
+            elif t == "Staking Yield":
+                ev.append(Event(r["ts"], "income", received=coin, received_qty=amt, note="staking"))
+            elif t == "Fee rebate":
+                ev.append(Event(r["ts"], "other", received=coin, received_qty=amt,
+                                usdt_value=amt if coin in STABLES else None,
+                                note="Reembolso de comisiones"))
+    if tr is None:
+        raise OKXUnsupported("okx_no_trading")
+    ev.sort(key=lambda e: e.ts)
+    return ev
+
+
+def load_events(files: dict[str, bytes], tz: str = "UTC") -> tuple[str, list[Event]]:
+    """(exchange, eventos) a partir de lo que suba el usuario (zips o CSV, OKX o Pionex)."""
+    csvs = read_files(files)
+    if detect(csvs) == "okx":
+        return "OKX", events_from_okx(load_okx(csvs, tz))
+    return "Pionex", events_from_export(_frames(csvs))
 
 
 # ---------------------------------------------------------------- FIFO
@@ -319,10 +475,11 @@ def summarize(rep: Report, year: int) -> dict:
     }
 
 
-def format_summary(s: dict, warnings: list[str] = ()) -> str:
+def format_summary(s: dict, warnings: list[str] = (), exchange: str = "Pionex") -> str:
+    exchange = s.get("exchange", exchange)
     e = lambda v: f"{v:>12,.2f} €".replace(",", "X").replace(".", ",").replace("X", ".")  # noqa: E731
     mv, fut = s["monedas_virtuales"], s["derivados_futuros"]
-    out = [f"INFORME RENTA {s['ejercicio']} · Pionex (borrador, revísalo con tu asesor)", "",
+    out = [f"INFORME RENTA {s['ejercicio']} · {exchange} (borrador, revísalo con tu asesor)", "",
            f"1. Monedas virtuales (permutas y ventas, FIFO) · {mv['transmisiones']} transmisiones",
            f"   {'Moneda':<8}{'Transmisión':>15}{'Adquisición':>15}{'Resultado':>15}"]
     for coin, c in mv["por_moneda"].items():
@@ -337,10 +494,10 @@ def format_summary(s: dict, warnings: list[str] = ()) -> str:
         out += [f"   {k:<14}{e(v)}" for k, v in s["otros_a_revisar"].items()]
     h = s["saldo_31_dic"]
     out += ["", f"Base del ahorro estimada        {e(s['base_ahorro_estimada'])}", "",
-            f"Saldo en Pionex a 31/12: {e(h['total_eur']).strip()} → Modelo 721: "
+            f"Saldo en {exchange} a 31/12: {e(h['total_eur']).strip()} → Modelo 721: "
             + ("SÍ, supera 50.000 €" if h["modelo_721"] else "no (≤ 50.000 €)")]
     if s["ventas_sin_coste_conocido"]:
-        out += ["", "Ventas sin lote de compra (coste 0, revisa compras fuera de Pionex):"]
+        out += ["", f"Ventas sin lote de compra (coste 0, revisa compras fuera de {exchange}):"]
         out += [f"   {k}: {v:g}" for k, v in s["ventas_sin_coste_conocido"].items()]
     if warnings:
         out += ["", "Avisos:"] + [f"   · {w}" for w in warnings]
@@ -443,19 +600,28 @@ def _year_results(rep: Report, years: list[int]) -> dict:
     return {y: {"summary": summarize(rep, y), "csv": disposals_csv(rep, y)} for y in years}
 
 
-def run(path: str | Path, year: int) -> tuple[Report, dict, list[Event]]:
-    events = events_from_export(load_full_export(path))
+def run(path: str | Path, year: int, tz: str = "UTC") -> tuple[Report, dict, list[Event]]:
+    """Escritorio: `path` es un zip o CSV (Pionex u OKX) o una carpeta con varios."""
+    p = Path(path)
+    files = {f.name: f.read_bytes() for f in p.iterdir() if f.is_file()} if p.is_dir() else {p.name: p.read_bytes()}
+    exchange, events = load_events(files, tz)
     px = fetch_prices(events)
     years = sorted({e.ts.year for e in events} | {year})
     rep = build_report(events, px.price, px.eur, years)
-    return rep, summarize(rep, year), events
+    return rep, {**summarize(rep, year), "exchange": exchange}, events
 
 
-async def report_web(export: bytes, get, progress=None) -> dict:
-    """Versión navegador (Pyodide): `get(url)` asíncrono → (estado, cuerpo)."""
+async def report_web(export: bytes | dict[str, bytes], get, progress=None, tz: str = "UTC") -> dict:
+    """Versión navegador (Pyodide): `get(url)` asíncrono → (estado, cuerpo).
+
+    `export`: el zip de Pionex (bytes) o {nombre: bytes} con lo que suba el usuario."""
     import asyncio
 
-    events = events_from_export(load_full_export(export))
+    files = export if isinstance(export, dict) else {"export.zip": export}
+    try:
+        exchange, events = load_events(files, tz)
+    except OKXUnsupported as e:
+        return {"error": e.code, "detail": e.detail}
     if not events:
         return {"error": "empty"}
     start, end = price_range(events)
@@ -483,4 +649,4 @@ async def report_web(export: bytes, get, progress=None) -> dict:
     now = pd.Timestamp.now(tz="UTC")
     return {"years": {str(y): {**r, "partial": y >= now.year}
                       for y, r in _year_results(rep, years).items()},
-            "warnings": rep.warnings, "events": len(events)}
+            "warnings": rep.warnings, "events": len(events), "exchange": exchange}

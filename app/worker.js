@@ -6,7 +6,7 @@
 // Servido desde la propia web (build.py): los CDN públicos caen con los bloqueos de LaLiga.
 const PYODIDE = "/pyodide/";
 const MODULES = ["__init__", "data", "fees", "pionex", "renta", "robust", "sim", "validate", "web"];
-const VERSION = "2be25567f5";
+const VERSION = "6f957a5fe4";
 const MAX_PARALLEL = 6;
 
 importScripts(PYODIDE + "pyodide.js");
@@ -85,11 +85,12 @@ async def run(export):
         return json.dumps({"error": "not_export"})
     return json.dumps({"rows": rows, "share": shareable(rows)})
 
-async def renta(export):
+async def renta(names, bufs, tz):
     import zipfile
     from gridreplay.renta import report_web
+    files = {n: b.to_bytes() for n, b in zip(json.loads(names), bufs)}
     try:
-        out = await report_web(export.to_bytes(), get, lambda d: js_progress(json.dumps(d)))
+        out = await report_web(files, get, lambda d: js_progress(json.dumps(d)), tz)
     except (KeyError, zipfile.BadZipFile):
         return json.dumps({"error": "not_export"})
     return json.dumps(out)
@@ -120,7 +121,10 @@ self.onmessage = async ({ data }) => {
     let out;
     if (data.type === "renta") {
       post({ type: "stage", stage: "reading" });
-      out = JSON.parse(await py.globals.get("renta")(new Uint8Array(data.file)));
+      // data.files: [{name, buf}] (OKX: varios CSV/zip; Pionex: un zip). data.file: formato anterior.
+      const files = data.files ?? [{ name: "export.zip", buf: data.file }];
+      out = JSON.parse(await py.globals.get("renta")(
+        JSON.stringify(files.map((f) => f.name)), files.map((f) => new Uint8Array(f.buf)), data.tz || "UTC"));
     } else if (data.type === "robust") {
       post({ type: "stage", stage: "prices" });
       out = JSON.parse(await py.globals.get("robust")(JSON.stringify(data.params)));
@@ -128,7 +132,7 @@ self.onmessage = async ({ data }) => {
       post({ type: "stage", stage: "reading" });
       out = JSON.parse(await py.globals.get("run")(new Uint8Array(data.file)));
     }
-    post(out.error ? { type: "error", code: out.error, symbol: out.symbol } : { type: "done", ...out });
+    post(out.error ? { type: "error", code: out.error, symbol: out.symbol, detail: out.detail } : { type: "done", ...out });
   } catch (err) {
     fail(err);
   }
