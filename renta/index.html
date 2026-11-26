@@ -120,8 +120,8 @@ ol.steps b { color: var(--ink); font-weight: 600; }
 .drop { display: grid; place-items: center; gap: 0.6rem; text-align: center; min-height: 11rem; padding: 1.5rem; background: var(--surface); border: 2px dashed var(--rule); border-radius: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
 .drop:hover, .drop.over { border-color: var(--accent); background: var(--band); }
 .drop b { font: 600 1.1rem/1.3 var(--font-body); }
-.tz { display: grid; gap: 0.35rem; font: 500 0.9rem/1.3 var(--font-body); color: var(--ink-2); }
-.tz select { font: 400 1rem/1.3 var(--font-body); padding: 0.5rem 0.6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); max-width: 22rem; }
+.tzline { font-size: 0.92rem; color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+.tzline select { font: 400 0.95rem/1.3 var(--font-body); padding: 0.35rem 0.5rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); color: var(--ink); }
 details.pionex { border-top: 1px solid var(--rule); padding-top: 0.8rem; }
 details.pionex summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 details.pionex .steps { margin-top: 0.8rem; }
@@ -216,13 +216,6 @@ form.reserve .consent input { margin-top: 0.25rem; }
   <section aria-labelledby="h-2" class="read">
     <p class="eyebrow">Paso 2</p>
     <h2 id="h-2">Suelta aquí tus archivos</h2>
-    <label class="tz">Zona horaria del historial de OKX
-      <select id="tz">
-        <option value="UTC" selected>UTC (la recomendada al exportar)</option>
-        <option value="Madrid">Hora de España (Madrid)</option>
-        <option value="UTC+8">UTC+8 (hora de Hong Kong)</option>
-      </select>
-    </label>
     <label class="drop" id="drop">
       <input type="file" id="file" accept=".zip,.csv,application/zip,text/csv" multiple>
       <b>Arrastra los archivos o pulsa para elegirlos</b>
@@ -250,6 +243,13 @@ form.reserve .consent input { margin-top: 0.25rem; }
       <p class="eyebrow">Resultado</p>
       <h2 id="h-res">Borrador de tu Renta</h2>
       <div class="years" id="years" role="group" aria-label="Ejercicio"></div>
+      <p class="tzline" id="tzline" hidden>Horas del archivo de OKX leídas en
+        <select id="tz" aria-label="Zona horaria del archivo de OKX">
+          <option value="UTC" selected>UTC</option>
+          <option value="Madrid">hora de España</option>
+          <option value="UTC+8">UTC+8 (Hong Kong)</option>
+        </select>
+        <span class="meta">¿Exportaste en otra zona horaria? Cámbiala y se recalcula: decide en qué año cae cada operación.</span></p>
       <p class="note" id="partial" hidden>Este ejercicio aún no ha terminado: las cifras son hasta la fecha de tu export y el saldo es el de ese día, no el del 31 de diciembre.</p>
     </div>
     <div class="kpis">
@@ -442,9 +442,11 @@ form.reserve .consent input { margin-top: 0.25rem; }
       grEvent("format_sent"); $("fmt-msg").textContent = "¡Gracias! Nos ayuda mucho.";
     } catch { $("fmt-send").disabled = false; $("fmt-msg").textContent = "No se ha podido enviar. Inténtalo de nuevo en unos minutos."; }
   });
+  let lastPicked = [];
   async function run(list) {
     const picked = [...(list || [])];
     if (!picked.length) return;
+    lastPicked = picked;
     askStructure(picked);
     $("results").hidden = true; $("drop").hidden = true;
     say(engineReady ? T.reading : T.engine, 0.01, "");
@@ -453,7 +455,9 @@ form.reserve .consent input { margin-top: 0.25rem; }
     startWorker().postMessage({ type: "renta", files, tz: $("tz").value }, files.map((f) => f.buf));
   }
 
+  $("tz").addEventListener("change", () => run(lastPicked));
   function show(m) {
+    $("tzline").hidden = m.exchange !== "OKX";
     grEvent("renta_done");
     data = m;
     $("status").hidden = true;
@@ -512,11 +516,12 @@ form.reserve .consent input { margin-top: 0.25rem; }
     $("useful-msg").textContent = b.dataset.useful === "yes" ? "¡Gracias!" : "Gracias. Si nos cuentas qué falta en contact@gridreplay.com, lo tendremos en cuenta.";
   }));
 
-  $("file").addEventListener("change", (e) => run(e.target.files));
+  // Archivo nuevo: se vuelve a leer en UTC (lo que pedimos al exportar).
+  $("file").addEventListener("change", (e) => { $("tz").value = "UTC"; run(e.target.files); });
   const drop = $("drop");
   ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(t => drop.addEventListener(t, () => drop.classList.remove("over")));
-  drop.addEventListener("drop", (e) => { e.preventDefault(); run(e.dataTransfer.files); });
+  drop.addEventListener("drop", (e) => { e.preventDefault(); $("tz").value = "UTC"; run(e.dataTransfer.files); });
   $("again").addEventListener("click", () => { $("file").value = ""; $("file").click(); });
 
   $("csv").addEventListener("click", () => {
