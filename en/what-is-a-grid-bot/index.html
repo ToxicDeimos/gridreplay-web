@@ -203,9 +203,10 @@ footer p { color: var(--ink-3); }
   <section aria-labelledby="h-donde">
     <div class="cta">
       <h2 id="h-donde">Where do you create a grid bot?</h2>
-      <p>The big exchanges offer them ready-made: pick a pair, range, grids and amount, and the bot runs on its own. Pionex was built around bots, and it's the one we used to validate the simulator against real bots.</p>
-      <a class="btn" href="https://www.pionex.com/en/signUp?r=0jw3MvqQjFQ" target="_blank" rel="sponsored noopener" onclick="grEvent('aff_pionex')">Create a grid bot on Pionex</a>
-      <p class="small">Affiliate link: if you sign up through it, GridReplay gets a commission from Pionex at no cost to you. Start small and without leverage until you understand how it behaves.</p>
+      <p>The big exchanges offer them ready-made: pick a pair, range, grids and amount, and the bot runs on its own.<span data-ex="pionex" hidden> Pionex was built around bots, and it's the one we used to validate the simulator against real bots.</span><span data-ex="okx" hidden> From the European Union we recommend OKX: it is MiCA-licensed and offers spot and futures grid bots.</span></p>
+      <a class="btn" data-ex="pionex" hidden href="https://www.pionex.com/en/signUp?r=0jw3MvqQjFQ" target="_blank" rel="sponsored noopener" onclick="grEvent('aff_pionex')">Create a grid bot on Pionex</a>
+      <a class="btn" data-ex="okx" hidden href="https://my.okx.com/join/V2AGEZZT" target="_blank" rel="sponsored noopener" onclick="grEvent('aff_okx')">Create a grid bot on OKX</a>
+      <p class="small">Affiliate link: if you sign up through it, GridReplay gets a commission from the exchange at no cost to you. Start small and without leverage until you understand how it behaves.</p>
     </div>
   </section>
 
@@ -224,5 +225,10 @@ footer p { color: var(--ink-3); }
     <p>GridReplay is independent and not owned by Pionex, Binance or any other exchange. Exchange links may be affiliate links and are always marked.</p>
   </footer>
 </main>
+
+<script>
+// Pionex no tiene licencia MiCA: en el EEE se enseña OKX (GEO de /api/geo; sin país → EEE).
+grGeo().then((g) => { document.querySelectorAll(g.eu ? "[data-ex=okx]" : "[data-ex=pionex]").forEach((e) => { e.hidden = false; }); });
+</script>
 </body>
 </html>
